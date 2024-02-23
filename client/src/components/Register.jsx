@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
 import RegisterValidation from '../func/RegisterValdidation.js'
@@ -14,26 +14,36 @@ const Register = () => {
     email: "",
     user: "",
     pass: "",
-    conf: ""
+    conf: "",
   });
 
   const [error, setError] = useState('');
 
+  const navigate = useNavigate()
+
   const handleSubmit = (event) => {
     event.preventDefault();
     setError(RegisterValidation(values));
-    console.log(error)
-    if(error){
-      let reqValues = {}
 
-      axios.get("http://localhost:8081/fk")
-      .then((res) => {
-        reqValues = {...values, ['fk']: [res.data.id + 1]}
-      })
 
-      axios.post("http://localhost:8081/register", reqValues)
-      .then(res => console.log(res))
-      .catch(err => console.log(err))
+    if(!(RegisterValidation(values))){      
+      axios
+        .get("http://localhost:8081/fk")
+        .then((res) => {
+          const reqVals = { ...values };
+          return axios
+            .post("http://localhost:8081/register/credentials", reqVals)
+            .catch((err) => console.log(err))
+            .then( () => {
+              const reqVals = { ...values, ["fk"]: [res.data.id + 1] };
+                return axios
+                  .post("http://localhost:8081/register/user", reqVals)
+                  .catch((err) => console.log(err));
+            })
+        })
+        .then(navigate('/'))
+        // .then(navigate('/'))
+        .catch((err) => console.log(err));
     }
   };
 
@@ -42,9 +52,9 @@ const Register = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-background">
+    <div className="flex justify-center items-center h-full bg-background">
 
-      <div className="w-80 h-5/6 lg:w-96 lg:h-auto bg-primary text-text font-secondary font-semibold px-10 py-8 rounded-xl shadow-custom">
+      <div className=" justify-center items-center w-80 h-5/6 lg:w-96 lg:h-auto my-8 bg-primary text-text font-secondary font-semibold px-10 py-8 rounded-xl shadow-custom">
 
         <form onSubmit={handleSubmit}>
           <h1 className="font-primary font-bold text-4xl text-center">

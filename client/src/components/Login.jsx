@@ -1,6 +1,8 @@
 import React from 'react'
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
+import axios from 'axios'
 
 import LoginValidation from '../func/LoginValidation.js'
 
@@ -12,9 +14,27 @@ const Login = () => {
 
     const [error, setError] = useState('')
 
+    const navigate = useNavigate()
+
     const handleSubmit = (event) => {
         event.preventDefault()
         setError(LoginValidation(values))
+
+        if (!(LoginValidation(values))) {
+          axios
+            .post("http://localhost:8081/login", values)
+            .then((res) => {
+              console.log(res.data);
+              if (res.data === "Success") {
+                navigate("/home");
+              } else {
+                setError("Credenciales incorrectas");
+              }
+            })
+            .catch((err) => console.log(err));
+        } else {
+          console.log("no jalo");
+        }
     }
     const handleInput = (event) => {
         setValues({...values, [event.target.name]: [event.target.value] });
