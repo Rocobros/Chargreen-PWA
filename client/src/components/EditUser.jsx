@@ -1,12 +1,12 @@
 import React from 'react'
 import Navbar from './navbar/Navbar'
 
-const Home = () => {
+const EditUser = () => {
   return (
     <div className='bg-background h-screen'>
-      <Navbar title={"Inicio"} />
+      <Navbar title={"Perfil"} />
     </div>
   );
 }
 
-export default Home
+export default EditUser
