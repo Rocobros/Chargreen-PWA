@@ -1,6 +1,6 @@
 {
     "name": "Chargreen",
-    "short_name": "CGN",
+    "short_name": "Chargreen",
     "description": "App to control the Chargreen Charging Towers",
     "start_url": "/",
     "display": "standalone",
