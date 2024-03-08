@@ -41,7 +41,7 @@ const Register = () => {
                   .catch((err) => console.log(err));
             })
         })
-        .then(navigate('/'))
+        .then(navigate('/login'))
         // .then(navigate('/'))
         .catch((err) => console.log(err));
     }
@@ -54,7 +54,7 @@ const Register = () => {
   return (
     <div className="flex justify-center items-center h-full bg-background">
 
-      <div className=" justify-center items-center w-80 h-5/6 lg:w-96 lg:h-auto my-8 bg-primary text-text font-secondary font-semibold px-10 py-8 rounded-xl shadow-custom">
+      <div className="justify-center items-center w-80 h-5/6 md:w-96 md:h-auto my-8 bg-primary text-text font-secondary font-semibold px-10 py-8 rounded-xl shadow-custom">
 
         <form onSubmit={handleSubmit}>
           <h1 className="font-primary font-bold text-4xl text-center">
@@ -71,7 +71,7 @@ const Register = () => {
             />
           </div>
 
-          <div className="w-full h-8 lg:h-12 my-7 relative">
+          <div className="w-full h-8 md:h-12 my-7 relative">
             <input
               className="w-full h-full bg-transparent outline-none border-2 border-solid border-text rounded-3xl text-lg text-text placeholder:text-text py-5 pr-10 pl-5"
               type="text"
@@ -81,7 +81,7 @@ const Register = () => {
             />
           </div>
 
-          <div className="w-full h-8 lg:h-12 my-7 relative">
+          <div className="w-full h-8 md:h-12 my-7 relative">
             <input
               className="w-full h-full bg-transparent outline-none border-2 border-solid border-text rounded-3xl text-lg text-text placeholder:text-text py-5 pr-10 pl-5"
               type="text"
@@ -91,7 +91,7 @@ const Register = () => {
             />
           </div>
 
-          <div className="w-full h-8 lg:h-12 my-7 relative">
+          <div className="w-full h-8 md:h-12 my-7 relative">
             <input
               className="w-full h-full bg-transparent outline-none border-2 border-solid border-text rounded-3xl text-lg text-text placeholder:text-text py-5 pr-10 pl-5"
               type="number"
@@ -101,7 +101,7 @@ const Register = () => {
             />
           </div>
 
-          <div className="w-full h-8 lg:h-12 my-7 relative">
+          <div className="w-full h-8 md:h-12 my-7 relative">
             <input
               className="w-full h-full bg-transparent outline-none border-2 border-solid border-text rounded-3xl text-lg text-text placeholder:text-text py-5 pr-10 pl-5"
               type="mail"
@@ -111,7 +111,7 @@ const Register = () => {
             />
           </div>
 
-          <div className="w-full h-8 lg:h-12 my-7 relative">
+          <div className="w-full h-8 md:h-12 my-7 relative">
             <input
               className="w-full h-full bg-transparent outline-none border-2 border-solid border-text rounded-3xl text-lg text-text placeholder:text-text py-5 pr-10 pl-5"
               type="text"
@@ -121,7 +121,7 @@ const Register = () => {
             />
           </div>
 
-          <div className="w-full h-8 lg:h-12 my-7 relative">
+          <div className="w-full h-8 md:h-12 my-7 relative">
             <input
               className="w-full h-full bg-transparent outline-none border-2 border-solid border-text rounded-3xl text-lg text-text placeholder:text-text py-5 pr-10 pl-5"
               type="password"
@@ -131,7 +131,7 @@ const Register = () => {
             />
           </div>
 
-          <div className="w-full h-8 lg:h-12 my-7 relative">
+          <div className="w-full h-8 md:h-12 my-7 relative">
             <input
               className="w-full h-full bg-transparent outline-none border-2 border-solid border-text rounded-3xl text-lg text-text placeholder:text-text py-5 pr-10 pl-5"
               type="password"
@@ -152,16 +152,13 @@ const Register = () => {
           <div className="text-base text-center mt-5 mb-4">
             <p>
               Ya tienes una cuenta?{" "}
-              <Link to="/" className="no-underline font-bold hover:underline">
+              <Link to="/login" className="no-underline font-bold hover:underline">
                 Ingresa
               </Link>
             </p>
           </div>
-
         </form>
-
       </div>
-
     </div>
   );
 }

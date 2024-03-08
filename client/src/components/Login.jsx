@@ -26,8 +26,8 @@ const Login = () => {
             .then((res) => {
               console.log(res.data);
               if (res.data === "Success") {
-                navigate("/home");
-              } else {
+                navigate("/");
+              }else {
                 setError("Credenciales incorrectas");
               }
             })
@@ -42,11 +42,9 @@ const Login = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-background">
-        
-      <div className="w-80 lg:w-96 bg-primary text-text font-secondary font-semibold px-10 py-8 rounded-xl shadow-custom">
-
+      <div className="w-80 md:w-96 bg-primary text-text font-secondary font-semibold px-10 py-8 rounded-xl shadow-custom">
         <form onSubmit={handleSubmit}>
-          <h1 className="font-primary font-bold text-4xl text-center">Login</h1>
+          <h1 className="font-primary font-bold text-4xl text-center">Ingresar</h1>
 
           <div className="w-full h-12 my-7 relative">
             <input
@@ -56,7 +54,7 @@ const Login = () => {
               placeholder="Usuario"
               onChange={handleInput}
             />
-            <i className="bx bxs-user absolute right-5 translate-y-1/2 text-[25px]"></i>
+            <i className="bx bxs-user absolute right-5 translate-y-1.5 text-3xl"></i>
           </div>
 
           <div className="w-full h-12 my-7 relative">
@@ -67,14 +65,14 @@ const Login = () => {
               placeholder="Contraseña"
               onChange={handleInput}
             />
-            <i className="bx bxs-lock-alt absolute right-5 translate-y-1/2 text-[25px]"></i>
+            <i className="bx bxs-lock-alt absolute right-5 translate-y-1.5 text-3xl"></i>
           </div>
 
           {error && <span className="text-red-500">{error}</span>}
 
           <button
             type="submit"
-            className="w-full h-10 bg-background outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent"
+            className="w-full h-10 bg-background outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
           >
             Ingresar
           </button>
@@ -87,6 +85,18 @@ const Login = () => {
                 className="no-underline font-bold hover:underline"
               >
                 Registrate
+              </Link>
+            </p>
+          </div>
+
+          <div className="text-base text-center mt-5 mb-4">
+            <p>
+              Olvidaste tu constraseña?{" "}
+              <Link
+                to="/olvidar"
+                className="no-underline font-bold hover:underline"
+              >
+                Recuperar
               </Link>
             </p>
           </div>
