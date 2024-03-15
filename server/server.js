@@ -1,6 +1,7 @@
 const express = require('express')
 const mysql = require('mysql')
 const cors = require('cors')
+const {transporter, mailOptions} = require('./utils/sendEmail')
 
 const app = express()
 app.use(cors())
@@ -64,6 +65,23 @@ app.post('/register/user', (req, res) => {
         }
         return res.json(data)
     })
+})
+
+app.post('/mail', (req, res) => {
+    const correo = req.body.correo
+    mailOptions.to = correo
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            return res.json({
+                error: error.message
+            })
+        } else {
+            return res.status(200).end()
+        }
+    });
+
+    
 })
 
 app.listen(8081, () => {
