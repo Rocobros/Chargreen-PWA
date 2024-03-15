@@ -4,7 +4,8 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
 import EditUser from './components/EditUser';
-import UpdatePassword from './components/UpdatePassword';
+import MailForm from './components/MailForm';
+import PasswordForm from './components/PasswordForm';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -27,7 +28,10 @@ function App() {
 						element={<EditUser />}></Route>
 					<Route
 						path='/olvidar'
-						element={<UpdatePassword />}></Route>
+						element={<MailForm />}></Route>
+					<Route
+						path='/recuperar'
+						element={<PasswordForm />}></Route>
 				</Routes>
 			</BrowserRouter>
 		</>

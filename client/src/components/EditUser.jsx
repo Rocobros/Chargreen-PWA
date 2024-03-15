@@ -3,7 +3,7 @@ import Navbar from './navbar/Navbar'
 
 const EditUser = () => {
   return (
-    <div className='bg-background h-screen'>
+    <div className='bg-background h-screent'>
       <Navbar title={"Perfil"} />
     </div>
   );

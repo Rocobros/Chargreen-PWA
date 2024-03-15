@@ -10,8 +10,8 @@ var transporter = nodemailer.createTransport({
 
 var mailOptions = {
   from: 'rocobros21@gmail.com',
-  subject: 'Sending Email using Node.js',
-  text: 'That was easy!'
+  subject: 'Intento de recuperar constraseña para la app Chargreen',
+  
 };
 
 module.exports = {
