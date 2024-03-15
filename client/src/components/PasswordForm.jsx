@@ -1,12 +1,9 @@
 import { useState, React } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 
 import UpdateValidation from '../func/UpdateValidation.js';
 
 const PasswordForm = () => {
-	const navigate = useNavigate();
-
 	const queryParameters = new URLSearchParams(window.location.search);
 	const token = queryParameters.get('token');
 	const id = queryParameters.get('id');
@@ -25,7 +22,6 @@ const PasswordForm = () => {
 				])
 				.then(console.log('Exito'));
 		}
-		navigate('/login');
 	};
 
 	const handleInputChange = (event) => {

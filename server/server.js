@@ -76,17 +76,19 @@ app.post('/recuperar/:token/:id', (req, res) => {
 
     const activeToken = `select * from tokens where codigo = "${token}" and usuarionormal = ${registro} and estado = 'A'`
     db.query(activeToken, (err, data) => {
-        if(data){
+        if(data.length > 0){
             const getUser = `select credencial as id from usuariosnormales where registro = ${registro}`
             db.query(getUser, (err, data) => {
+                console.log(data)
                 const id = data[0].id
-                
                 const query = `update credenciales set Contrasena = "${password}" where id = ${id}`
                 db.query(query);
 
                 const deactivateToken = `update tokens set estado = 'D' where usuarionormal = ${registro}`
                 db.query(deactivateToken)
             })
+        }else{
+            res.status(400).end()
         }
     })
  
