@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import LoginValidation from '../func/LoginValidation.js';
 
-const Login = () => {
+const Login = ({ setUserRole }) => {
 	const [values, setValues] = useState({
 		username: '',
 		password: '',
@@ -24,18 +24,22 @@ const Login = () => {
 			axios
 				.post('http://localhost:8081/login', values)
 				.then((res) => {
-					console.log(res.data);
-					if (res.data === 'Success') {
+					if (res.data.role === 'admin') {
+						setUserRole('admin');
+						navigate('/');
+					} else if (res.data.role === 'user') {
+						setUserRole('user');
 						navigate('/');
 					} else {
-						setError('Credenciales incorrectas');
+						setError(res.data.message);
 					}
 				})
 				.catch((err) => console.log(err));
 		} else {
-			console.log('no jalo');
+			console.log('Intente de nuevo');
 		}
 	};
+
 	const handleInput = (event) => {
 		setValues({ ...values, [event.target.name]: [event.target.value] });
 	};

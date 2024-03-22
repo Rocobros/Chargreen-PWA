@@ -26,16 +26,48 @@ app.get('/fk', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
-    const sql = "SELECT * FROM credenciales WHERE `usuario` = ? AND `contrasena` = ?"
-    db.query(sql, [req.body.username, req.body.password], (err, data) => {
-        if(err){
-            return res.json('Error querying from credentials table')
+    const { username, password } = req.body;
+
+    // Check if username and password are provided
+    if (!username || !password) {
+        return res.status(400).json({ message: 'Username and password are required' });
+    }
+
+    // Check credentials against the regular users table
+    db.query('SELECT * FROM credenciales WHERE usuario = ? AND contrasena = ?', [username, password], (error, credentialsResult, fields) => {
+        if (error) {
+            console.error('Error querying regular users database:', error);
+            return res.status(500).send('Internal Server Error');
+        }
+        // Check if user is found in the regular users table
+        if (credentialsResult.length > 0) {
+            const credentialId = credentialsResult[0].Id;
+
+            db.query('SELECT * FROM usuariosnormales WHERE credencial = ?',credentialId, (error, userResults, fields) => {
+                if (error) {
+                    console.error('Error querying users table:', error);
+                    return res.status(500).send('Internal Server Error');
+                }
+
+                // Check if user is found in the users table
+                if (userResults.length > 0) { 
+                    return res.json({ message: 'Login successful', role: 'user' });
+                }
+
+                db.query('SELECT * FROM usuariosadministradores WHERE credencial = ?', credentialId, (error, adminResults, fields) => {
+                    if (error) {
+                        console.error('Error querying admins table:', error);
+                        return res.status(500).send('Internal Server Error');
+                    }
+
+                    // Check if user is found in the users table
+                    if (adminResults.length > 0) { 
+                        return res.json({ message: 'Login successful', role: 'admin' });
+                    }
+                })
+            })
         }else{
-            if(data.length > 0){
-                return res.json('Success')
-            }else{
-                return res.json('No record')
-            }
+            return res.status(401).json({ message: 'Invalid username or password' });
         }
     })
 })
@@ -58,7 +90,21 @@ app.post('/register/user', (req, res) => {
 
     const sql = 'INSERT INTO `usuariosnormales`(`nombre`, `apellidopaterno`, `apellidomaterno`, `celular`, `correo`, `nivel`, `credencial`) VALUES (?)'
     const vals = [req.body.name[0], req.body.apep[0], req.body.apem[0], req.body.tel[0], req.body.email[0], 1, req.body.fk[0]]
+    
+    db.query(sql, [vals], (err, data) => {
+        if(err){
+            console.log(err)
+            return res.json('Error inserting to Users')
+        }
+        return res.json(data)
+    })
+})
 
+app.post('/register/moderator', (req, res) => {
+
+    const sql = 'INSERT INTO `usuariosmoderadores`(`nombre`, `apellidopaterno`, `apellidomaterno`, `celular`, `correo`, `credencial`) VALUES (?)'
+    const vals = [req.body.name[0], req.body.apep[0], req.body.apem[0], req.body.tel[0], req.body.email[0], req.body.fk[0]]
+    console.log(req.body)
     db.query(sql, [vals], (err, data) => {
         if(err){
             console.log(err)

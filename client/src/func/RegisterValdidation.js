@@ -1,9 +1,9 @@
 export default function validation (values){
     let error = ''
-    const TEXT_PATTERN = /^[a-zA-Z]{1,50}$/
+    const TEXT_PATTERN = /^[a-zA-Z\u00f1\u00d1]{1,50}$/
     const TEL_PATTERN = /^[0-9]{10}$/
     const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    const USERNAME_PATTERN = /^[a-zA-Z0-9]{8,}$/
+    const USERNAME_PATTERN = /^[a-zA-Z0-9\u00f1\u00d1]{8,}$/
     const PASSWORD_PATTERN = /^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])[a-zA-Z0-9!@#$%^&*]{8,}$/
 
     let a = new String(values.pass)
