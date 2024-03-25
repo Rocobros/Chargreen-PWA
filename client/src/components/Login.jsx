@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import LoginValidation from '../func/LoginValidation.js';
 
-const Login = ({ setUserRole }) => {
+const Login = ({ setUserRole, setUserId }) => {
 	const [values, setValues] = useState({
 		username: '',
 		password: '',
@@ -26,9 +26,11 @@ const Login = ({ setUserRole }) => {
 				.then((res) => {
 					if (res.data.role === 'admin') {
 						setUserRole('admin');
+						setUserId(res.data.id);
 						navigate('/');
 					} else if (res.data.role === 'user') {
 						setUserRole('user');
+						setUserId(res.data.id);
 						navigate('/');
 					} else {
 						setError(res.data.message);

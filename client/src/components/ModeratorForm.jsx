@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import RegisterValidation from '../func/RegisterValdidation.js';
@@ -149,17 +149,6 @@ const ModeratorFrom = () => {
 						className='w-full h-10 bg-background outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent'>
 						Continuar
 					</button>
-
-					<div className='text-base text-center mt-5 mb-4'>
-						<p>
-							Ya tienes una cuenta?{' '}
-							<Link
-								to='/login'
-								className='no-underline font-bold hover:underline'>
-								Ingresa
-							</Link>
-						</p>
-					</div>
 				</form>
 			</div>
 		</div>

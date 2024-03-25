@@ -51,7 +51,7 @@ app.post('/login', (req, res) => {
 
                 // Check if user is found in the users table
                 if (userResults.length > 0) { 
-                    return res.json({ message: 'Login successful', role: 'user' });
+                    return res.json({ message: 'Login successful', role: 'user', id: userResults[0].Registro });
                 }
 
                 db.query('SELECT * FROM usuariosadministradores WHERE credencial = ?', credentialId, (error, adminResults, fields) => {
@@ -62,7 +62,7 @@ app.post('/login', (req, res) => {
 
                     // Check if user is found in the users table
                     if (adminResults.length > 0) { 
-                        return res.json({ message: 'Login successful', role: 'admin' });
+                        return res.json({ message: 'Login successful', role: 'admin', id: adminResults[0].Registro});
                     }
                 })
             })
@@ -104,8 +104,36 @@ app.post('/register/moderator', (req, res) => {
 
     const sql = 'INSERT INTO `usuariosmoderadores`(`nombre`, `apellidopaterno`, `apellidomaterno`, `celular`, `correo`, `credencial`) VALUES (?)'
     const vals = [req.body.name[0], req.body.apep[0], req.body.apem[0], req.body.tel[0], req.body.email[0], req.body.fk[0]]
-    console.log(req.body)
+    
     db.query(sql, [vals], (err, data) => {
+        if(err){
+            console.log(err)
+            return res.json('Error inserting to Users')
+        }
+        return res.json(data)
+    })
+})
+
+app.get('/locations', (req, res) => {
+  db.query('SELECT id, nombre, ST_X(coordenadas) AS latitud, ST_Y(coordenadas) AS longitud FROM torrecarga', (err, results) => {
+    if (err) {
+      console.error('Error getting locations: ' + err.stack);
+      res.status(500).send('Error getting locations');
+      return;
+    }
+    res.json(results);
+  });
+});
+
+app.post('/register/tower', (req, res) => {
+    const { nombre, latitud, longitud, admin } = req.body;
+    const sql = 'INSERT INTO torrecarga (nombre, coordenadas, usuarioadministrador) VALUES (?, POINTFROMTEXT(?), ?)'
+    const coordinates = `POINT(${latitud} ${longitud})`;
+
+    const vals = [nombre, coordinates, admin]
+    console.log(vals)
+
+    db.query(sql, vals, (err, data) => {
         if(err){
             console.log(err)
             return res.json('Error inserting to Users')

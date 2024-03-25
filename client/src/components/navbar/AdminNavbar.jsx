@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-const AdminNavbar = ({ title }) => {
+const AdminNavbar = ({ title, userId }) => {
 	return (
 		<header className='bg-primary '>
 			<nav className='text-text flex justify-between items-center mx-auto px-8 py-2'>
@@ -16,7 +16,13 @@ const AdminNavbar = ({ title }) => {
 							</Link>
 						</li>
 						<li>
-							<Link to='/agregar/torre'>Agregar Torre</Link>
+							<Link
+								to={{
+									pathname: '/agregar/torre',
+									state: { userId },
+								}}>
+								Agregar Torre
+							</Link>
 						</li>
 					</ul>
 				</div>
