@@ -1,35 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, React } from 'react';
+
+import Login from './components/Login';
+import Register from './components/Register';
+import Home from './components/Home';
+import EditUser from './components/EditUser';
+import MailForm from './components/MailForm';
+import PasswordForm from './components/PasswordForm';
+import ModeratorFrom from './components/ModeratorForm';
+import TowerForm from './components/TowerForm';
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+	const [userRole, setUserRole] = useState(null);
+	const [userId, setUserId] = useState(null);
+	return (
+		<>
+			<BrowserRouter>
+				<Routes>
+					<Route
+						path='/'
+						element={
+							<Home
+								userRole={userRole}
+								userId={userId}
+							/>
+						}></Route>
+					<Route
+						path='/register'
+						element={<Register />}></Route>
+					<Route
+						path='/login'
+						element={
+							<Login
+								setUserRole={setUserRole}
+								setUserId={setUserId}
+							/>
+						}></Route>
+					<Route
+						path='/editUser'
+						element={<EditUser />}></Route>
+					<Route
+						path='/olvidar'
+						element={<MailForm />}></Route>
+					<Route
+						path='/recuperar'
+						element={<PasswordForm />}></Route>
+					<Route
+						path='/agregar/moderador'
+						element={<ModeratorFrom />}></Route>
+					<Route
+						path='/agregar/torre'
+						element={<TowerForm userId={userId}/>}></Route>
+				</Routes>
+			</BrowserRouter>
+		</>
+	);
 }
 
-export default App
+export default App;
