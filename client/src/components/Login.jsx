@@ -1,50 +1,50 @@
-import React from 'react';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 
-import axios from 'axios';
+import axios from 'axios'
 
-import LoginValidation from '../func/LoginValidation.js';
+import LoginValidation from '../func/LoginValidation.js'
 
 const Login = ({ setUserRole, setUserId }) => {
 	const [values, setValues] = useState({
 		username: '',
 		password: '',
-	});
+	})
 
-	const [error, setError] = useState('');
+	const [error, setError] = useState('')
 
-	const navigate = useNavigate();
+	const navigate = useNavigate()
 
 	const handleSubmit = (event) => {
-		event.preventDefault();
-		setError(LoginValidation(values));
+		event.preventDefault()
+		setError(LoginValidation(values))
 
 		if (!LoginValidation(values)) {
 			axios
 				.post('http://localhost:8081/login', values)
 				.then((res) => {
 					if (res.data.role === 'admin') {
-						setUserRole('admin');
-						setUserId(res.data.id);
-						navigate('/');
+						setUserRole('admin')
+						setUserId(res.data.id)
+						navigate('/')
 					} else if (res.data.role === 'user') {
-						setUserRole('user');
-						setUserId(res.data.id);
-						navigate('/');
+						setUserRole('user')
+						setUserId(res.data.id)
+						navigate('/')
 					} else {
-						setError(res.data.message);
+						setError(res.data.message)
 					}
 				})
-				.catch((err) => console.log(err));
+				.catch((err) => console.log(err))
 		} else {
-			console.log('Intente de nuevo');
+			console.log('Intente de nuevo')
 		}
-	};
+	}
 
 	const handleInput = (event) => {
-		setValues({ ...values, [event.target.name]: [event.target.value] });
-	};
+		setValues({ ...values, [event.target.name]: [event.target.value] })
+	}
 
 	return (
 		<div className='flex justify-center items-center h-screen bg-background'>
@@ -107,7 +107,7 @@ const Login = ({ setUserRole, setUserId }) => {
 				</form>
 			</div>
 		</div>
-	);
-};
+	)
+}
 
-export default Login;
+export default Login

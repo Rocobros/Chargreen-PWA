@@ -1,19 +1,19 @@
-import { useState, React } from 'react';
+import { useState, React } from 'react'
 
-import Login from './components/Login';
-import Register from './components/Register';
-import Home from './components/Home';
-import EditUser from './components/EditUser';
-import MailForm from './components/MailForm';
-import PasswordForm from './components/PasswordForm';
-import ModeratorFrom from './components/ModeratorForm';
-import TowerForm from './components/TowerForm';
+import Login from './components/Login'
+import Register from './components/Register'
+import Home from './components/Home'
+import EditUser from './components/EditUser'
+import MailForm from './components/MailForm'
+import PasswordForm from './components/PasswordForm'
+import ModeratorFrom from './components/ModeratorForm'
+import TowerForm from './components/TowerForm'
 
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 function App() {
-	const [userRole, setUserRole] = useState(null);
-	const [userId, setUserId] = useState(null);
+	const [userRole, setUserRole] = useState(null)
+	const [userId, setUserId] = useState(null)
 	return (
 		<>
 			<BrowserRouter>
@@ -51,11 +51,11 @@ function App() {
 						element={<ModeratorFrom />}></Route>
 					<Route
 						path='/agregar/torre'
-						element={<TowerForm userId={userId}/>}></Route>
+						element={<TowerForm userId={userId} />}></Route>
 				</Routes>
 			</BrowserRouter>
 		</>
-	);
+	)
 }
 
-export default App;
+export default App

@@ -6,6 +6,7 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
+    'eslint-config-prettier'
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
@@ -19,6 +20,7 @@ module.exports = {
     ],
     "react/jsx-uses-react": "error",
     "react/jsx-uses-vars": "error",
-    "react/prop-types": 0
+    "react/prop-types": 0,
+    "react/react-in-jsx-scope": "off"
   },
 }

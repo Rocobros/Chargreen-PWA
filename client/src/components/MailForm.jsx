@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import axios from 'axios'
 
 const UpdatePassword = () => {
-	const [correo, setCorreo] = useState('');
-	const [message, setMessage] = useState('');
+	const [correo, setCorreo] = useState('')
+	const [message, setMessage] = useState('')
 
 	const handleSubmit = (event) => {
-		event.preventDefault();
+		event.preventDefault()
 		axios
 			.post('http://localhost:8081/mail', [{ correo: correo }])
 			.then(() => {
-				setMessage(`Se envio un codigo al correo ${correo}`);
+				setMessage(`Se envio un codigo al correo ${correo}`)
 			})
-			.catch((err) => console.log(err));
-	};
+			.catch((err) => console.log(err))
+	}
 
 	const handleInput = (event) => {
-		setCorreo(event.target.value);
-	};
+		setCorreo(event.target.value)
+	}
 
 	return (
 		<div className='flex justify-center items-center h-screen bg-background'>
@@ -58,7 +58,7 @@ const UpdatePassword = () => {
 				</form>
 			</div>
 		</div>
-	);
-};
+	)
+}
 
-export default UpdatePassword;
+export default UpdatePassword
