@@ -3,7 +3,11 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import LoginValidation from '../func/LoginValidation.js'
-import Form from './FormComponents/Form.jsx'
+
+import FormWrapper from './FormComponents/FormWrapper.jsx'
+import FormButton from './FormComponents/FormButton.jsx'
+import FormInput from './FormComponents/FormInput.jsx'
+import FormLink from './FormComponents/FormLink.jsx'
 
 const fields = [
     {
@@ -59,14 +63,34 @@ const Login = ({ setUserRole, setUserId }) => {
         setValues({ ...values, [event.target.name]: [event.target.value] })
     }
 
+    const inputs = fields.map((item) => (
+        <FormInput
+            key={item.id}
+            type={item.type}
+            name={item.name}
+            placeholder={item.placeholder}
+            icon={item.icon}
+            handleInput={handleInput}></FormInput>
+    ))
+
     return (
         <div className="flex justify-center items-center h-screen bg-background">
-            <Form
-                title={'Ingresar'}
-                inputsList={fields}
-                handleInput={handleInput}
-                handleSubmit={handleSubmit}
-            />
+            <FormWrapper
+                title="Ingresar"
+                handleSubmit={handleSubmit}>
+                {inputs}
+                <FormButton>Ingresar</FormButton>
+                <FormLink
+                    linkTo={'/register'}
+                    linkText={'Registrate'}>
+                    No tienes una cuenta?{' '}
+                </FormLink>
+                <FormLink
+                    linkTo={'/olvidar'}
+                    linkText={'Recuperar'}>
+                    Olvidaste tu constraseña?{' '}
+                </FormLink>
+            </FormWrapper>
         </div>
     )
 }
