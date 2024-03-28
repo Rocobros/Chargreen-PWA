@@ -11,8 +11,8 @@ app.use(express.json())
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
-    database: 'nueva_bd'
+    password: 'RoRoco2105!',
+    database: 'chargreen_db'
 })
 
 app.get('/fk', (req, res) => {
@@ -208,6 +208,6 @@ app.post('/mail', (req, res) => {
     })
 })
 
-app.listen(8081, () => {
-    console.log('Listening on URL: http://localhost:8081/')
+app.listen(3000, () => {
+    console.log('Listening on URL: http://localhost:3000/')
 })
