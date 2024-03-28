@@ -6,6 +6,7 @@ import axios from 'axios'
 import FormWrapper from './FormComponents/FormWrapper.jsx'
 import FormButton from './FormComponents/FormButton.jsx'
 import FormInput from './FormComponents/FormInput.jsx'
+import FormLink from './FormComponents/FormLink.jsx'
 
 const TowerForm = ({ userId }) => {
     const [values, setValues] = useState({
@@ -56,6 +57,10 @@ const TowerForm = ({ userId }) => {
                     handleInput={handleInput}
                 />
                 <FormButton>Agregar</FormButton>
+                <FormLink
+                    linkText={'Regresar al inicio'}
+                    linkTo={'/'}
+                />
             </FormWrapper>
         </div>
     )

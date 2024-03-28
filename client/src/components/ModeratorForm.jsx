@@ -7,6 +7,7 @@ import RegisterValidation from '../func/RegisterValdidation.js'
 import FormWrapper from './FormComponents/FormWrapper.jsx'
 import FormButton from './FormComponents/FormButton.jsx'
 import FormInput from './FormComponents/FormInput.jsx'
+import FormLink from './FormComponents/FormLink.jsx'
 
 const fields = [
     {
@@ -122,6 +123,10 @@ const ModeratorFrom = () => {
                 handleSubmit={handleSubmit}>
                 {inputs}
                 <FormButton>Agregar</FormButton>
+                <FormLink
+                    linkText={'Regresar al Incio'}
+                    linkTo={'/'}
+                />
             </FormWrapper>
         </div>
     )
