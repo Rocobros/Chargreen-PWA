@@ -50,7 +50,7 @@ const Login = ({ setUserRole, setUserId }) => {
                         setUserId(res.data.id)
                         navigate('/')
                     } else {
-                        setError(res.data.message)
+                        console.log('Error')
                     }
                 })
                 .catch((err) => console.log(err))
@@ -74,7 +74,7 @@ const Login = ({ setUserRole, setUserId }) => {
     ))
 
     return (
-        <div className="flex justify-center items-center h-screen bg-background">
+        <div className="flex justify-center items-center h-screen">
             <FormWrapper
                 title="Ingresar"
                 handleSubmit={handleSubmit}>

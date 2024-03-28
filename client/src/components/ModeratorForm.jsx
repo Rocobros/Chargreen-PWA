@@ -123,6 +123,10 @@ const ModeratorFrom = () => {
                 handleSubmit={handleSubmit}>
                 {inputs}
                 <FormButton>Agregar</FormButton>
+                <FormLink
+                    linkText={'Regresar al Incio'}
+                    linkTo={'/'}
+                />
             </FormWrapper>
         </div>
     )
