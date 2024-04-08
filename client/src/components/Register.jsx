@@ -83,12 +83,12 @@ const Register = () => {
 
         if (!RegisterValidation(values)) {
             axios
-                .get('http://localhost:8081/fk')
+                .get('http://localhost:3000/fk')
                 .then((res) => {
                     const reqVals = { ...values }
                     return axios
                         .post(
-                            'http://localhost:8081/register/credentials',
+                            'http://localhost:3000/register/credentials',
                             reqVals
                         )
                         .catch((err) => console.log(err))
@@ -99,7 +99,7 @@ const Register = () => {
                             }
                             return axios
                                 .post(
-                                    'http://localhost:8081/register/user',
+                                    'http://localhost:3000/register/user',
                                     reqVals
                                 )
                                 .catch((err) => console.log(err))

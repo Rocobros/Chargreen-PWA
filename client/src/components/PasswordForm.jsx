@@ -38,7 +38,7 @@ const PasswordForm = () => {
         event.preventDefault()
         if (!UpdateValidation(values)) {
             axios
-                .post(`http://localhost:8081/recuperar/${token}/${id}`, [
+                .post(`http://localhost:3000/recuperar/${token}/${id}`, [
                     values,
                 ])
                 .then(navigate('/login'))

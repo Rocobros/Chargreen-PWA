@@ -3,16 +3,29 @@ const mysql = require('mysql')
 const cors = require('cors')
 const {transporter, mailOptions} = require('./utils/sendEmail')
 const makeToken = require('./utils/makeToken')
+const db = require('./db.js')
+
+const botellasLatasRouter = require('./api/botellasLatasRouter.js');
+const codigosRouter = require('./api/codigosRouter.js')
+const credencialesRouter = require('./api/credencialesRouter.js')
+const nivelUsuarioRouter = require('./api/nivelUsuarioRouter.js')
+const usuariosNormalesRouter = require('./api/usuariosNormalesRouter.js')
 
 const app = express()
 app.use(cors())
 app.use(express.json())
 
-const db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'RoRoco2105!',
-    database: 'chargreen_db'
+app.use('/api/botellaslatas', botellasLatasRouter)
+app.use('/api/codigos', codigosRouter)
+app.use('/api/credenciales', credencialesRouter)
+app.use('/api/nivelusuario', nivelUsuarioRouter)
+app.use('/api/usuarios', usuariosNormalesRouter)
+
+app.post('/sendEsp', (req, res) => {
+    const data = req.body;
+    app.locals.sendDataToEsp(JSON.stringify(data))
+    .then(() => res.json({ message: 'Datos enviados al ESP.' }))
+    .catch((error) => res.status(500).json({ message: error.message }));
 })
 
 app.get('/fk', (req, res) => {
@@ -165,8 +178,6 @@ app.post('/recuperar/:token/:id', (req, res) => {
             res.status(400).end()
         }
     })
- 
-    
 })
 
 app.post('/mail', (req, res) => {
@@ -208,6 +219,4 @@ app.post('/mail', (req, res) => {
     })
 })
 
-app.listen(3000, () => {
-    console.log('Listening on URL: http://localhost:3000/')
-})
+module.exports = app

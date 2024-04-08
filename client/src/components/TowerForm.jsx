@@ -22,7 +22,7 @@ const TowerForm = ({ userId }) => {
         event.preventDefault()
 
         axios
-            .post('http://localhost:8081/register/tower', values)
+            .post('http://localhost:3000/register/tower', values)
             .then(navigate('/'))
             .catch((err) => console.log(err))
     }
