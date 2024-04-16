@@ -19,7 +19,7 @@ app.use('/api/botellaslatas', botellasLatasRouter)
 app.use('/api/codigos', codigosRouter)
 app.use('/api/credenciales', credencialesRouter)
 app.use('/api/nivelusuario', nivelUsuarioRouter)
-app.use('/api/usuarios', usuariosNormalesRouter)
+app.use('/api/usuarios', usuariosNormalesRouter) 
 
 app.post('/sendEsp', (req, res) => {
     const data = req.body;
