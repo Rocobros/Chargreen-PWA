@@ -35,7 +35,7 @@ app.use('/api/tokens', tokensRouter)
 app.use('/api/torres', torreCargaRouter)
 app.use('/api/admins', adminRouter)
 app.use('/api/moderadores', moderRouter)
-app.use('/api/usuarios', usuariosRouter)
+app.use('/api/usuarios', usuariosRouter) 
 
 app.post('/sendEsp', (req, res) => {
     const data = req.body
