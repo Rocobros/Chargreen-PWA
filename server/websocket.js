@@ -12,7 +12,6 @@ function setupWebSocket() {
     espClient = ws;
 
     ws.on('message', (message) => {
-      console.log('Received: %s', message);
 
         try {
             // Deserialize the JSON string to a JavaScript object
