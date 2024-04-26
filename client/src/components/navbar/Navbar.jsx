@@ -32,11 +32,9 @@ const Navbar = ({ title }) => {
                             </Link>
                         </li>
                         <li>
-                            <a
-                                className="hover:text-accent"
-                                href="#">
-                                Mapa
-                            </a>
+                            <Link to="/map">
+                                <span>Mapa</span>
+                            </Link>
                         </li>
                         <li>
                             <a

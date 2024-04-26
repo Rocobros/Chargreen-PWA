@@ -41,13 +41,16 @@ const Login = ({ setUserRole, setUserId }) => {
             axios
                 .post('http://localhost:3000/login', values)
                 .then((res) => {
+                    console.log(res.data)
                     if (res.data.role === 'admin') {
                         setUserRole('admin')
                         setUserId(res.data.id)
+                        localStorage.setItem('userId', res.data.id)
                         navigate('/')
                     } else if (res.data.role === 'user') {
                         setUserRole('user')
                         setUserId(res.data.id)
+                        localStorage.setItem('userId', res.data.id)
                         navigate('/')
                     } else {
                         console.log('Error')

@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import axios from 'axios'
 
-const CountdownTimer = ({ userId }) => {
-    const [timeInSeconds, setTimeInSeconds] = useState(0) // Start with 0, will be updated
-    const [isActive, setIsActive] = useState(false)
+//TODO: Modificar el tiempo del usuario y desactivar la salida cuando se termine el tiempo
+
+const CountdownTimer = () => {
+    const [timeInSeconds, setTimeInSeconds] = useState(0)
+    const [isActive, setIsActive] = useState(true)
+
+    const location = useLocation()
 
     useEffect(() => {
         // Function to fetch initial time
         const fetchInitialTime = async () => {
             try {
                 const response = await axios.get(
-                    `http://localhost:3000/api/usuarios/${userId}`
+                    `http://localhost:3000/api/usuarios/${localStorage.getItem(
+                        'userId'
+                    )}`
                 )
                 setTimeInSeconds(response.data.Tiempo)
             } catch (error) {
                 console.error('Error fetching initial time:', error)
-                // Handle error, possibly setting a default time or giving feedback to the user
             }
         }
 
@@ -34,17 +40,27 @@ const CountdownTimer = ({ userId }) => {
         return () => clearInterval(timer)
     }, [isActive, timeInSeconds])
 
-    const startTimer = () => {
-        setIsActive(true)
-    }
-
     const stopTimer = () => {
         axios
-            .put(`http://localhost:3000/api/usuarios/tiempo/${userId}`, {
-                Tiempo: timeInSeconds,
-            })
+            .put(
+                `http://localhost:3000/api/usuarios/tiempo/${localStorage.getItem(
+                    'userId'
+                )}`,
+                {
+                    Tiempo: timeInSeconds,
+                }
+            )
             .then(() => {
                 setIsActive(false)
+                setTimeInSeconds(0)
+                axios.post('http://localhost:3000/sendToEsp', {
+                    Torre: location.state.torre,
+                    Salida: location.state.salidaId,
+                    Tiempo: 0,
+                })
+                axios.put(
+                    `http://localhost:3000/api/salidas/desactivar/${location.state.salidaId}`
+                )
             })
             .catch((err) => {
                 console.error(err)
@@ -64,7 +80,6 @@ const CountdownTimer = ({ userId }) => {
             <div>
                 {formattedMinutes}:{formattedSeconds}
             </div>
-            <button onClick={startTimer}>Start</button>
             <button onClick={stopTimer}>Stop</button>
         </div>
     )

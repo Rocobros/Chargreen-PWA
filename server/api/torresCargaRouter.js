@@ -36,10 +36,10 @@ router.get('/:id', (req, res) => {
 
 // Crear una nueva torre
 router.post('/', (req, res) => {
-    const { Nombre, Latitud, Longitud, Admin } = req.body
+    const { Nombre, Latitud, Longitud, UsuarioAdministrador } = req.body
     db.query(
         'INSERT INTO torrecarga (Nombre, Coordenadas, UsuarioAdministrador) VALUES (?, POINTFROMTEXT(?), ?)',
-        [Nombre, `POINT(${Latitud} ${Longitud})`, Admin],
+        [Nombre, `POINT(${Latitud} ${Longitud})`, UsuarioAdministrador],
         (error, results) => {
             if (error) {
                 console.error('Error encontrado: ', error)

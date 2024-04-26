@@ -39,7 +39,7 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
   const { nombre, minutos, peso, altura } = req.body;
   db.query(
-    'UPDATE botellaslatas SET Nombre = ?, Minutos = ?, Peso = ?, Altura = ? WHERE Id = ?',
+    'UPDATE botellaslatas SET Nombre = ?, Segundos = ?, Peso = ?, Altura = ? WHERE Id = ?',
     [nombre, minutos, peso, altura, req.params.id],
     (error, results) => {
       if (error) {
