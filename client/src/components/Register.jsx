@@ -10,67 +10,73 @@ import FormButton from './FormComponents/FormButton.jsx'
 import FormInput from './FormComponents/FormInput.jsx'
 import FormLink from './FormComponents/FormLink.jsx'
 
-const fields = [
+const infoFields = [
     {
         id: 1,
         type: 'text',
-        name: 'name',
+        name: 'Nombre',
         placeholder: 'Nombre',
     },
     {
         id: 2,
         type: 'text',
-        name: 'apep',
+        name: 'ApellidoPaterno',
         placeholder: 'Apellido Paterno',
     },
     {
         id: 3,
         type: 'text',
-        name: 'apem',
+        name: 'ApellidoMaterno',
         placeholder: 'Apellido Materno',
     },
     {
         id: 4,
         type: 'number',
-        name: 'tel',
+        name: 'Celular',
         placeholder: 'Celular',
     },
     {
         id: 5,
         type: 'mail',
-        name: 'email',
+        name: 'Correo',
         placeholder: 'Correo',
     },
+]
+
+const credentialsFields = [
     {
         id: 6,
         type: 'text',
-        name: 'user',
+        name: 'Usuario',
         placeholder: 'Usuario',
     },
     {
         id: 7,
         type: 'password',
-        name: 'pass',
+        name: 'Contrasena',
         placeholder: 'Contraseña',
     },
     {
         id: 8,
         type: 'password',
-        name: 'conf',
+        name: 'Confirmacion',
         placeholder: 'Confirmar',
     },
 ]
 
 const Register = () => {
-    const [values, setValues] = useState({
-        name: '',
-        apep: '',
-        apem: '',
-        tel: '',
-        email: '',
-        user: '',
-        pass: '',
-        conf: '',
+    const [userInfo, setUserInfo] = useState({
+        Nombre: '',
+        ApellidoPaterno: '',
+        ApellidoMaterno: '',
+        Celular: 0,
+        Correo: '',
+    })
+
+    const [credentials, setCredentials] = useState({
+        Usuario: '',
+        Contrasena: '',
+        Confirmacion: '',
     })
 
     const [error, setError] = useState('')
@@ -79,50 +85,57 @@ const Register = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        setError(RegisterValidation(values))
+        setError(RegisterValidation(userInfo))
 
-        if (!RegisterValidation(values)) {
+        if (!RegisterValidation(userInfo)) {
             axios
-                .get('http://localhost:8081/fk')
+                .post('http://localhost:3000/api/credenciales', credentials)
                 .then((res) => {
-                    const reqVals = { ...values }
+                    console.log({ ...userInfo, Credencial: res.data.id })
                     return axios
-                        .post(
-                            'http://localhost:8081/register/credentials',
-                            reqVals
-                        )
-                        .catch((err) => console.log(err))
-                        .then(() => {
-                            const reqVals = {
-                                ...values,
-                                ['fk']: [res.data.id + 1],
-                            }
-                            return axios
-                                .post(
-                                    'http://localhost:8081/register/user',
-                                    reqVals
-                                )
-                                .catch((err) => console.log(err))
+                        .post('http://localhost:3000/api/usuarios', {
+                            ...userInfo,
+                            Credencial: res.data.id,
                         })
+                        .catch((err) => console.log(err))
                 })
-                .then(navigate('/login'))
-                // .then(navigate('/'))
-                .catch((err) => console.log(err))
+                .then(
+                    navigate('/login')
+                )
+                .catch((err) => console.error(err))
+        } else {
+            console.log('Error')
         }
     }
 
-    const handleInput = (event) => {
-        setValues({ ...values, [event.target.name]: [event.target.value] })
+    const handleUserInput = (event) => {
+        setUserInfo({ ...userInfo, [event.target.name]: event.target.value })
+    }
+    const handleCredentialInput = (event) => {
+        setCredentials({
+            ...credentials,
+            [event.target.name]: event.target.value,
+        })
     }
 
-    const inputs = fields.map((item) => (
+    const infoInputs = infoFields.map((item) => (
         <FormInput
             key={item.id}
             type={item.type}
             name={item.name}
             placeholder={item.placeholder}
             icon={item.icon}
-            handleInput={handleInput}></FormInput>
+            handleInput={handleUserInput}></FormInput>
+    ))
+
+    const credentialsInputs = credentialsFields.map((item) => (
+        <FormInput
+            key={item.id}
+            type={item.type}
+            name={item.name}
+            placeholder={item.placeholder}
+            icon={item.icon}
+            handleInput={handleCredentialInput}></FormInput>
     ))
 
     return (
@@ -130,7 +143,8 @@ const Register = () => {
             <FormWrapper
                 title={'Nueva cuenta'}
                 handleSubmit={handleSubmit}>
-                {inputs}
+                {infoInputs}
+                {credentialsInputs}
                 <FormButton>Registrase</FormButton>
                 <FormLink
                     linkText={'Ingresa'}

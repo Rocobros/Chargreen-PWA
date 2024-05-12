@@ -78,18 +78,18 @@ const ModeratorFrom = () => {
         event.preventDefault()
 
         if (!RegisterValidation(values)) {
-            axios.get('http://localhost:8081/fk').then((res) => {
+            axios.get('http://localhost:3000/fk').then((res) => {
                 const reqVals = {
                     ...values,
                     ['fk']: [res.data.id + 1],
                 }
                 return axios
-                    .post('http://localhost:8081/register/credentials', reqVals)
+                    .post('http://localhost:3000/register/credentials', reqVals)
                     .catch((err) => console.log(err))
                     .then(() => {
                         axios
                             .post(
-                                'http://localhost:8081/register/moderator',
+                                'http://localhost:3000/register/moderator',
                                 reqVals
                             )
                             .catch((err) => {
