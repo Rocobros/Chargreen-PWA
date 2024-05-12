@@ -36,7 +36,7 @@ router.get('/:id', (req, res) => {
 // Crear una nueva credencial
 router.post('/', async (req, res) => {
     const { Usuario, Contrasena } = req.body
-    const hashedPassword = await bcrypt.hash(Contrasena, 8)
+    const hashedPassword = await bcrypt.hash(Contrasena, 10)
 
     db.query(
         'INSERT INTO credenciales (Usuario, Contrasena) VALUES (?, ?)',
@@ -60,7 +60,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     const { Usuario, Contrasena } = req.body
     // Encripta la contraseña antes de actualizarla en la base de datos
-    const hashedPassword = await bcrypt.hash(Contrasena, 8)
+    const hashedPassword = await bcrypt.hash(Contrasena, 10)
 
     db.query(
         'UPDATE credenciales SET Usuario = ?, Contrasena = ? WHERE Id = ?',

@@ -63,7 +63,7 @@ const Login = ({ setUserRole, setUserId }) => {
     }
 
     const handleInput = (event) => {
-        setValues({ ...values, [event.target.name]: [event.target.value] })
+        setValues({ ...values, [event.target.name]: event.target.value })
     }
 
     const inputs = fields.map((item) => (
@@ -77,7 +77,7 @@ const Login = ({ setUserRole, setUserId }) => {
     ))
 
     return (
-        <div className="flex justify-center items-center h-screen">
+        <div className="flex justify-center items-center h-screen overflow-hidden">
             <FormWrapper
                 title="Ingresar"
                 handleSubmit={handleSubmit}>

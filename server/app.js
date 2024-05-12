@@ -4,6 +4,7 @@ const cors = require('cors')
 const { transporter, mailOptions } = require('./utils/sendEmail')
 const makeToken = require('./utils/makeToken')
 const db = require('./db.js')
+const bcrypt = require('bcryptjs')
 
 const botellasLatasRouter = require('./api/botellasLatasRouter.js')
 const codigosRouter = require('./api/codigosRouter.js')
@@ -45,7 +46,7 @@ app.post('/sendToEsp', (req, res) => {
         .catch((error) => res.status(500).json({ message: error.message }))
 })
 
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
     const { username, password } = req.body
 
     // Check if username and password are provided
@@ -55,64 +56,92 @@ app.post('/login', (req, res) => {
             .json({ message: 'Username and password are required' })
     }
 
-    // Check credentials against the regular users table
+    // Retrieve the hashed password from the database
     db.query(
-        'SELECT * FROM credenciales WHERE usuario = ? AND contrasena = ?',
-        [username, password],
-        (error, credentialsResult, fields) => {
+        'SELECT * FROM credenciales WHERE Usuario = ?',
+        [username],
+        async (error, credentialsResult, fields) => {
             if (error) {
-                console.error('Error querying regular users database:', error)
+                console.error('Error querying the database:', error)
                 return res.status(500).send('Internal Server Error')
             }
-            // Check if user is found in the regular users table
+
+            // Check if user is found
             if (credentialsResult.length > 0) {
-                const credentialId = credentialsResult[0].Id
+                const user = credentialsResult[0]
 
-                db.query(
-                    'SELECT * FROM usuariosnormales WHERE credencial = ?',
-                    credentialId,
-                    (error, userResults, fields) => {
-                        if (error) {
-                            console.error('Error querying users table:', error)
-                            return res.status(500).send('Internal Server Error')
-                        }
+                // Compare the provided password with the hashed password in the database
+                const match = await bcrypt.compare(password, user.Contrasena)
 
-                        // Check if user is found in the users table
-                        if (userResults.length > 0) {
-                            return res.json({
-                                message: 'Login successful',
-                                role: 'user',
-                                id: userResults[0].Registro,
-                            })
-                        }
+                if (match) {
+                    // Password matches, proceed to check user role
+                    const credentialId = user.Id
 
-                        db.query(
-                            'SELECT * FROM usuariosadministradores WHERE credencial = ?',
-                            credentialId,
-                            (error, adminResults, fields) => {
-                                if (error) {
-                                    console.error(
-                                        'Error querying admins table:',
-                                        error
-                                    )
-                                    return res
-                                        .status(500)
-                                        .send('Internal Server Error')
-                                }
-
-                                // Check if user is found in the users table
-                                if (adminResults.length > 0) {
-                                    return res.json({
-                                        message: 'Login successful',
-                                        role: 'admin',
-                                        id: adminResults[0].Registro,
-                                    })
-                                }
+                    db.query(
+                        'SELECT * FROM usuariosnormales WHERE credencial = ?',
+                        credentialId,
+                        (error, userResults, fields) => {
+                            if (error) {
+                                console.error(
+                                    'Error querying users table:',
+                                    error
+                                )
+                                return res
+                                    .status(500)
+                                    .send('Internal Server Error')
                             }
-                        )
-                    }
-                )
+
+                            // Check if user is found in the users table
+                            if (userResults.length > 0) {
+                                return res.json({
+                                    message: 'Login successful',
+                                    role: 'user',
+                                    id: userResults[0].Registro,
+                                })
+                            }
+
+                            // Check if the user might be an admin
+                            db.query(
+                                'SELECT * FROM usuariosadministradores WHERE credencial = ?',
+                                credentialId,
+                                (error, adminResults, fields) => {
+                                    if (error) {
+                                        console.error(
+                                            'Error querying admins table:',
+                                            error
+                                        )
+                                        return res
+                                            .status(500)
+                                            .send('Internal Server Error')
+                                    }
+
+                                    if (adminResults.length > 0) {
+                                        return res.json({
+                                            message: 'Login successful',
+                                            role: 'admin',
+                                            id: adminResults[0].Registro,
+                                        })
+                                    } else {
+                                        // No user found in either table
+                                        return res
+                                            .status(401)
+                                            .json({
+                                                message:
+                                                    'User does not exist in any user group',
+                                            })
+                                    }
+                                }
+                            )
+                        }
+                    )
+                } else {
+                    // Password does not match
+                    return res
+                        .status(401)
+                        .json({ message: 'Invalid username or password' })
+                }
             } else {
+                // No user found
                 return res
                     .status(401)
                     .json({ message: 'Invalid username or password' })
@@ -120,6 +149,7 @@ app.post('/login', (req, res) => {
         }
     )
 })
+
 
 app.post('/register/moderator', (req, res) => {
     const sql =
