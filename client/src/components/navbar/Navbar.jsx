@@ -3,71 +3,69 @@ import toggleMenu from '../../func/NavbarMenu.js'
 import { Link } from 'react-router-dom'
 
 const Navbar = ({ title }) => {
-    return (
-        <header className="bg-primary ">
-            <nav className="text-text flex justify-between items-center mx-auto px-8 py-2">
-                <div>
-                    <h1 className="text-4xl font-primary">{title}</h1>
-                </div>
+  return (
+    <header className="bg-primary ">
+      <nav className="text-text flex justify-between items-center mx-auto px-8 py-2">
+        <div>
+          <h1 className="text-4xl font-primary">{title}</h1>
+        </div>
 
-                <div className="nav-links md:static absolute bg-primary md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto w-full flex items-center px-5">
-                    <ul className="text-xl font-secondary flex md:flex-row flex-col md:items-center md:gap-20 gap-8">
-                        <li>
-                            <a
-                                className="hover:text-accent"
-                                href="#">
-                                Inicio
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                className="hover:text-accent"
-                                href="">
-                                Novedades
-                            </a>
-                        </li>
-                        <li>
-                            <Link to="/tiempo">
-                                <span>Cargar</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/map">
-                                <span>Mapa</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <a
-                                className="hover:text-accent"
-                                href="">
-                                Metricas
-                            </a>
-                        </li>
-                    </ul>
-                </div>
+        <div className="nav-links md:static absolute bg-primary md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto w-full flex items-center px-5">
+          <ul className="text-xl font-secondary flex md:flex-row flex-col md:items-center md:gap-20 gap-8">
+            <li>
+              <a
+                className="hover:text-accent"
+                href="#"
+              >
+                Inicio
+              </a>
+            </li>
+            <li>
+              <Link to="/novedades">
+                <span>Novedades</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/tiempo">
+                <span>Cargar</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/map">
+                <span>Mapa</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/metricas">
+                <span>Metricas</span>
+              </Link>
+            </li>
+          </ul>
+        </div>
 
-                <div className="flex items-center gap-6">
-                    <Link to="/editUser">
-                        <span className="">
-                            <i className="bx bxs-user text-3xl"></i>
-                        </span>
-                    </Link>
+        <div className="flex items-center gap-6">
+          <Link to="/editUser">
+            <span className="">
+              <i className="bx bxs-user text-3xl"></i>
+            </span>
+          </Link>
 
-                    <Link to="/login">
-                        <span className="">
-                            <i className="bx bxs-log-in-circle text-3xl"></i>
-                        </span>
-                    </Link>
+          <Link to="/login">
+            <span className="">
+              <i className="bx bxs-log-in-circle text-3xl"></i>
+            </span>
+          </Link>
 
-                    <span>
-                        <i
-                            onClick={toggleMenu}
-                            className="bx bx-menu text-3xl md:hidden"></i>
-                    </span>
-                </div>
-            </nav>
-        </header>
-    )
+          <span>
+            <i
+              onClick={toggleMenu}
+              className="bx bx-menu text-3xl md:hidden"
+            ></i>
+          </span>
+        </div>
+      </nav>
+    </header>
+  )
 }
 
 export default Navbar
