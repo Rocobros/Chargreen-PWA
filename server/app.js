@@ -214,10 +214,11 @@ app.post('/recuperar/:token/:id', (req, res) => {
   db.query(activeToken, (err, data) => {
     if (data.length > 0) {
       const getUser = `select credencial as id from usuariosnormales where registro = ${registro}`
-      db.query(getUser, (err, data) => {
+      db.query(getUser, async (err, data) => {
         console.log(data)
         const id = data[0].id
-        const query = `update credenciales set Contrasena = "${password}" where id = ${id}`
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const query = `update credenciales set Contrasena = "${hashedPassword}" where id = ${id}`
         db.query(query)
 
         const deactivateToken = `update tokens set estado = 'D' where usuarionormal = ${registro}`

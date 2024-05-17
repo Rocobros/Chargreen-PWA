@@ -21,7 +21,9 @@ const MetricasPage = () => {
 
   useEffect(() => {
     fetch(
-      `http://localhost:3000/api/metricas/${localStorage.getItem('userId')}`
+      `http://140.84.161.236:3000/api/metricas/${localStorage.getItem(
+        'userId'
+      )}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -36,7 +38,9 @@ const MetricasPage = () => {
 
   useEffect(() => {
     fetch(
-      `http://localhost:3000/api/usuarios/${localStorage.getItem('userId')}`
+      `http://140.84.161.236:3000/api/usuarios/${localStorage.getItem(
+        'userId'
+      )}`
     )
       .then((response) => response.json())
       .then((data) => {
