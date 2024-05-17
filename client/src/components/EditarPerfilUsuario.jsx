@@ -5,12 +5,14 @@ import { useNavigate } from 'react-router-dom'
 function EditarPerfilUsuario() {
   const [profileData, setProfileData] = useState({})
   const navigate = useNavigate()
-  
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/usuarios/${localStorage.getItem('userId')}`
+          `http://140.84.161.236:3000/api/usuarios/${localStorage.getItem(
+            'userId'
+          )}`
         )
         setProfileData(response.data)
       } catch (error) {
@@ -32,7 +34,9 @@ function EditarPerfilUsuario() {
     event.preventDefault()
     const editUser = async () => {
       const response = await axios.put(
-        `http://localhost:3000/api/usuarios/${localStorage.getItem('userId')}`,
+        `http://140.84.161.236:3000/api/usuarios/${localStorage.getItem(
+          'userId'
+        )}`,
         profileData
       )
       if (response.status === 200) {

@@ -23,67 +23,67 @@ function App() {
   return (
     <>
       <BrowserRouter>
-        {/* <LoadScript
+        <LoadScript
           googleMapsApiKey="AIzaSyDFjyE9Fn-mtW4eJcNGKnqLVB7cnI3iTDE"
           loadingElement={<div>Loading...</div>}
-        > */}
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Home
-                userRole={userRole}
-                userId={userId}
-              />
-            }
-          ></Route>
-          <Route
-            path="/register"
-            element={<Register />}
-          ></Route>
-          <Route
-            path="/login"
-            element={
-              <Login
-                setUserRole={setUserRole}
-                setUserId={setUserId}
-              />
-            }
-          ></Route>
-          <Route
-            path="/editUser"
-            element={<EditarPerfilUsuario />}
-          ></Route>
-          <Route
-            path="/novedades"
-            element={<Novedades />}
-          ></Route>
-          <Route
-            path="/olvidar"
-            element={<MailForm />}
-          ></Route>
-          <Route
-            path="/recuperar"
-            element={<PasswordForm />}
-          ></Route>
-          <Route
-            path="/agregar/moderador"
-            element={<ModeratorFrom />}
-          ></Route>
-          <Route
-            path="/agregar/torre"
-            element={<TowerForm userId={userId} />}
-          ></Route>
-          <Route
-            path="/tiempo"
-            element={<CountdownTimer userId={userId} />}
-          />
-          <Route
-            path="/map"
-            element={<MapPage />}
-          />
-        </Routes>
-        {/* </LoadScript> */}
+        >
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Home
+                  userRole={userRole}
+                  userId={userId}
+                />
+              }
+            ></Route>
+            <Route
+              path="/register"
+              element={<Register />}
+            ></Route>
+            <Route
+              path="/login"
+              element={
+                <Login
+                  setUserRole={setUserRole}
+                  setUserId={setUserId}
+                />
+              }
+            ></Route>
+            <Route
+              path="/editUser"
+              element={<EditarPerfilUsuario />}
+            ></Route>
+            <Route
+              path="/novedades"
+              element={<Novedades />}
+            ></Route>
+            <Route
+              path="/olvidar"
+              element={<MailForm />}
+            ></Route>
+            <Route
+              path="/recuperar"
+              element={<PasswordForm />}
+            ></Route>
+            <Route
+              path="/agregar/moderador"
+              element={<ModeratorFrom />}
+            ></Route>
+            <Route
+              path="/agregar/torre"
+              element={<TowerForm userId={userId} />}
+            ></Route>
+            <Route
+              path="/tiempo"
+              element={<CountdownTimer userId={userId} />}
+            />
+            <Route
+              path="/map"
+              element={<MapPage />}
+            />
+          </Routes>
+        </LoadScript>
       </BrowserRouter>
     </>
   )
