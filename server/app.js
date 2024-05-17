@@ -39,232 +39,232 @@ app.use('/api/moderadores', moderRouter)
 app.use('/api/usuarios', usuariosRouter)
 
 app.post('/sendToEsp', (req, res) => {
-    const data = req.body
-    app.locals
-        .sendDataToEsp(JSON.stringify(data))
-        .then(() => res.json({ message: 'Datos enviados al ESP.' }))
-        .catch((error) => res.status(500).json({ message: error.message }))
+  const data = req.body
+  app.locals
+    .sendDataToEsp(JSON.stringify(data))
+    .then(() => res.json({ message: 'Datos enviados al ESP.' }))
+    .catch((error) => res.status(500).json({ message: error.message }))
+})
+
+app.get('/api/metricas/:id', (req, res) => {
+  db.query(
+    'SELECT registro.id as Id, registro.Fecha as Fecha, usuariosnormales.Registro as IdUsuario, botellaslatas.Id as IdBotella, botellaslatas.Nombre as Botella, botellaslatas.Segundos as Segundos, torrecarga.Id as IdTorre ,torrecarga.Nombre as Torre FROM registro INNER JOIN usuariosnormales ON registro.UsuarioNormal=usuariosnormales.Registro INNER JOIN botellaslatas ON registro.Botella=botellaslatas.Id INNER JOIN salidas ON registro.Salida=salidas.Id INNER JOIN torrecarga ON salidas.TorreCarga=torrecarga.Id WHERE usuariosnormales.Registro = ?',
+    req.params.id,
+    (error, results) => {
+      if (error) {
+        console.error('Error encontrado: ', error)
+        return res
+          .status(500)
+          .json({ message: 'Error al obtener la informacion. ' })
+      }
+      res.status(200).json(results)
+    }
+  )
 })
 
 app.post('/login', async (req, res) => {
-    const { username, password } = req.body
+  const { username, password } = req.body
 
-    // Check if username and password are provided
-    if (!username || !password) {
-        return res
-            .status(400)
-            .json({ message: 'Username and password are required' })
-    }
+  // Check if username and password are provided
+  if (!username || !password) {
+    return res
+      .status(400)
+      .json({ message: 'Username and password are required' })
+  }
 
-    // Retrieve the hashed password from the database
-    db.query(
-        'SELECT * FROM credenciales WHERE Usuario = ?',
-        [username],
-        async (error, credentialsResult, fields) => {
-            if (error) {
-                console.error('Error querying the database:', error)
+  // Retrieve the hashed password from the database
+  db.query(
+    'SELECT * FROM credenciales WHERE Usuario = ?',
+    [username],
+    async (error, credentialsResult, fields) => {
+      if (error) {
+        console.error('Error querying the database:', error)
+        return res.status(500).send('Internal Server Error')
+      }
+
+      // Check if user is found
+      if (credentialsResult.length > 0) {
+        const user = credentialsResult[0]
+
+        // Compare the provided password with the hashed password in the database
+        const match = await bcrypt.compare(password, user.Contrasena)
+
+        if (match) {
+          // Password matches, proceed to check user role
+          const credentialId = user.Id
+
+          db.query(
+            'SELECT * FROM usuariosnormales WHERE credencial = ?',
+            credentialId,
+            (error, userResults, fields) => {
+              if (error) {
+                console.error('Error querying users table:', error)
                 return res.status(500).send('Internal Server Error')
-            }
+              }
 
-            // Check if user is found
-            if (credentialsResult.length > 0) {
-                const user = credentialsResult[0]
+              // Check if user is found in the users table
+              if (userResults.length > 0) {
+                return res.json({
+                  message: 'Login successful',
+                  role: 'user',
+                  id: userResults[0].Registro,
+                })
+              }
 
-                // Compare the provided password with the hashed password in the database
-                const match = await bcrypt.compare(password, user.Contrasena)
+              // Check if the user might be an admin
+              db.query(
+                'SELECT * FROM usuariosadministradores WHERE credencial = ?',
+                credentialId,
+                (error, adminResults, fields) => {
+                  if (error) {
+                    console.error('Error querying admins table:', error)
+                    return res.status(500).send('Internal Server Error')
+                  }
 
-                if (match) {
-                    // Password matches, proceed to check user role
-                    const credentialId = user.Id
-
-                    db.query(
-                        'SELECT * FROM usuariosnormales WHERE credencial = ?',
-                        credentialId,
-                        (error, userResults, fields) => {
-                            if (error) {
-                                console.error(
-                                    'Error querying users table:',
-                                    error
-                                )
-                                return res
-                                    .status(500)
-                                    .send('Internal Server Error')
-                            }
-
-                            // Check if user is found in the users table
-                            if (userResults.length > 0) {
-                                return res.json({
-                                    message: 'Login successful',
-                                    role: 'user',
-                                    id: userResults[0].Registro,
-                                })
-                            }
-
-                            // Check if the user might be an admin
-                            db.query(
-                                'SELECT * FROM usuariosadministradores WHERE credencial = ?',
-                                credentialId,
-                                (error, adminResults, fields) => {
-                                    if (error) {
-                                        console.error(
-                                            'Error querying admins table:',
-                                            error
-                                        )
-                                        return res
-                                            .status(500)
-                                            .send('Internal Server Error')
-                                    }
-
-                                    if (adminResults.length > 0) {
-                                        return res.json({
-                                            message: 'Login successful',
-                                            role: 'admin',
-                                            id: adminResults[0].Registro,
-                                        })
-                                    } else {
-                                        // No user found in either table
-                                        return res
-                                            .status(401)
-                                            .json({
-                                                message:
-                                                    'User does not exist in any user group',
-                                            })
-                                    }
-                                }
-                            )
-                        }
-                    )
-                } else {
-                    // Password does not match
-                    return res
-                        .status(401)
-                        .json({ message: 'Invalid username or password' })
+                  if (adminResults.length > 0) {
+                    return res.json({
+                      message: 'Login successful',
+                      role: 'admin',
+                      id: adminResults[0].Registro,
+                    })
+                  } else {
+                    // No user found in either table
+                    return res.status(401).json({
+                      message: 'User does not exist in any user group',
+                    })
+                  }
                 }
-            } else {
-                // No user found
-                return res
-                    .status(401)
-                    .json({ message: 'Invalid username or password' })
+              )
             }
+          )
+        } else {
+          // Password does not match
+          return res
+            .status(401)
+            .json({ message: 'Invalid username or password' })
         }
-    )
+      } else {
+        // No user found
+        return res.status(401).json({ message: 'Invalid username or password' })
+      }
+    }
+  )
 })
 
-
 app.post('/register/moderator', (req, res) => {
-    const sql =
-        'INSERT INTO `usuariosmoderadores`(`nombre`, `apellidopaterno`, `apellidomaterno`, `celular`, `correo`, `credencial`) VALUES (?)'
-    const vals = [
-        req.body.name[0],
-        req.body.apep[0],
-        req.body.apem[0],
-        req.body.tel[0],
-        req.body.email[0],
-        req.body.fk[0],
-    ]
+  const sql =
+    'INSERT INTO `usuariosmoderadores`(`nombre`, `apellidopaterno`, `apellidomaterno`, `celular`, `correo`, `credencial`) VALUES (?)'
+  const vals = [
+    req.body.name[0],
+    req.body.apep[0],
+    req.body.apem[0],
+    req.body.tel[0],
+    req.body.email[0],
+    req.body.fk[0],
+  ]
 
-    db.query(sql, [vals], (err, data) => {
-        if (err) {
-            console.log(err)
-            return res.json('Error inserting to Users')
-        }
-        return res.json(data)
-    })
+  db.query(sql, [vals], (err, data) => {
+    if (err) {
+      console.log(err)
+      return res.json('Error inserting to Users')
+    }
+    return res.json(data)
+  })
 })
 
 app.get('/locations', (req, res) => {
-    db.query(
-        'SELECT id, nombre, ST_X(coordenadas) AS latitud, ST_Y(coordenadas) AS longitud FROM torrecarga',
-        (err, results) => {
-            if (err) {
-                console.error('Error getting locations: ' + err.stack)
-                res.status(500).send('Error getting locations')
-                return
-            }
-            res.json(results)
-        }
-    )
+  db.query(
+    'SELECT id, nombre, ST_X(coordenadas) AS latitud, ST_Y(coordenadas) AS longitud FROM torrecarga',
+    (err, results) => {
+      if (err) {
+        console.error('Error getting locations: ' + err.stack)
+        res.status(500).send('Error getting locations')
+        return
+      }
+      res.json(results)
+    }
+  )
 })
 
 app.post('/register/tower', (req, res) => {
-    const { nombre, latitud, longitud, admin } = req.body
-    const sql =
-        'INSERT INTO torrecarga (nombre, coordenadas, usuarioadministrador) VALUES (?, POINTFROMTEXT(?), ?)'
-    const coordinates = `POINT(${latitud} ${longitud})`
+  const { nombre, latitud, longitud, admin } = req.body
+  const sql =
+    'INSERT INTO torrecarga (nombre, coordenadas, usuarioadministrador) VALUES (?, POINTFROMTEXT(?), ?)'
+  const coordinates = `POINT(${latitud} ${longitud})`
 
-    const vals = [nombre, coordinates, admin]
-    console.log(vals)
+  const vals = [nombre, coordinates, admin]
+  console.log(vals)
 
-    db.query(sql, vals, (err, data) => {
-        if (err) {
-            console.log(err)
-            return res.json('Error inserting to Users')
-        }
-        return res.json(data)
-    })
+  db.query(sql, vals, (err, data) => {
+    if (err) {
+      console.log(err)
+      return res.json('Error inserting to Users')
+    }
+    return res.json(data)
+  })
 })
 
 app.post('/recuperar/:token/:id', (req, res) => {
-    const password = req.body[0].password[0]
+  const password = req.body[0].password[0]
 
-    const token = req.params.token
-    const registro = req.params.id
+  const token = req.params.token
+  const registro = req.params.id
 
-    const activeToken = `select * from tokens where codigo = "${token}" and usuarionormal = ${registro} and estado = 'A'`
-    db.query(activeToken, (err, data) => {
-        if (data.length > 0) {
-            const getUser = `select credencial as id from usuariosnormales where registro = ${registro}`
-            db.query(getUser, (err, data) => {
-                console.log(data)
-                const id = data[0].id
-                const query = `update credenciales set Contrasena = "${password}" where id = ${id}`
-                db.query(query)
+  const activeToken = `select * from tokens where codigo = "${token}" and usuarionormal = ${registro} and estado = 'A'`
+  db.query(activeToken, (err, data) => {
+    if (data.length > 0) {
+      const getUser = `select credencial as id from usuariosnormales where registro = ${registro}`
+      db.query(getUser, (err, data) => {
+        console.log(data)
+        const id = data[0].id
+        const query = `update credenciales set Contrasena = "${password}" where id = ${id}`
+        db.query(query)
 
-                const deactivateToken = `update tokens set estado = 'D' where usuarionormal = ${registro}`
-                db.query(deactivateToken)
-            })
-        } else {
-            res.status(400).end()
-        }
-    })
+        const deactivateToken = `update tokens set estado = 'D' where usuarionormal = ${registro}`
+        db.query(deactivateToken)
+      })
+    } else {
+      res.status(400).end()
+    }
+  })
 })
 
 app.post('/mail', (req, res) => {
-    const correo = req.body[0].correo
-    mailOptions.to = correo
+  const correo = req.body[0].correo
+  mailOptions.to = correo
 
-    const token = makeToken(10)
+  const token = makeToken(10)
 
-    const query = `select registro as id from usuariosnormales where correo = "${correo}"`
-    db.query(query, (err, data) => {
-        if (err) {
-            console.log(err.message)
-            return res.status(404).end()
-        }
+  const query = `select registro as id from usuariosnormales where correo = "${correo}"`
+  db.query(query, (err, data) => {
+    if (err) {
+      console.log(err.message)
+      return res.status(404).end()
+    }
 
-        const id = data[0].id
-        mailOptions.text = `Se ha solicitado recuperar la contraseña de la cuenta vinculada a este correo<br/>
+    const id = data[0].id
+    mailOptions.text = `Se ha solicitado recuperar la contraseña de la cuenta vinculada a este correo<br/>
         Ingresa al siguiente link para actualizarla: http://localhost:5173/recuperar?token=${token}&id=${id}<br/>
         Si no has solicitado este cambio has caso omiso al correo`
 
-        transporter.sendMail(mailOptions, function (error, info) {
-            if (error) {
-                return res.json({
-                    error: error.message,
-                })
-            }
-            const addToken =
-                'insert into tokens(codigo, estado, usuarionormal) values (?)'
-            const vals = [token, 'A', id]
-            db.query(addToken, [vals], (err, data) => {
-                if (err) {
-                    console.log(err)
-                    return res.json('Error inserting to Token')
-                }
-                return res.json(data)
-            })
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        return res.json({
+          error: error.message,
         })
+      }
+      const addToken =
+        'insert into tokens(codigo, estado, usuarionormal) values (?)'
+      const vals = [token, 'A', id]
+      db.query(addToken, [vals], (err, data) => {
+        if (err) {
+          console.log(err)
+          return res.json('Error inserting to Token')
+        }
+        return res.json(data)
+      })
     })
+  })
 })
 
 module.exports = app

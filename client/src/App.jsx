@@ -10,6 +10,7 @@ import PasswordForm from './components/PasswordForm'
 import ModeratorFrom from './components/ModeratorForm'
 import TowerForm from './components/TowerForm'
 import CountdownTimer from './components/Timer/CountdownTimer'
+import MetricasPage from './components/Metricas/MetricasPage'
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
@@ -82,6 +83,10 @@ function App() {
               path="/map"
               element={<MapPage />}
             />
+            <Route
+              path="/metricas"
+              element={<MetricasPage />}
+            ></Route>
           </Routes>
         </LoadScript>
       </BrowserRouter>
