@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import Navbar from './navbar/Navbar'
 import AdminNavbar from './navbar/AdminNavbar'
+import ModeratorNavbar from './navbar/ModeratorNavbar'
 import { useNavigate } from 'react-router-dom'
 
 const Home = ({ userRole, userId }) => {
@@ -19,9 +20,14 @@ const Home = ({ userRole, userId }) => {
         ></AdminNavbar>
       )}
 
-      {userRole === 'user' && <Navbar title={'Inicio'}></Navbar>}
+      {userRole === 'mod' && (
+        <ModeratorNavbar
+          title={'Inicio'}
+          userId={userId}
+        ></ModeratorNavbar>
+      )}
 
-      
+      {userRole === 'user' && <Navbar title={'Inicio'}></Navbar>}
     </div>
   )
 }

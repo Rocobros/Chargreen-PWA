@@ -6,9 +6,7 @@ const Novedades = () => {
 
   useEffect(() => {
     const fetchNovedades = async () => {
-      const response = await axios.get(
-        'http://140.84.161.236:3000/api/novedades'
-      )
+      const response = await axios.get('http://localhost:3000/api/novedades')
       //TODO: Obtener el nombre del moderador
       setNovedades(response.data)
     }

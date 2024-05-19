@@ -11,7 +11,7 @@ import ModeratorFrom from './components/ModeratorForm'
 import TowerForm from './components/TowerForm'
 import CountdownTimer from './components/Timer/CountdownTimer'
 import MetricasPage from './components/Metricas/MetricasPage'
-
+import Verificar from './components/Verificar'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import MapPage from './components/Map/MapPage'
@@ -66,6 +66,10 @@ function App() {
             <Route
               path="/recuperar"
               element={<PasswordForm />}
+            ></Route>
+            <Route
+              path="/verificar"
+              element={<Verificar />}
             ></Route>
             <Route
               path="/agregar/moderador"

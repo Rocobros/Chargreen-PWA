@@ -3,11 +3,13 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import LoginValidation from '../func/LoginValidation.js'
+import { Toaster, toast } from 'sonner'
 
 import FormWrapper from './FormComponents/FormWrapper.jsx'
 import FormButton from './FormComponents/FormButton.jsx'
 import FormInput from './FormComponents/FormInput.jsx'
 import FormLink from './FormComponents/FormLink.jsx'
+import validation from '../func/LoginValidation.js'
 
 const fields = [
   {
@@ -36,10 +38,11 @@ const Login = ({ setUserRole, setUserId }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault()
+    const validationError = LoginValidation(values)
 
-    if (!LoginValidation(values)) {
+    if (!validationError) {
       axios
-        .post('http://140.84.161.236:3000/login', values)
+        .post('http://localhost:3000/login', values)
         .then((res) => {
           console.log(res.data)
           if (res.data.role === 'admin') {
@@ -52,13 +55,18 @@ const Login = ({ setUserRole, setUserId }) => {
             setUserId(res.data.id)
             localStorage.setItem('userId', res.data.id)
             navigate('/')
+          } else if (res.data.role === 'mod') {
+            setUserRole('mod')
+            setUserId(res.data.id)
+            localStorage.setItem('userId', res.data.id)
+            navigate('/')
           } else {
-            console.log('Error')
+            toast.error('Error inesperado. Intente de nuevo')
           }
         })
-        .catch((err) => console.log(err))
+        .catch((err) => toast.error(err.response.data.message))
     } else {
-      console.log('Intente de nuevo')
+      toast.warning(validationError)
     }
   }
 
@@ -79,6 +87,7 @@ const Login = ({ setUserRole, setUserId }) => {
 
   return (
     <div className="flex justify-center items-center h-screen overflow-hidden">
+      <Toaster />
       <FormWrapper
         title="Ingresar"
         handleSubmit={handleSubmit}

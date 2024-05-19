@@ -67,9 +67,7 @@ app.post('/login', async (req, res) => {
 
   // Check if username and password are provided
   if (!username || !password) {
-    return res
-      .status(400)
-      .json({ message: 'Username and password are required' })
+    return res.status(400).json({ message: 'Usuario y Contraseña requeridos' })
   }
 
   // Retrieve the hashed password from the database
@@ -79,7 +77,7 @@ app.post('/login', async (req, res) => {
     async (error, credentialsResult, fields) => {
       if (error) {
         console.error('Error querying the database:', error)
-        return res.status(500).send('Internal Server Error')
+        return res.status(500).send('Error del servidor')
       }
 
       // Check if user is found
@@ -99,16 +97,22 @@ app.post('/login', async (req, res) => {
             (error, userResults, fields) => {
               if (error) {
                 console.error('Error querying users table:', error)
-                return res.status(500).send('Internal Server Error')
+                return res.status(500).send('Error del servidor')
               }
 
               // Check if user is found in the users table
               if (userResults.length > 0) {
-                return res.json({
-                  message: 'Login successful',
-                  role: 'user',
-                  id: userResults[0].Registro,
-                })
+                if (userResults[0].Estado === 'D') {
+                  return res
+                    .status(401)
+                    .json({ message: 'La cuenta no esta verificada' })
+                } else {
+                  return res.json({
+                    message: 'Login successful',
+                    role: 'user',
+                    id: userResults[0].Registro,
+                  })
+                }
               }
 
               // Check if the user might be an admin
@@ -117,8 +121,8 @@ app.post('/login', async (req, res) => {
                 credentialId,
                 (error, adminResults, fields) => {
                   if (error) {
-                    console.error('Error querying admins table:', error)
-                    return res.status(500).send('Internal Server Error')
+                    console.error('Error en la tabla administradores:', error)
+                    return res.status(500).send('Error del servidor')
                   }
 
                   if (adminResults.length > 0) {
@@ -127,12 +131,32 @@ app.post('/login', async (req, res) => {
                       role: 'admin',
                       id: adminResults[0].Registro,
                     })
-                  } else {
-                    // No user found in either table
-                    return res.status(401).json({
-                      message: 'User does not exist in any user group',
-                    })
                   }
+
+                  // Check if the user might be a mod
+                  db.query(
+                    'SELECT * FROM usuariosmoderadores WHERE credencial = ?',
+                    credentialId,
+                    (error, modResults, fields) => {
+                      if (error) {
+                        console.error('Error en la tabla moderadores', error)
+                        return res.status(500).send('Error del servidor')
+                      }
+
+                      if (modResults.length > 0) {
+                        return res.json({
+                          message: 'Login successful',
+                          role: 'mod',
+                          id: modResults[0].Registro,
+                        })
+                      } else {
+                        // No user found in either table
+                        return res.status(401).json({
+                          message: 'El usuario no existe',
+                        })
+                      }
+                    }
+                  )
                 }
               )
             }
@@ -141,11 +165,13 @@ app.post('/login', async (req, res) => {
           // Password does not match
           return res
             .status(401)
-            .json({ message: 'Invalid username or password' })
+            .json({ message: 'Usuario o contraseña incorrectos' })
         }
       } else {
         // No user found
-        return res.status(401).json({ message: 'Invalid username or password' })
+        return res
+          .status(401)
+          .json({ message: 'Usuario o contraseña incorrectos' })
       }
     }
   )
