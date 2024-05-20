@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-05-2024 a las 09:15:15
--- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Tiempo de generación: 17-05-2024 a las 17:59:12
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -84,7 +84,8 @@ INSERT INTO `credenciales` (`Id`, `Usuario`, `Contrasena`) VALUES
 (5, 'Albertw17', 'Albert123'),
 (6, 'Diego123', 'Diego123'),
 (7, 'Rodrigo1234', 'Rodrigo1234'),
-(29, 'Monika', '$2a$08$COv4rxfHzuCdde1gPkZRzOxSFpg1gY4PHPHV5kdV2tOL/CYcUfSdG');
+(29, 'Monika', '$2a$08$COv4rxfHzuCdde1gPkZRzOxSFpg1gY4PHPHV5kdV2tOL/CYcUfSdG'),
+(31, 'Wachos17', '$2a$10$vS3MdOQ6sGGcmqWkk.bEwOUTQ1/mu.rs5HjY6bmOWA/yi.3Z0Rile');
 
 -- --------------------------------------------------------
 
@@ -230,21 +231,6 @@ CREATE TABLE `tokens` (
   `UsuarioNormal` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `tokens`
---
-
-INSERT INTO `tokens` (`Id`, `Codigo`, `Estado`, `UsuarioNormal`) VALUES
-(1, '2000', 'D', 2),
-(2, '2000', 'D', 2),
-(3, '2000', 'D', 2),
-(4, '2000', 'D', 2),
-(7, '2000', 'D', 2),
-(8, '2', 'D', 2),
-(18, 'ABC123', 'D', 2),
-(20, '213124324', 'A', 16),
-(21, '213124324', 'A', 2);
-
 -- --------------------------------------------------------
 
 --
@@ -361,7 +347,8 @@ CREATE TABLE `usuariosnormales` (
 INSERT INTO `usuariosnormales` (`Registro`, `Nombre`, `ApellidoPaterno`, `ApellidoMaterno`, `Celular`, `Correo`, `FechaCreacion`, `Tiempo`, `Estado`, `Nivel`, `Credencial`) VALUES
 (2, 'Rodrigo', 'Romero', 'Corvera', '3316346586', 'rocobros21@gmail.com', '2024-03-15', 9000, 'A', 1, 1),
 (3, 'Diego', 'Romero', 'Corvera', '3338465252', 'diego2105@gmail.com', '2024-03-15', 6180, 'A', 1, 2),
-(16, 'Monica', 'Corvera', 'Romo', '3318107819', 'monicorverar@gmail.com', '2024-04-17', 0, 'D', 1, 29);
+(16, 'Monica', 'Corvera', 'Romo', '3318107819', 'monicorverar@gmail.com', '2024-04-17', 0, 'D', 1, 29),
+(20, 'Albert', 'Wachi', 'Peña', '3312346578', 'a20300686@ceti.mx', '2024-05-17', 0, 'D', 1, 31);
 
 --
 -- Índices para tablas volcadas
@@ -471,7 +458,7 @@ ALTER TABLE `chatbot`
 -- AUTO_INCREMENT de la tabla `credenciales`
 --
 ALTER TABLE `credenciales`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `nivelusuario`
@@ -490,6 +477,42 @@ ALTER TABLE `novedades`
 --
 ALTER TABLE `registro`
   MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT de la tabla `salidas`
+--
+ALTER TABLE `salidas`
+  MODIFY `Id` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT de la tabla `tokens`
+--
+ALTER TABLE `tokens`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+
+--
+-- AUTO_INCREMENT de la tabla `torrecarga`
+--
+ALTER TABLE `torrecarga`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+
+--
+-- AUTO_INCREMENT de la tabla `usuariosadministradores`
+--
+ALTER TABLE `usuariosadministradores`
+  MODIFY `Registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT de la tabla `usuariosmoderadores`
+--
+ALTER TABLE `usuariosmoderadores`
+  MODIFY `Registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT de la tabla `usuariosnormales`
+--
+ALTER TABLE `usuariosnormales`
+  MODIFY `Registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 DELIMITER $$
 --

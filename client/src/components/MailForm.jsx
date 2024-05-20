@@ -23,7 +23,7 @@ const UpdatePassword = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     axios
-      .post('http://140.84.161.236:3000/mail', [{ correo: correo }])
+      .post('https://chargreen.com.mx/api/mail', [{ correo: correo }])
       .then(() => {
         setMessage(`Se envio un codigo al correo ${correo}`)
       })

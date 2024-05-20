@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
-
 import RegisterValidation from '../func/RegisterValdidation.js'
+import { Toaster, toast } from 'sonner'
 
 import FormWrapper from './FormComponents/FormWrapper.jsx'
 import FormButton from './FormComponents/FormButton.jsx'
@@ -79,30 +79,47 @@ const Register = () => {
     Confirmacion: '',
   })
 
-  const [error, setError] = useState('')
+  const [values, setValues] = useState()
 
   const navigate = useNavigate()
 
+  useEffect(() => {
+    const values = { ...userInfo, ...credentials }
+    setValues(values)
+  }, [userInfo, credentials])
+
   const handleSubmit = (event) => {
     event.preventDefault()
-    setError(RegisterValidation(userInfo))
+    const validationError = RegisterValidation(values)
 
-    if (!RegisterValidation(userInfo)) {
+    if (!validationError) {
       axios
-        .post('http://140.84.161.236:3000/api/credenciales', credentials)
-        .then((res) => {
-          console.log({ ...userInfo, Credencial: res.data.id })
-          return axios
-            .post('http://140.84.161.236:3000/api/usuarios', {
-              ...userInfo,
-              Credencial: res.data.id,
-            })
-            .catch((err) => console.log(err))
+        .post('https://chargreen.com.mx/api/credenciales', credentials)
+        .then(async (res) => {
+          try {
+            return await axios
+              .post('https://chargreen.com.mx/api/usuarios', {
+                ...userInfo,
+                Credencial: res.data.id,
+              })
+              .then(() => {
+                navigate('/login')
+              })
+          } catch (err) {
+            if (err.response.status === 409) {
+              await axios.delete(
+                `https://chargreen.com.mx/api/credenciales/${res.data.id}`
+              )
+              return toast.warning(err.response.data.message)
+            }
+            return toast.error(err.response.data.message)
+          }
         })
-        .then(navigate('/login'))
-        .catch((err) => console.error(err))
+        .catch(async (err) => {
+          return toast.error(err.response.data.message)
+        })
     } else {
-      console.log('Error')
+      toast.warning(validationError)
     }
   }
 
@@ -140,13 +157,14 @@ const Register = () => {
 
   return (
     <div className="flex justify-center items-center h-screen bg-background">
+      <Toaster />
       <FormWrapper
         title={'Nueva cuenta'}
         handleSubmit={handleSubmit}
       >
         {infoInputs}
         {credentialsInputs}
-        <FormButton>Registrase</FormButton>
+        <FormButton>Registrarse</FormButton>
         <FormLink
           linkText={'Ingresa'}
           linkTo={'/login'}

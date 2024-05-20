@@ -38,7 +38,7 @@ app.use('/api/admins', adminRouter)
 app.use('/api/moderadores', moderRouter)
 app.use('/api/usuarios', usuariosRouter)
 
-app.post('/sendToEsp', (req, res) => {
+app.post('/api/sendToEsp', (req, res) => {
   const data = req.body
   app.locals
     .sendDataToEsp(JSON.stringify(data))
@@ -62,14 +62,12 @@ app.get('/api/metricas/:id', (req, res) => {
   )
 })
 
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { username, password } = req.body
 
   // Check if username and password are provided
   if (!username || !password) {
-    return res
-      .status(400)
-      .json({ message: 'Username and password are required' })
+    return res.status(400).json({ message: 'Usuario y Contraseña requeridos' })
   }
 
   // Retrieve the hashed password from the database
@@ -79,7 +77,7 @@ app.post('/login', async (req, res) => {
     async (error, credentialsResult, fields) => {
       if (error) {
         console.error('Error querying the database:', error)
-        return res.status(500).send('Internal Server Error')
+        return res.status(500).send('Error del servidor')
       }
 
       // Check if user is found
@@ -99,16 +97,22 @@ app.post('/login', async (req, res) => {
             (error, userResults, fields) => {
               if (error) {
                 console.error('Error querying users table:', error)
-                return res.status(500).send('Internal Server Error')
+                return res.status(500).send('Error del servidor')
               }
 
               // Check if user is found in the users table
               if (userResults.length > 0) {
-                return res.json({
-                  message: 'Login successful',
-                  role: 'user',
-                  id: userResults[0].Registro,
-                })
+                if (userResults[0].Estado === 'D') {
+                  return res
+                    .status(401)
+                    .json({ message: 'La cuenta no esta verificada' })
+                } else {
+                  return res.json({
+                    message: 'Login successful',
+                    role: 'user',
+                    id: userResults[0].Registro,
+                  })
+                }
               }
 
               // Check if the user might be an admin
@@ -117,8 +121,8 @@ app.post('/login', async (req, res) => {
                 credentialId,
                 (error, adminResults, fields) => {
                   if (error) {
-                    console.error('Error querying admins table:', error)
-                    return res.status(500).send('Internal Server Error')
+                    console.error('Error en la tabla administradores:', error)
+                    return res.status(500).send('Error del servidor')
                   }
 
                   if (adminResults.length > 0) {
@@ -127,12 +131,32 @@ app.post('/login', async (req, res) => {
                       role: 'admin',
                       id: adminResults[0].Registro,
                     })
-                  } else {
-                    // No user found in either table
-                    return res.status(401).json({
-                      message: 'User does not exist in any user group',
-                    })
                   }
+
+                  // Check if the user might be a mod
+                  db.query(
+                    'SELECT * FROM usuariosmoderadores WHERE credencial = ?',
+                    credentialId,
+                    (error, modResults, fields) => {
+                      if (error) {
+                        console.error('Error en la tabla moderadores', error)
+                        return res.status(500).send('Error del servidor')
+                      }
+
+                      if (modResults.length > 0) {
+                        return res.json({
+                          message: 'Login successful',
+                          role: 'mod',
+                          id: modResults[0].Registro,
+                        })
+                      } else {
+                        // No user found in either table
+                        return res.status(401).json({
+                          message: 'El usuario no existe',
+                        })
+                      }
+                    }
+                  )
                 }
               )
             }
@@ -141,70 +165,19 @@ app.post('/login', async (req, res) => {
           // Password does not match
           return res
             .status(401)
-            .json({ message: 'Invalid username or password' })
+            .json({ message: 'Usuario o contraseña incorrectos' })
         }
       } else {
         // No user found
-        return res.status(401).json({ message: 'Invalid username or password' })
+        return res
+          .status(401)
+          .json({ message: 'Usuario o contraseña incorrectos' })
       }
     }
   )
 })
 
-app.post('/register/moderator', (req, res) => {
-  const sql =
-    'INSERT INTO `usuariosmoderadores`(`nombre`, `apellidopaterno`, `apellidomaterno`, `celular`, `correo`, `credencial`) VALUES (?)'
-  const vals = [
-    req.body.name[0],
-    req.body.apep[0],
-    req.body.apem[0],
-    req.body.tel[0],
-    req.body.email[0],
-    req.body.fk[0],
-  ]
-
-  db.query(sql, [vals], (err, data) => {
-    if (err) {
-      console.log(err)
-      return res.json('Error inserting to Users')
-    }
-    return res.json(data)
-  })
-})
-
-app.get('/locations', (req, res) => {
-  db.query(
-    'SELECT id, nombre, ST_X(coordenadas) AS latitud, ST_Y(coordenadas) AS longitud FROM torrecarga',
-    (err, results) => {
-      if (err) {
-        console.error('Error getting locations: ' + err.stack)
-        res.status(500).send('Error getting locations')
-        return
-      }
-      res.json(results)
-    }
-  )
-})
-
-app.post('/register/tower', (req, res) => {
-  const { nombre, latitud, longitud, admin } = req.body
-  const sql =
-    'INSERT INTO torrecarga (nombre, coordenadas, usuarioadministrador) VALUES (?, POINTFROMTEXT(?), ?)'
-  const coordinates = `POINT(${latitud} ${longitud})`
-
-  const vals = [nombre, coordinates, admin]
-  console.log(vals)
-
-  db.query(sql, vals, (err, data) => {
-    if (err) {
-      console.log(err)
-      return res.json('Error inserting to Users')
-    }
-    return res.json(data)
-  })
-})
-
-app.post('/recuperar/:token/:id', (req, res) => {
+app.post('/api/recuperar/:token/:id', (req, res) => {
   const password = req.body[0].password[0]
 
   const token = req.params.token
@@ -230,7 +203,7 @@ app.post('/recuperar/:token/:id', (req, res) => {
   })
 })
 
-app.post('/mail', (req, res) => {
+app.post('/api/mail', (req, res) => {
   const correo = req.body[0].correo
   mailOptions.to = correo
 

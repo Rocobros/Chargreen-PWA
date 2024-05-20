@@ -21,9 +21,7 @@ const MetricasPage = () => {
 
   useEffect(() => {
     fetch(
-      `http://140.84.161.236:3000/api/metricas/${localStorage.getItem(
-        'userId'
-      )}`
+      `https://chargreen.com.mx/api/metricas/${localStorage.getItem('userId')}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -38,9 +36,7 @@ const MetricasPage = () => {
 
   useEffect(() => {
     fetch(
-      `http://140.84.161.236:3000/api/usuarios/${localStorage.getItem(
-        'userId'
-      )}`
+      `https://chargreen.com.mx/api/usuarios/${localStorage.getItem('userId')}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -198,7 +194,7 @@ const MetricasPage = () => {
         </div>
         <div className="mb-2">
           <h1 className="text-center text-2xl">
-            Cantidad de energia usada: {energyUsed} Watts
+            Cantidad de energia usada: {Math.floor(energyUsed)} Watts
           </h1>
         </div>
       </div>
