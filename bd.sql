@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-05-2024 a las 17:59:12
+-- Tiempo de generación: 20-05-2024 a las 03:25:05
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -79,13 +79,14 @@ CREATE TABLE `credenciales` (
 INSERT INTO `credenciales` (`Id`, `Usuario`, `Contrasena`) VALUES
 (1, 'Rocobros21', '$2a$10$py5/SOx0y74p0sF0M9giz.C0YLgmA4wLQxNy/5aS5yqAn2HxglN7S'),
 (2, 'RodrigoR21', 'Rocobros2105'),
-(3, 'Admin123', 'Admin123'),
+(3, 'Admin123', '$2a$10$9cPjDvzg5DAQJg.bmHLIRe2.81ewSTWlWMSFZ4aK.zouhR0M4uXey'),
 (4, 'Moder123', 'Moder123'),
-(5, 'Albertw17', 'Albert123'),
+(5, 'Moderator123', '$2a$10$g.GL8E6JuRf5PgOFCmLxXuzJHL5pIum0fx5/Whe4k0zadMJL/GNcW'),
 (6, 'Diego123', 'Diego123'),
 (7, 'Rodrigo1234', 'Rodrigo1234'),
 (29, 'Monika', '$2a$08$COv4rxfHzuCdde1gPkZRzOxSFpg1gY4PHPHV5kdV2tOL/CYcUfSdG'),
-(31, 'Wachos17', '$2a$10$vS3MdOQ6sGGcmqWkk.bEwOUTQ1/mu.rs5HjY6bmOWA/yi.3Z0Rile');
+(31, 'Wachos17', '$2a$10$vS3MdOQ6sGGcmqWkk.bEwOUTQ1/mu.rs5HjY6bmOWA/yi.3Z0Rile'),
+(65, 'Susana123', '$2a$10$95hi84Bg0uVVS/t385oo.uF7.hSDSY2AbQ6BvcgpBDBp3prsYXGhy');
 
 -- --------------------------------------------------------
 
@@ -96,15 +97,20 @@ INSERT INTO `credenciales` (`Id`, `Usuario`, `Contrasena`) VALUES
 CREATE TABLE `nivelusuario` (
   `Id` tinyint(4) NOT NULL,
   `Nombre` varchar(255) DEFAULT NULL,
-  `CantidadMinima` smallint(6) DEFAULT NULL
+  `CantidadMinima` smallint(6) DEFAULT NULL,
+  `SegundosAlMes` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `nivelusuario`
 --
 
-INSERT INTO `nivelusuario` (`Id`, `Nombre`, `CantidadMinima`) VALUES
-(1, 'Default', 0);
+INSERT INTO `nivelusuario` (`Id`, `Nombre`, `CantidadMinima`, `SegundosAlMes`) VALUES
+(2, 'Principiante Verde', 0, 0),
+(3, 'Explorador del Eco', 21, 60),
+(4, 'Defensor Ambiental', 51, 300),
+(5, 'Experto del Reciclaje', 101, 600),
+(6, 'Heroe Ecologico', 201, 900);
 
 -- --------------------------------------------------------
 
@@ -137,7 +143,7 @@ CREATE TABLE `registro` (
   `Id` int(11) NOT NULL,
   `UsuarioNormal` int(11) DEFAULT NULL,
   `Botella` tinyint(4) DEFAULT NULL,
-  `Salida` tinyint(4) DEFAULT NULL,
+  `Salida` int(11) DEFAULT NULL,
   `Fecha` date NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -190,6 +196,41 @@ CREATE TRIGGER `SumarMinutosAlUsuario` AFTER INSERT ON `registro` FOR EACH ROW B
 END
 $$
 DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `after_insert_registro` AFTER INSERT ON `registro` FOR EACH ROW BEGIN
+    DECLARE count_registros INT;
+    DECLARE current_level INT;
+    DECLARE next_level INT;
+    DECLARE min_quantity_next_level INT;
+
+    
+    SELECT COUNT(*) INTO count_registros
+    FROM registro
+    WHERE UsuarioNormal = NEW.UsuarioNormal;
+
+    
+    SELECT Nivel INTO current_level
+    FROM usuariosnormales
+    WHERE Registro = NEW.UsuarioNormal;
+
+    
+    SET next_level = current_level + 1;
+
+    
+    SELECT CantidadMinima INTO min_quantity_next_level
+    FROM nivelusuario
+    WHERE Id = next_level;
+
+    
+    IF count_registros >= min_quantity_next_level THEN
+        
+        UPDATE usuariosnormales
+        SET Nivel = next_level
+        WHERE Registro = NEW.UsuarioNormal;
+    END IF;
+END
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -198,7 +239,7 @@ DELIMITER ;
 --
 
 CREATE TABLE `salidas` (
-  `Id` tinyint(4) NOT NULL,
+  `Id` int(11) NOT NULL,
   `Numero` tinyint(1) DEFAULT NULL,
   `Estado` varchar(1) DEFAULT NULL,
   `TorreCarga` int(11) DEFAULT NULL
@@ -249,8 +290,8 @@ CREATE TABLE `torrecarga` (
 --
 
 INSERT INTO `torrecarga` (`Id`, `Nombre`, `Coordenadas`, `UsuarioAdministrador`) VALUES
-(22, 'Torre Centro GDL', 0x0000000001010000005cab2a42cfaf34404bd4d9cd6ad659c0, NULL),
-(24, 'Torre Ceti Colomos', 0x00000000010100000086babb90c9b334405c8fb793dad859c0, NULL);
+(22, 'Torre Centro GDL', 0x0000000001010000005cab2a42cfaf34404bd4d9cd6ad659c0, 1),
+(24, 'Torre Ceti Colomos', 0x00000000010100000086babb90c9b334405c8fb793dad859c0, 1);
 
 --
 -- Disparadores `torrecarga`
@@ -317,8 +358,7 @@ CREATE TABLE `usuariosmoderadores` (
 
 INSERT INTO `usuariosmoderadores` (`Registro`, `Nombre`, `ApellidoPaterno`, `ApellidoMaterno`, `Celular`, `Correo`, `FechaCreacion`, `Credencial`) VALUES
 (2, 'Albert', 'Wachi', 'Pena', '3387654321', 'a20300686@ceti.mx', NULL, 5),
-(5, 'Diego', 'Romero', 'Corvera', '3312345678', 'diegobros2105@gmail.com', NULL, 6),
-(6, 'Rodrigo', 'Romero', 'Corvear', '3316346586', 'rodrigorc2105@gmail.com', NULL, 7);
+(5, 'Diego', 'Romero', 'Corvera', '3312345678', 'diegobros2105@gmail.com', NULL, 6);
 
 -- --------------------------------------------------------
 
@@ -336,7 +376,7 @@ CREATE TABLE `usuariosnormales` (
   `FechaCreacion` date DEFAULT current_timestamp(),
   `Tiempo` int(11) NOT NULL DEFAULT 0,
   `Estado` varchar(1) NOT NULL DEFAULT 'D',
-  `Nivel` tinyint(4) NOT NULL DEFAULT 1,
+  `Nivel` tinyint(4) NOT NULL DEFAULT 2,
   `Credencial` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -345,10 +385,10 @@ CREATE TABLE `usuariosnormales` (
 --
 
 INSERT INTO `usuariosnormales` (`Registro`, `Nombre`, `ApellidoPaterno`, `ApellidoMaterno`, `Celular`, `Correo`, `FechaCreacion`, `Tiempo`, `Estado`, `Nivel`, `Credencial`) VALUES
-(2, 'Rodrigo', 'Romero', 'Corvera', '3316346586', 'rocobros21@gmail.com', '2024-03-15', 9000, 'A', 1, 1),
-(3, 'Diego', 'Romero', 'Corvera', '3338465252', 'diego2105@gmail.com', '2024-03-15', 6180, 'A', 1, 2),
-(16, 'Monica', 'Corvera', 'Romo', '3318107819', 'monicorverar@gmail.com', '2024-04-17', 0, 'D', 1, 29),
-(20, 'Albert', 'Wachi', 'Peña', '3312346578', 'a20300686@ceti.mx', '2024-05-17', 0, 'D', 1, 31);
+(2, 'Rodrigo', 'Romero', 'Corvera', '3316346586', 'rocobros21@gmail.com', '2024-03-15', 993, 'A', 2, 1),
+(3, 'Diego', 'Romero', 'Corvera', '3338465252', 'diego2105@gmail.com', '2024-03-15', 6180, 'A', 2, 2),
+(16, 'Monica', 'Corvera', 'Romo', '3318107819', 'monicorverar@gmail.com', '2024-04-17', 0, 'D', 2, 29),
+(37, 'Susana', 'Ferrer', 'Hernandez', '1234567890', 'a20300699@ceti.mx', '2024-05-17', 0, 'A', 2, 65);
 
 --
 -- Índices para tablas volcadas
@@ -393,7 +433,8 @@ ALTER TABLE `novedades`
 ALTER TABLE `registro`
   ADD PRIMARY KEY (`Id`),
   ADD KEY `Botella` (`Botella`),
-  ADD KEY `Salida` (`Salida`);
+  ADD KEY `Salida` (`Salida`),
+  ADD KEY `registro_ibfk_2` (`UsuarioNormal`);
 
 --
 -- Indices de la tabla `salidas`
@@ -458,13 +499,13 @@ ALTER TABLE `chatbot`
 -- AUTO_INCREMENT de la tabla `credenciales`
 --
 ALTER TABLE `credenciales`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT de la tabla `nivelusuario`
 --
 ALTER TABLE `nivelusuario`
-  MODIFY `Id` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Id` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `novedades`
@@ -482,13 +523,13 @@ ALTER TABLE `registro`
 -- AUTO_INCREMENT de la tabla `salidas`
 --
 ALTER TABLE `salidas`
-  MODIFY `Id` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `tokens`
 --
 ALTER TABLE `tokens`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `torrecarga`
@@ -506,19 +547,92 @@ ALTER TABLE `usuariosadministradores`
 -- AUTO_INCREMENT de la tabla `usuariosmoderadores`
 --
 ALTER TABLE `usuariosmoderadores`
-  MODIFY `Registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `Registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `usuariosnormales`
 --
 ALTER TABLE `usuariosnormales`
-  MODIFY `Registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `Registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `chatbot`
+--
+ALTER TABLE `chatbot`
+  ADD CONSTRAINT `chatbot_ibfk_1` FOREIGN KEY (`UsuarioModerador`) REFERENCES `usuariosmoderadores` (`Registro`),
+  ADD CONSTRAINT `chatbot_ibfk_2` FOREIGN KEY (`UsuarioNormal`) REFERENCES `usuariosnormales` (`Registro`);
+
+--
+-- Filtros para la tabla `novedades`
+--
+ALTER TABLE `novedades`
+  ADD CONSTRAINT `novedades_ibfk_1` FOREIGN KEY (`UsuarioModerador`) REFERENCES `usuariosmoderadores` (`Registro`);
+
+--
+-- Filtros para la tabla `registro`
+--
+ALTER TABLE `registro`
+  ADD CONSTRAINT `registro_ibfk_1` FOREIGN KEY (`Salida`) REFERENCES `salidas` (`Id`),
+  ADD CONSTRAINT `registro_ibfk_2` FOREIGN KEY (`UsuarioNormal`) REFERENCES `usuariosnormales` (`Registro`),
+  ADD CONSTRAINT `registro_ibfk_3` FOREIGN KEY (`Botella`) REFERENCES `botellaslatas` (`Id`);
+
+--
+-- Filtros para la tabla `salidas`
+--
+ALTER TABLE `salidas`
+  ADD CONSTRAINT `salidas_ibfk_1` FOREIGN KEY (`TorreCarga`) REFERENCES `torrecarga` (`Id`);
+
+--
+-- Filtros para la tabla `tokens`
+--
+ALTER TABLE `tokens`
+  ADD CONSTRAINT `tokens_ibfk_1` FOREIGN KEY (`UsuarioNormal`) REFERENCES `usuariosnormales` (`Registro`);
+
+--
+-- Filtros para la tabla `torrecarga`
+--
+ALTER TABLE `torrecarga`
+  ADD CONSTRAINT `torrescarga_ibfk_1` FOREIGN KEY (`UsuarioAdministrador`) REFERENCES `usuariosadministradores` (`Registro`);
+
+--
+-- Filtros para la tabla `usuariosadministradores`
+--
+ALTER TABLE `usuariosadministradores`
+  ADD CONSTRAINT `usuariosadministradores_ibfk_1` FOREIGN KEY (`Credencial`) REFERENCES `credenciales` (`Id`);
+
+--
+-- Filtros para la tabla `usuariosmoderadores`
+--
+ALTER TABLE `usuariosmoderadores`
+  ADD CONSTRAINT `usuariosmoderadores_ibfk_1` FOREIGN KEY (`Credencial`) REFERENCES `credenciales` (`Id`);
+
+--
+-- Filtros para la tabla `usuariosnormales`
+--
+ALTER TABLE `usuariosnormales`
+  ADD CONSTRAINT `usuariosnormales_ibfk_1` FOREIGN KEY (`Nivel`) REFERENCES `nivelusuario` (`Id`),
+  ADD CONSTRAINT `usuariosnormales_ibfk_2` FOREIGN KEY (`Credencial`) REFERENCES `credenciales` (`Id`);
 
 DELIMITER $$
 --
 -- Eventos
 --
-CREATE DEFINER=`root`@`localhost` EVENT `BorrarTokens` ON SCHEDULE EVERY 1 DAY STARTS '2024-05-04 21:56:28' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM tokens$$
+CREATE DEFINER=`root`@`localhost` EVENT `BorrarTokens` ON SCHEDULE EVERY 5 MINUTE STARTS '2024-05-04 21:56:28' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM tokens$$
+
+CREATE DEFINER=`root`@`localhost` EVENT `update_tiempo` ON SCHEDULE EVERY 1 MONTH STARTS '2024-05-19 19:03:30' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+    UPDATE usuariosnormales u
+    JOIN nivelusuario n ON u.Nivel = n.Id
+    SET u.Tiempo = u.Tiempo + n.SegundosAlMes;
+END$$
+
+CREATE DEFINER=`root`@`localhost` EVENT `reset_nivel` ON SCHEDULE EVERY 1 MONTH STARTS '2024-05-19 19:04:35' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+    UPDATE usuariosnormales
+    SET Nivel = DEFAULT(Nivel);
+END$$
 
 DELIMITER ;
 COMMIT;
