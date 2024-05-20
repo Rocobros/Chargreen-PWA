@@ -38,7 +38,7 @@ const PasswordForm = () => {
     event.preventDefault()
     if (!UpdateValidation(values)) {
       axios
-        .post(`https://chargreen.com.mx/recuperar/${token}/${id}`, [values])
+        .post(`https://chargreen.com.mx/api/recuperar/${token}/${id}`, [values])
         .then(navigate('/login'))
     }
   }

@@ -38,7 +38,7 @@ app.use('/api/admins', adminRouter)
 app.use('/api/moderadores', moderRouter)
 app.use('/api/usuarios', usuariosRouter)
 
-app.post('/sendToEsp', (req, res) => {
+app.post('/api/sendToEsp', (req, res) => {
   const data = req.body
   app.locals
     .sendDataToEsp(JSON.stringify(data))
@@ -62,7 +62,7 @@ app.get('/api/metricas/:id', (req, res) => {
   )
 })
 
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { username, password } = req.body
 
   // Check if username and password are provided
@@ -177,60 +177,7 @@ app.post('/login', async (req, res) => {
   )
 })
 
-app.post('/register/moderator', (req, res) => {
-  const sql =
-    'INSERT INTO `usuariosmoderadores`(`nombre`, `apellidopaterno`, `apellidomaterno`, `celular`, `correo`, `credencial`) VALUES (?)'
-  const vals = [
-    req.body.name[0],
-    req.body.apep[0],
-    req.body.apem[0],
-    req.body.tel[0],
-    req.body.email[0],
-    req.body.fk[0],
-  ]
-
-  db.query(sql, [vals], (err, data) => {
-    if (err) {
-      console.log(err)
-      return res.json('Error inserting to Users')
-    }
-    return res.json(data)
-  })
-})
-
-app.get('/locations', (req, res) => {
-  db.query(
-    'SELECT id, nombre, ST_X(coordenadas) AS latitud, ST_Y(coordenadas) AS longitud FROM torrecarga',
-    (err, results) => {
-      if (err) {
-        console.error('Error getting locations: ' + err.stack)
-        res.status(500).send('Error getting locations')
-        return
-      }
-      res.json(results)
-    }
-  )
-})
-
-app.post('/register/tower', (req, res) => {
-  const { nombre, latitud, longitud, admin } = req.body
-  const sql =
-    'INSERT INTO torrecarga (nombre, coordenadas, usuarioadministrador) VALUES (?, POINTFROMTEXT(?), ?)'
-  const coordinates = `POINT(${latitud} ${longitud})`
-
-  const vals = [nombre, coordinates, admin]
-  console.log(vals)
-
-  db.query(sql, vals, (err, data) => {
-    if (err) {
-      console.log(err)
-      return res.json('Error inserting to Users')
-    }
-    return res.json(data)
-  })
-})
-
-app.post('/recuperar/:token/:id', (req, res) => {
+app.post('/api/recuperar/:token/:id', (req, res) => {
   const password = req.body[0].password[0]
 
   const token = req.params.token
@@ -256,7 +203,7 @@ app.post('/recuperar/:token/:id', (req, res) => {
   })
 })
 
-app.post('/mail', (req, res) => {
+app.post('/api/mail', (req, res) => {
   const correo = req.body[0].correo
   mailOptions.to = correo
 

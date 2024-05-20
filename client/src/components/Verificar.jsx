@@ -6,7 +6,6 @@ const Verificar = () => {
   const queryParameters = new URLSearchParams(window.location.search)
   const id = queryParameters.get('id')
 
-  //TODO: UseEffect to verify user when page is loaded
   useEffect(() => {
     axios
       .put(`https://chargreen.com.mx/api/usuarios/verificar/${id}`)

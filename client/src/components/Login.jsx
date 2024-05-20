@@ -42,7 +42,7 @@ const Login = ({ setUserRole, setUserId }) => {
 
     if (!validationError) {
       axios
-        .post('https://chargreen.com.mx/login', values)
+        .post('https://chargreen.com.mx/api/login', values)
         .then((res) => {
           console.log(res.data)
           if (res.data.role === 'admin') {

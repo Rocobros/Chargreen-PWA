@@ -26,7 +26,7 @@ const MapInfoBox = ({ selectedTower, handleInfoClose, exits }) => {
       )
       const exitNum = res.data.Numero
 
-      await axios.post('https://chargreen.com.mx/sendToEsp', {
+      await axios.post('https://chargreen.com.mx/api/sendToEsp', {
         Torre: selectedTower.Id,
         Salida: Number(exitNum),
         Tiempo: userTime,

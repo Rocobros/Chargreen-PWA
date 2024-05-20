@@ -53,7 +53,7 @@ const CountdownTimer = () => {
       .then(() => {
         setIsActive(false)
         setTimeInSeconds(0)
-        axios.post('https://chargreen.com.mx/sendToEsp', {
+        axios.post('https://chargreen.com.mx/api/sendToEsp', {
           Torre: location.state.torre,
           Salida: location.state.salidaId,
           Tiempo: 0,
