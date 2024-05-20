@@ -15,22 +15,24 @@ const MapInfoBox = ({ selectedTower, handleInfoClose, exits }) => {
     try {
       const userId = localStorage.getItem('userId')
       const response = await axios.get(
-        `http://localhost:3000/api/usuarios/${userId}`
+        `https://chargreen.com.mx/api/usuarios/${userId}`
       )
       const user = response.data
       const userTime = user.Tiempo
 
       const exitId = event.target.exitSelect.value
-      const res = await axios.get(`http://localhost:3000/api/salidas/${exitId}`)
+      const res = await axios.get(
+        `https://chargreen.com.mx/api/salidas/${exitId}`
+      )
       const exitNum = res.data.Numero
 
-      await axios.post('http://localhost:3000/sendToEsp', {
+      await axios.post('https://chargreen.com.mx/sendToEsp', {
         Torre: selectedTower.Id,
         Salida: Number(exitNum),
         Tiempo: userTime,
       })
 
-      await axios.put(`http://localhost:3000/api/salidas/activar/${exitId}`)
+      await axios.put(`https://chargreen.com.mx/api/salidas/activar/${exitId}`)
       navigate('/tiempo', {
         state: { torre: selectedTower.Id, salidaId: exitId },
       })

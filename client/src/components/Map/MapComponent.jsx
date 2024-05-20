@@ -54,7 +54,7 @@ function MapComponent() {
     setSelectedLocation(torre)
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/salidas/disponibles/${torre.Id}`
+        `https://chargreen.com.mx/api/salidas/disponibles/${torre.Id}`
       )
       const data = response.data
       setAvailableExits(data)
@@ -67,7 +67,9 @@ function MapComponent() {
     const fetchLocations = async () => {
       try {
         setTimeout(async () => {
-          const response = await axios.get('http://localhost:3000/api/torres')
+          const response = await axios.get(
+            'https://chargreen.com.mx/api/torres'
+          )
 
           // Mapear los datos para asegurar que los nombres de las propiedades coincidan con lo que espera el componente Marker
           const mappedLocations = response.data.map((loc) => ({

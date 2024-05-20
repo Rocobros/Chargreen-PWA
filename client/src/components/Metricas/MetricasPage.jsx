@@ -21,7 +21,7 @@ const MetricasPage = () => {
 
   useEffect(() => {
     fetch(
-      `http://localhost:3000/api/metricas/${localStorage.getItem('userId')}`
+      `https://chargreen.com.mx/api/metricas/${localStorage.getItem('userId')}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -36,7 +36,7 @@ const MetricasPage = () => {
 
   useEffect(() => {
     fetch(
-      `http://localhost:3000/api/usuarios/${localStorage.getItem('userId')}`
+      `https://chargreen.com.mx/api/usuarios/${localStorage.getItem('userId')}`
     )
       .then((response) => response.json())
       .then((data) => {

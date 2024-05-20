@@ -94,11 +94,11 @@ const Register = () => {
 
     if (!validationError) {
       axios
-        .post('http://localhost:3000/api/credenciales', credentials)
+        .post('https://chargreen.com.mx/api/credenciales', credentials)
         .then(async (res) => {
           try {
             return await axios
-              .post('http://localhost:3000/api/usuarios', {
+              .post('https://chargreen.com.mx/api/usuarios', {
                 ...userInfo,
                 Credencial: res.data.id,
               })
@@ -108,7 +108,7 @@ const Register = () => {
           } catch (err) {
             if (err.response.status === 409) {
               await axios.delete(
-                `http://localhost:3000/api/credenciales/${res.data.id}`
+                `https://chargreen.com.mx/api/credenciales/${res.data.id}`
               )
               return toast.warning(err.response.data.message)
             }

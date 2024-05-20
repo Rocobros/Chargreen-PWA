@@ -15,7 +15,9 @@ const CountdownTimer = () => {
     const fetchInitialTime = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/usuarios/${localStorage.getItem('userId')}`
+          `https://chargreen.com.mx/api/usuarios/${localStorage.getItem(
+            'userId'
+          )}`
         )
         setTimeInSeconds(response.data.Tiempo)
       } catch (error) {
@@ -41,7 +43,7 @@ const CountdownTimer = () => {
   const stopTimer = () => {
     axios
       .put(
-        `http://localhost:3000/api/usuarios/tiempo/${localStorage.getItem(
+        `https://chargreen.com.mx/api/usuarios/tiempo/${localStorage.getItem(
           'userId'
         )}`,
         {
@@ -51,13 +53,13 @@ const CountdownTimer = () => {
       .then(() => {
         setIsActive(false)
         setTimeInSeconds(0)
-        axios.post('http://localhost:3000/sendToEsp', {
+        axios.post('https://chargreen.com.mx/sendToEsp', {
           Torre: location.state.torre,
           Salida: location.state.salidaId,
           Tiempo: 0,
         })
         axios.put(
-          `http://localhost:3000/api/salidas/desactivar/${location.state.salidaId}`
+          `https://chargreen.com.mx/api/salidas/desactivar/${location.state.salidaId}`
         )
       })
       .catch((err) => {

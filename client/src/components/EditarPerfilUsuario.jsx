@@ -24,10 +24,12 @@ function EditarPerfilUsuario() {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/usuarios/${localStorage.getItem('userId')}`
+          `https://chargreen.com.mx/api/usuarios/${localStorage.getItem(
+            'userId'
+          )}`
         )
         const nivel = await axios.get(
-          `http://localhost:3000/api/nivelusuario/${response.data.Nivel}`
+          `https://chargreen.com.mx/api/nivelusuario/${response.data.Nivel}`
         )
         setProfileData({ ...response.data, Nivel: nivel.data.Nombre })
       } catch (error) {
@@ -53,7 +55,7 @@ function EditarPerfilUsuario() {
     if (!validationError) {
       axios
         .put(
-          `http://localhost:3000/api/usuarios/${localStorage.getItem(
+          `https://chargreen.com.mx/api/usuarios/${localStorage.getItem(
             'userId'
           )}`,
           userInfo

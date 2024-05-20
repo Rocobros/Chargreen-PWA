@@ -9,7 +9,7 @@ const Verificar = () => {
   //TODO: UseEffect to verify user when page is loaded
   useEffect(() => {
     axios
-      .put(`http://localhost:3000/api/usuarios/verificar/${id}`)
+      .put(`https://chargreen.com.mx/api/usuarios/verificar/${id}`)
       .catch((err) => console.log(err))
   }, [])
   return (
