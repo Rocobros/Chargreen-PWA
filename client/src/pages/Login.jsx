@@ -1,15 +1,16 @@
 import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import LoginValidation from '../func/LoginValidation.js'
 import { Toaster, toast } from 'sonner'
+import axios from 'axios'
 
-import FormWrapper from './FormComponents/FormWrapper.jsx'
-import FormButton from './FormComponents/FormButton.jsx'
-import FormInput from './FormComponents/FormInput.jsx'
-import FormLink from './FormComponents/FormLink.jsx'
-import validation from '../func/LoginValidation.js'
+import FormWrapper from '../components/FormComponents/FormWrapper.jsx'
+import FormButton from '../components/FormComponents/FormButton.jsx'
+import FormInput from '../components/FormComponents/FormInput.jsx'
+import FormLink from '../components/FormComponents/FormLink.jsx'
+
+const apiUrl = import.meta.env.VITE_API_URL
 
 const fields = [
   {
@@ -36,35 +37,24 @@ const Login = ({ setUserRole, setUserId }) => {
 
   const navigate = useNavigate()
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
     const validationError = LoginValidation(values)
 
     if (!validationError) {
-      axios
-        .post('https://chargreen.com.mx/api/login', values)
-        .then((res) => {
-          console.log(res.data)
-          if (res.data.role === 'admin') {
-            setUserRole('admin')
-            setUserId(res.data.id)
-            localStorage.setItem('userId', res.data.id)
-            navigate('/')
-          } else if (res.data.role === 'user') {
-            setUserRole('user')
-            setUserId(res.data.id)
-            localStorage.setItem('userId', res.data.id)
-            navigate('/')
-          } else if (res.data.role === 'mod') {
-            setUserRole('mod')
-            setUserId(res.data.id)
-            localStorage.setItem('userId', res.data.id)
-            navigate('/')
-          } else {
-            toast.error('Error inesperado. Intente de nuevo')
-          }
-        })
-        .catch((err) => toast.error(err.response.data.message))
+      try {
+        const response = await axios.post(apiUrl + '/api/login', values)
+
+        if (response.status === 200) {
+          localStorage.setItem('jwt', response.data.token)
+          navigate('/')
+        } else {
+          toast.warning(response.data.message)
+        }
+      } catch (error) {
+        console.error('Error:', error)
+        toast.error(error.response.data.message)
+      }
     } else {
       toast.warning(validationError)
     }
@@ -95,7 +85,7 @@ const Login = ({ setUserRole, setUserId }) => {
         {inputs}
         <FormButton>Ingresar</FormButton>
         <FormLink
-          linkTo={'/register'}
+          linkTo={'/registro'}
           linkText={'Registrate'}
         >
           No tienes una cuenta?{' '}

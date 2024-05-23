@@ -1,20 +1,20 @@
-const db = require('../db')
+const pool = require('../db')
 
 async function CheckEmailAvailable(email, celular) {
   try {
-    const [emailResults] = await db
-      .promise()
-      .query('SELECT Registro FROM usuariosnormales WHERE Correo = ?', [email])
+    const [emailResults] = await pool.execute(
+      'SELECT Registro FROM usuariosnormales WHERE Correo = ?',
+      [email]
+    )
 
     if (emailResults.length > 0) {
       return 1 // Correo duplicado
     }
 
-    const [celularResults] = await db
-      .promise()
-      .query('SELECT Registro FROM usuariosnormales WHERE Celular = ?', [
-        celular,
-      ])
+    const [celularResults] = await pool.execute(
+      'SELECT Registro FROM usuariosnormales WHERE Celular = ?',
+      [celular]
+    )
 
     if (celularResults.length > 0) {
       return 2 // Celular duplicado

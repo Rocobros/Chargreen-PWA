@@ -1,13 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 
 import RegisterValidation from '../func/RegisterValdidation.js'
-import FormWrapper from './FormComponents/FormWrapper.jsx'
-import FormButton from './FormComponents/FormButton.jsx'
-import FormInput from './FormComponents/FormInput.jsx'
-import FormLink from './FormComponents/FormLink.jsx'
+import FormWrapper from '../components/FormComponents/FormWrapper.jsx'
+import FormButton from '../components/FormComponents/FormButton.jsx'
+import FormInput from '../components/FormComponents/FormInput.jsx'
+import FormLink from '../components/FormComponents/FormLink.jsx'
+import axiosInstance from '../func/axiosInstance.js'
 
 const fields = [
   {
@@ -78,20 +78,18 @@ const ModeratorFrom = () => {
     event.preventDefault()
 
     if (!RegisterValidation(values)) {
-      axios.get('https://chargreen.com.mx/fk').then((res) => {
+      axiosInstance.get('/fk').then((res) => {
         const reqVals = {
           ...values,
           ['fk']: [res.data.id + 1],
         }
-        return axios
-          .post('https://chargreen.com.mx/register/credentials', reqVals)
+        return axiosInstance
+          .post('/register/credentials', reqVals)
           .catch((err) => console.log(err))
           .then(() => {
-            axios
-              .post('https://chargreen.com.mx/register/moderator', reqVals)
-              .catch((err) => {
-                return console.log(err)
-              })
+            axiosInstance.post('/register/moderator', reqVals).catch((err) => {
+              return console.log(err)
+            })
           })
           .then(navigate('/'))
           .catch((err) => console.log(err))

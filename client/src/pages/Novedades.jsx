@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import axiosInstance from '../func/axiosInstance'
 
 const Novedades = () => {
   const [novedades, setNovedades] = useState([])
 
   useEffect(() => {
     const fetchNovedades = async () => {
-      const response = await axios.get('https://chargreen.com.mx/api/novedades')
+      const response = await axiosInstance.get('/api/novedades')
       //TODO: Obtener el nombre del moderador
       setNovedades(response.data)
     }

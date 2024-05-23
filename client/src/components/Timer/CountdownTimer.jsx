@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '../../func/axiosInstance'
+import { jwtDecode } from 'jwt-decode'
+
 //TODO: Modificar el tiempo del usuario y desactivar la salida cuando se termine el tiempo
 
 const CountdownTimer = () => {
@@ -10,15 +12,20 @@ const CountdownTimer = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
+  const getUserIdFromJWT = () => {
+    const token = localStorage.getItem('jwt')
+    if (!token) return null
+    const decoded = jwtDecode(token)
+    return decoded.id
+  }
+
   useEffect(() => {
+    const userId = getUserIdFromJWT()
+    if (!userId) return
     // Function to fetch initial time
     const fetchInitialTime = async () => {
       try {
-        const response = await axios.get(
-          `https://chargreen.com.mx/api/usuarios/${localStorage.getItem(
-            'userId'
-          )}`
-        )
+        const response = await axiosInstance.get(`/api/usuarios/${userId}`)
         setTimeInSeconds(response.data.Tiempo)
       } catch (error) {
         console.error('Error fetching initial time:', error)
@@ -41,26 +48,21 @@ const CountdownTimer = () => {
   }, [isActive, timeInSeconds])
 
   const stopTimer = () => {
-    axios
-      .put(
-        `https://chargreen.com.mx/api/usuarios/tiempo/${localStorage.getItem(
-          'userId'
-        )}`,
-        {
-          Tiempo: timeInSeconds,
-        }
-      )
+    const userId = getUserIdFromJWT()
+    if (!userId) return
+    axiosInstance
+      .put(`/api/usuarios/tiempo/${userId}`, {
+        Tiempo: timeInSeconds,
+      })
       .then(() => {
         setIsActive(false)
         setTimeInSeconds(0)
-        axios.post('https://chargreen.com.mx/api/sendToEsp', {
+        axiosInstance.post('/api/sendToEsp', {
           Torre: location.state.torre,
           Salida: location.state.salidaId,
           Tiempo: 0,
         })
-        axios.put(
-          `https://chargreen.com.mx/api/salidas/desactivar/${location.state.salidaId}`
-        )
+        axiosInstance.put(`/api/salidas/desactivar/${location.state.salidaId}`)
       })
       .catch((err) => {
         console.error(err)

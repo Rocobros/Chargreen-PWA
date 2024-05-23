@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '../func/axiosInstance.js'
 import RegisterValidation from '../func/RegisterValdidation.js'
 import { Toaster, toast } from 'sonner'
 
-import FormWrapper from './FormComponents/FormWrapper.jsx'
-import FormButton from './FormComponents/FormButton.jsx'
-import FormInput from './FormComponents/FormInput.jsx'
-import FormLink from './FormComponents/FormLink.jsx'
+import FormWrapper from '../components/FormComponents/FormWrapper.jsx'
+import FormButton from '../components/FormComponents/FormButton.jsx'
+import FormInput from '../components/FormComponents/FormInput.jsx'
+import FormLink from '../components/FormComponents/FormLink.jsx'
 
 const infoFields = [
   {
@@ -93,12 +93,12 @@ const Register = () => {
     const validationError = RegisterValidation(values)
 
     if (!validationError) {
-      axios
-        .post('https://chargreen.com.mx/api/credenciales', credentials)
+      axiosInstance
+        .post('/api/credenciales', credentials)
         .then(async (res) => {
           try {
-            return await axios
-              .post('https://chargreen.com.mx/api/usuarios', {
+            return await axiosInstance
+              .post('/api/usuarios', {
                 ...userInfo,
                 Credencial: res.data.id,
               })
@@ -107,9 +107,7 @@ const Register = () => {
               })
           } catch (err) {
             if (err.response.status === 409) {
-              await axios.delete(
-                `https://chargreen.com.mx/api/credenciales/${res.data.id}`
-              )
+              await axiosInstance.delete(`/api/credenciales/${res.data.id}`)
               return toast.warning(err.response.data.message)
             }
             return toast.error(err.response.data.message)

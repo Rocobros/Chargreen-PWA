@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 
-import FormWrapper from './FormComponents/FormWrapper.jsx'
-import FormButton from './FormComponents/FormButton.jsx'
-import FormInput from './FormComponents/FormInput.jsx'
-import FormLink from './FormComponents/FormLink.jsx'
+import FormWrapper from '../components/FormComponents/FormWrapper.jsx'
+import FormButton from '../components/FormComponents/FormButton.jsx'
+import FormInput from '../components/FormComponents/FormInput.jsx'
+import FormLink from '../components/FormComponents/FormLink.jsx'
 
 const fields = [
   {
