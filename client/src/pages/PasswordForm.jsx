@@ -3,9 +3,9 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import UpdateValidation from '../func/UpdateValidation.js'
 
-import FormWrapper from './FormComponents/FormWrapper.jsx'
-import FormButton from './FormComponents/FormButton.jsx'
-import FormInput from './FormComponents/FormInput.jsx'
+import FormWrapper from '../components/FormComponents/FormWrapper.jsx'
+import FormButton from '../components/FormComponents/FormButton.jsx'
+import FormInput from '../components/FormComponents/FormInput.jsx'
 
 const fields = [
   {

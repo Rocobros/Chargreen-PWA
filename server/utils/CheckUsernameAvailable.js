@@ -1,10 +1,11 @@
-const db = require('../db')
+const pool = require('../db')
 
 async function CheckUserNameAvailable(usuario) {
   try {
-    const [userResults] = await db
-      .promise()
-      .query('SELECT Id FROM credenciales WHERE Usuario = ?', [usuario])
+    const [userResults] = await pool.execute(
+      'SELECT Id FROM credenciales WHERE Usuario = ?',
+      [usuario]
+    )
 
     if (userResults.length > 0) {
       return 1 // Usuario duplicado

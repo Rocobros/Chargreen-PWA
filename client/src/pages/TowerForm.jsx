@@ -1,12 +1,12 @@
 import React from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 
-import FormWrapper from './FormComponents/FormWrapper.jsx'
-import FormButton from './FormComponents/FormButton.jsx'
-import FormInput from './FormComponents/FormInput.jsx'
-import FormLink from './FormComponents/FormLink.jsx'
+import FormWrapper from '../components/FormComponents/FormWrapper.jsx'
+import FormButton from '../components/FormComponents/FormButton.jsx'
+import FormInput from '../components/FormComponents/FormInput.jsx'
+import FormLink from '../components/FormComponents/FormLink.jsx'
+import axiosInstance from '../func/axiosInstance.js'
 
 const TowerForm = ({ userId }) => {
   const [values, setValues] = useState({
@@ -21,8 +21,8 @@ const TowerForm = ({ userId }) => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    axios
-      .post('https://chargreen.com.mx/register/tower', values)
+    axiosInstance
+      .post('/register/tower', values)
       .then(navigate('/'))
       .catch((err) => console.log(err))
   }

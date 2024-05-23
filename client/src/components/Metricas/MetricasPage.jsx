@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { Pie, Bar } from 'react-chartjs-2'
 import 'chart.js/auto'
+import axiosInstance from '../../func/axiosInstance'
+import { jwtDecode } from 'jwt-decode'
 
 const colors = {
   text: '#081603',
@@ -19,12 +21,21 @@ const MetricasPage = () => {
   const [timeUsed, setTimeUsed] = useState(null)
   const [energyUsed, setEnergyUsed] = useState(null)
 
+  const getUserIdFromJWT = () => {
+    const token = localStorage.getItem('jwt')
+    if (!token) return null
+    const decoded = jwtDecode(token)
+    return decoded.id
+  }
+
   useEffect(() => {
-    fetch(
-      `https://chargreen.com.mx/api/metricas/${localStorage.getItem('userId')}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
+    const userId = getUserIdFromJWT()
+    if (!userId) return
+
+    axiosInstance
+      .get(`/api/metricas/${userId}`)
+      .then((response) => {
+        const data = response.data
         if (data && Array.isArray(data)) {
           setData(data)
         } else {
@@ -35,11 +46,13 @@ const MetricasPage = () => {
   }, [])
 
   useEffect(() => {
-    fetch(
-      `https://chargreen.com.mx/api/usuarios/${localStorage.getItem('userId')}`
-    )
-      .then((response) => response.json())
-      .then((data) => {
+    const userId = getUserIdFromJWT()
+    if (!userId) return
+
+    axiosInstance
+      .get(`/api/usuarios/${userId}`)
+      .then((response) => {
+        const data = response.data
         if (data) {
           setActualTime(data.Tiempo)
         } else {
@@ -59,7 +72,7 @@ const MetricasPage = () => {
     if (!data || data.length === 0) {
       setPieChartData(null)
       setBarsChartData(null)
-      setTimeData(null)
+      setTimeUsed(null)
       return
     }
 
@@ -125,80 +138,100 @@ const MetricasPage = () => {
     let filteredData = []
 
     if (period === '6m') {
-      const sixMonthsAgo = new Date()
-      sixMonthsAgo.setMonth(now.getMonth() - 6)
+      const sixMonthsAgo = new Date(
+        now.getFullYear(),
+        now.getMonth() - 6,
+        now.getDate()
+      )
       filteredData = data.filter((item) => new Date(item.Fecha) >= sixMonthsAgo)
     } else if (period === '1m') {
-      const oneMonthAgo = new Date()
-      oneMonthAgo.setMonth(now.getMonth() - 1)
+      const oneMonthAgo = new Date(
+        now.getFullYear(),
+        now.getMonth() - 1,
+        now.getDate()
+      )
       filteredData = data.filter((item) => new Date(item.Fecha) >= oneMonthAgo)
     } else if (period === '1w') {
-      const oneWeekAgo = new Date()
-      oneWeekAgo.setDate(now.getDate() - 7)
-      filteredData = data.filter((item) => new Date(item.Fecha) >= oneWeekAgo)
+      const oneWeekAgo = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() - 7
+      )
+      filteredData = data.filter((item) => {
+        const itemDate = new Date(item.Fecha)
+        return itemDate >= oneWeekAgo
+      })
     }
-
     updateCharts(filteredData)
   }
 
   return (
-    <div className="bg-background">
-      <div className="overflow-y-auto">
-        <div className="text-center mb-5">
-          <button
-            className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
-            onClick={() => filterData('6m')}
-          >
-            Últimos 6 meses
-          </button>
-          <button
-            className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
-            onClick={() => filterData('1m')}
-          >
-            Último mes
-          </button>
-          <button
-            className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
-            onClick={() => filterData('1w')}
-          >
-            Última semana
-          </button>
-        </div>
-        <div className="mb-2">
-          <h1 className="text-center">Cantidad de Botellas por Torre</h1>
-          {pieChartData ? <Pie data={pieChartData} /> : <p>Loading data...</p>}
-        </div>
-        <div className="mb-2">
-          <h1 className="text-center">
-            Cantidad de Botellas por Clasificación
-          </h1>
-          {barsChartData ? (
-            <Bar
-              data={barsChartData}
-              options={{
-                scales: {
-                  y: {
-                    beginAtZero: true,
+    <>
+      <div
+        className="bg-background p-2"
+        style={{ paddingBottom: 'var(--navbar-height)' }}
+      >
+        <div className="overflow-y-auto">
+          <div className="text-center mb-5">
+            <button
+              className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+              onClick={() => filterData('6m')}
+            >
+              Últimos 6 meses
+            </button>
+            <button
+              className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+              onClick={() => filterData('1m')}
+            >
+              Último mes
+            </button>
+            <button
+              className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+              onClick={() => filterData('1w')}
+            >
+              Última semana
+            </button>
+          </div>
+          <div className="mb-2">
+            <h1 className="text-center">Cantidad de Botellas por Torre</h1>
+            {pieChartData ? (
+              <Pie data={pieChartData} />
+            ) : (
+              <p>Loading data...</p>
+            )}
+          </div>
+          <div className="mb-2">
+            <h1 className="text-center">
+              Cantidad de Botellas por Clasificación
+            </h1>
+            {barsChartData ? (
+              <Bar
+                data={barsChartData}
+                options={{
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                    },
                   },
-                },
-              }}
-            />
-          ) : (
-            <p>Loading data...</p>
-          )}
-        </div>
-        <div className="mb-2">
-          <h1 className="text-center text-2xl">
-            Cantidad de tiempo usado: {timeUsed} segundos
-          </h1>
-        </div>
-        <div className="mb-2">
-          <h1 className="text-center text-2xl">
-            Cantidad de energia usada: {Math.floor(energyUsed)} Watts
-          </h1>
+                }}
+              />
+            ) : (
+              <p>Loading data...</p>
+            )}
+          </div>
+          <div className="mb-2">
+            <h1 className="text-center text-2xl">
+              Cantidad de tiempo usado: {timeUsed} segundos
+            </h1>
+          </div>
+          <div className="mb-2">
+            <h1 className="text-center text-2xl">
+              Cantidad de energia usada: {Math.floor(energyUsed)} Watts
+            </h1>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import axiosInstance from '../func/axiosInstance'
 
 const Verificar = () => {
   const queryParameters = new URLSearchParams(window.location.search)
   const id = queryParameters.get('id')
 
   useEffect(() => {
-    axios
-      .put(`https://chargreen.com.mx/api/usuarios/verificar/${id}`)
+    axiosInstance
+      .put(`/api/usuarios/verificar/${id}`)
       .catch((err) => console.log(err))
   }, [])
   return (

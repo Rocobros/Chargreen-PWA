@@ -1,7 +1,7 @@
 import { GoogleMap, Marker, InfoWindow } from '@react-google-maps/api'
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import MapInfoBox from './MapInfoBox'
+import axiosInstance from '../../func/axiosInstance'
 
 const containerStyle = {
   width: '100%', // 100% of the viewport width
@@ -53,8 +53,8 @@ function MapComponent() {
   const handleMarkerClick = async (torre) => {
     setSelectedLocation(torre)
     try {
-      const response = await axios.get(
-        `https://chargreen.com.mx/api/salidas/disponibles/${torre.Id}`
+      const response = await axiosInstance.get(
+        `/api/salidas/disponibles/${torre.Id}`
       )
       const data = response.data
       setAvailableExits(data)
@@ -67,9 +67,7 @@ function MapComponent() {
     const fetchLocations = async () => {
       try {
         setTimeout(async () => {
-          const response = await axios.get(
-            'https://chargreen.com.mx/api/torres'
-          )
+          const response = await axiosInstance.get('/api/torres')
 
           // Mapear los datos para asegurar que los nombres de las propiedades coincidan con lo que espera el componente Marker
           const mappedLocations = response.data.map((loc) => ({

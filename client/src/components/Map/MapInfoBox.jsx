@@ -1,7 +1,7 @@
 import React from 'react'
 import FormButton from '../FormComponents/FormButton'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import axiosInstance from '../../func/axiosInstance'
 
 const MapInfoBox = ({ selectedTower, handleInfoClose, exits }) => {
   const navigate = useNavigate()
@@ -10,29 +10,32 @@ const MapInfoBox = ({ selectedTower, handleInfoClose, exits }) => {
 
   const hasAvailableExits = exits.length > 0
 
+  const getUserIdFromJWT = () => {
+    const token = localStorage.getItem('jwt')
+    if (!token) return null
+    const decoded = jwtDecode(token)
+    return decoded.id
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      const userId = localStorage.getItem('userId')
-      const response = await axios.get(
-        `https://chargreen.com.mx/api/usuarios/${userId}`
-      )
+      const userId = getUserIdFromJWT()
+      const response = await axiosInstance.get(`/api/usuarios/${userId}`)
       const user = response.data
       const userTime = user.Tiempo
 
       const exitId = event.target.exitSelect.value
-      const res = await axios.get(
-        `https://chargreen.com.mx/api/salidas/${exitId}`
-      )
+      const res = await axiosInstance.get(`/api/salidas/${exitId}`)
       const exitNum = res.data.Numero
 
-      await axios.post('https://chargreen.com.mx/api/sendToEsp', {
+      await axiosInstance.post('/api/sendToEsp', {
         Torre: selectedTower.Id,
         Salida: Number(exitNum),
         Tiempo: userTime,
       })
 
-      await axios.put(`https://chargreen.com.mx/api/salidas/activar/${exitId}`)
+      await axiosInstance.put(`/api/salidas/activar/${exitId}`)
       navigate('/tiempo', {
         state: { torre: selectedTower.Id, salidaId: exitId },
       })

@@ -1,46 +1,46 @@
 const express = require('express')
 const router = express.Router()
-const db = require('../db.js')
-const CheckEmailAndPhoneAvailable = require('../utils/CheckEmailAndPhoneAvailable.js')
-require('dotenv').config()
-var nodemailer = require('nodemailer')
+const pool = require('../db')
+const nodemailer = require('nodemailer')
+const CheckEmailAndPhoneAvailable = require('../utils/CheckEmailAndPhoneAvailable')
+const authenticateToken = require('../utils/authenticateToken')
+const baseUrl = process.env.BASE_URL
 
 // Obtener todos los usuarios
-router.get('/', (req, res) => {
-  db.query('SELECT * FROM usuariosnormales', (error, results) => {
-    if (error) {
-      console.error('Error encontrado: ', error)
-      return res
-        .status(500)
-        .json({ message: 'Error al obtener la información.' })
-    }
+router.get('/', authenticateToken, async (req, res) => {
+  try {
+    const [results] = await pool.execute('SELECT * FROM usuariosnormales')
     res.status(200).json(results)
-  })
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error al obtener la información.',
+      error: error.message,
+    })
+  }
 })
 
 // Obtener un usuario por su Registro
-router.get('/:registro', (req, res) => {
-  db.query(
-    'SELECT * FROM usuariosnormales WHERE Registro = ?',
-    [req.params.registro],
-    (error, results) => {
-      if (error) {
-        console.error('Error encontrado: ', error)
-        return res
-          .status(500)
-          .json({ message: 'Error al obtener la información.' })
-      }
-      if (results.length > 0) {
-        res.status(200).json(results[0])
-      } else {
-        res.status(404).json({ message: 'Usuario no encontrado.' })
-      }
+router.get('/:registro', authenticateToken, async (req, res) => {
+  try {
+    const [results] = await pool.execute(
+      'SELECT * FROM usuariosnormales WHERE Registro = ?',
+      [req.params.registro]
+    )
+    if (results.length > 0) {
+      res.status(200).json(results[0])
+    } else {
+      res.status(404).json({ message: 'Usuario no encontrado.' })
     }
-  )
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error al obtener la información.',
+      error: error.message,
+    })
+  }
 })
 
 // Crear un nuevo usuario
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
   const {
     Nombre,
     ApellidoPaterno,
@@ -49,85 +49,66 @@ router.post('/', (req, res) => {
     Correo,
     Credencial,
   } = req.body
-  CheckEmailAndPhoneAvailable(Correo, Celular)
-    .then((isAvailable) => {
-      if (isAvailable === 0) {
-        db.query(
-          'INSERT INTO usuariosnormales (Nombre, ApellidoPaterno, ApellidoMaterno, Celular, Correo, Credencial) VALUES (?, ?, ?, ?, ?, ?)',
-          [
-            Nombre,
-            ApellidoPaterno,
-            ApellidoMaterno,
-            Celular,
-            Correo,
-            Credencial,
-          ],
-          (error, results) => {
-            if (error) {
-              console.error('Error encontrado: ', error)
-              return res
-                .status(500)
-                .json({ message: 'Error al crear el usuario.' })
-            }
 
-            var transporter = nodemailer.createTransport({
-              service: 'gmail',
-              auth: {
-                user: process.env.MAIL_USER,
-                pass: process.env.MAIL_PASSWORD,
-              },
-            })
+  try {
+    const isAvailable = await CheckEmailAndPhoneAvailable(Correo, Celular)
+    if (isAvailable === 0) {
+      const [results] = await pool.execute(
+        'INSERT INTO usuariosnormales (Nombre, ApellidoPaterno, ApellidoMaterno, Celular, Correo, Credencial) VALUES (?, ?, ?, ?, ?, ?)',
+        [Nombre, ApellidoPaterno, ApellidoMaterno, Celular, Correo, Credencial]
+      )
 
-            var mailOptions = {
-              from: 'rocobros21@gmail.com',
-              subject: 'Verifica tu cuenta para la app de Chargreen',
-            }
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASSWORD,
+        },
+      })
 
-            mailOptions.to = Correo
-
-            db.query(
-              `select registro as id from usuariosnormales where correo = "${Correo}"`,
-              (err, data) => {
-                if (err) {
-                  console.log(err.message)
-                  return res.status(404).end()
-                }
-                const id = data[0].id
-
-                mailOptions.text = `Se ha creado un cuenta con esta direccion de Correo. 
-                Ingresa al siguiente link para verificar el usuario y que puedas usar la aplicacion: 
-                http://localhost:5173/verificar?id=${id}<br/>
-                Si no has creado la cuenta haz caso omiso a este correo.`
-
-                transporter.sendMail(mailOptions, (err, info) => {
-                  if (err) {
-                    console.log(err)
-                  }
-                })
-              }
-            )
-
-            return res.status(201).json({
-              message: 'Usuario creado correctamente',
-              Registro: results.insertId,
-            })
-          }
-        )
-      } else if (isAvailable === 1) {
-        return res.status(409).json({ message: 'El correo ya esta registrado' })
-      } else if (isAvailable === 2) {
-        return res
-          .status(409)
-          .json({ message: 'El celular ya esta registrado' })
+      var mailOptions = {
+        from: 'rocobros21@gmail.com',
+        subject: 'Verifica tu cuenta para la app de Chargreen',
       }
-    })
-    .catch((err) => {
-      console.error('Error al verificar el correo:', err)
-    })
+
+      mailOptions.to = Correo
+
+      const [data] = await pool.execute(
+        `SELECT registro as id FROM usuariosnormales WHERE correo = ?`,
+        [Correo]
+      )
+      const id = data[0].id
+
+      mailOptions.text = `Se ha creado un cuenta con esta direccion de Correo. 
+        Ingresa al siguiente link para verificar el usuario y que puedas usar la aplicacion: 
+        ${baseUrl}/verificar?id=${id}
+        Si no has creado la cuenta haz caso omiso a este correo.`
+
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          console.log(err)
+        }
+      })
+
+      res.status(201).json({
+        message: 'Usuario creado correctamente',
+        Registro: results.insertId,
+      })
+    } else if (isAvailable === 1) {
+      res.status(409).json({ message: 'El correo ya está registrado' })
+    } else if (isAvailable === 2) {
+      res.status(409).json({ message: 'El celular ya está registrado' })
+    }
+  } catch (error) {
+    console.error('Error al verificar el correo:', error)
+    res
+      .status(500)
+      .json({ message: 'Error al crear el usuario.', error: error.message })
+  }
 })
 
 // Actualizar un usuario
-router.put('/:registro', (req, res) => {
+router.put('/:registro', authenticateToken, async (req, res) => {
   const {
     Nombre,
     ApellidoPaterno,
@@ -138,97 +119,83 @@ router.put('/:registro', (req, res) => {
     Nivel,
   } = req.body
 
-  CheckEmailAndPhoneAvailable(Correo, Celular)
-    .then((isAvailable) => {
-      if (isAvailable === 0) {
-        db.query(
-          'UPDATE usuariosnormales SET Nombre = ?, ApellidoPaterno = ?, ApellidoMaterno = ?, Celular = ?, Correo = ?, Tiempo = ?, Nivel = ? WHERE Registro = ?',
-          [
-            Nombre,
-            ApellidoPaterno,
-            ApellidoMaterno,
-            Celular,
-            Correo,
-            Tiempo,
-            Nivel,
-            req.params.registro,
-          ],
-          (error, results) => {
-            if (error) {
-              console.error('Error encontrado: ', error)
-              return res
-                .status(500)
-                .json({ message: 'Error al actualizar el usuario.' })
-            }
-            res.status(200).json({
-              message: 'Usuario actualizado correctamente',
-            })
-          }
-        )
-      } else if (isAvailable === 2) {
-        return res
-          .status(409)
-          .json({ message: 'El celular ya esta registrado' })
-      }
+  try {
+    const isAvailable = await CheckEmailAndPhoneAvailable(Correo, Celular)
+    if (isAvailable === 0) {
+      await pool.execute(
+        'UPDATE usuariosnormales SET Nombre = ?, ApellidoPaterno = ?, ApellidoMaterno = ?, Celular = ?, Correo = ?, Tiempo = ?, Nivel = ? WHERE Registro = ?',
+        [
+          Nombre,
+          ApellidoPaterno,
+          ApellidoMaterno,
+          Celular,
+          Correo,
+          Tiempo,
+          Nivel,
+          req.params.registro,
+        ]
+      )
+      res.status(200).json({ message: 'Usuario actualizado correctamente' })
+    } else if (isAvailable === 2) {
+      res.status(409).json({ message: 'El celular ya está registrado' })
+    }
+  } catch (error) {
+    console.error('Error al verificar el correo:', error)
+    res.status(500).json({
+      message: 'Error al actualizar el usuario.',
+      error: error.message,
     })
-    .catch((err) => {
-      console.error('Error al verificar el correo:', err)
-    })
+  }
 })
 
 // Actualizar tiempo de un usuario
-router.put('/tiempo/:registro', (req, res) => {
+router.put('/tiempo/:registro', authenticateToken, async (req, res) => {
   const { Tiempo } = req.body
-  db.query(
-    'UPDATE usuariosnormales SET Tiempo = ? WHERE Registro = ?',
-    [Tiempo, req.params.registro],
-    (error, results) => {
-      if (error) {
-        console.error('Error encontrado: ', error)
-        return res
-          .status(500)
-          .json({ message: 'Error al actualizar el usuario.' })
-      }
-      res.status(200).json({
-        message: 'Usuario actualizado correctamente',
-      })
-    }
-  )
+
+  try {
+    await pool.execute(
+      'UPDATE usuariosnormales SET Tiempo = ? WHERE Registro = ?',
+      [Tiempo, req.params.registro]
+    )
+    res.status(200).json({ message: 'Usuario actualizado correctamente' })
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res.status(500).json({
+      message: 'Error al actualizar el usuario.',
+      error: error.message,
+    })
+  }
 })
 
-router.put('/verificar/:id', (req, res) => {
-  db.query(
-    'UPDATE usuariosnormales SET Estado = "A" WHERE Registro = ?',
-    [req.params.id],
-    (error, results) => {
-      if (error) {
-        console.error('Error encontrado: ', error)
-        return res
-          .status(500)
-          .json({ message: 'Error al verificar el usuario.' })
-      }
-      res.status(200).json({
-        message: 'Usuario verificado correctamente',
-      })
-    }
-  )
+// Verificar un usuario
+router.put('/verificar/:id', async (req, res) => {
+  try {
+    await pool.execute(
+      'UPDATE usuariosnormales SET Estado = "A" WHERE Registro = ?',
+      [req.params.id]
+    )
+    res.status(200).json({ message: 'Usuario verificado correctamente' })
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res
+      .status(500)
+      .json({ message: 'Error al verificar el usuario.', error: error.message })
+  }
 })
 
 // Eliminar un usuario
-router.delete('/:registro', (req, res) => {
-  db.query(
-    'DELETE FROM usuariosnormales WHERE Registro = ?',
-    [req.params.registro],
-    (error, results) => {
-      if (error) {
-        console.error('Error encontrado: ', error)
-        return res
-          .status(500)
-          .json({ message: 'Error al eliminar el usuario.' })
-      }
-      res.status(200).json({ message: 'Usuario eliminado correctamente' })
-    }
-  )
+router.delete('/:registro', async (req, res) => {
+  try {
+    await pool.execute('DELETE FROM usuariosnormales WHERE Registro = ?', [
+      req.params.registro,
+    ])
+    res.status(200).json({ message: 'Usuario eliminado correctamente' })
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res
+      .status(500)
+      .json({ message: 'Error al eliminar el usuario.', error: error.message })
+  }
 })
 
 module.exports = router

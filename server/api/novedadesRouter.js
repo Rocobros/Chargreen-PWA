@@ -1,65 +1,83 @@
-const router = require('express').Router()
-const db = require('../db.js')
+const express = require('express')
+const router = express.Router()
+const pool = require('../db.js')
 
 // Obtener todas las novedades
-router.get('/', (req, res) => {
-  db.query('SELECT * FROM novedades', (error, results) => {
-    if (error) {
-            console.error("Error encontrado: ", error);
-            return res.status(500).json({ message: "Error al obtener la informacion. " });
-        }
-    res.status(200).json(results);
-  });
-});
+router.get('/', async (req, res) => {
+  try {
+    const [results] = await pool.execute('SELECT * FROM novedades')
+    res.status(200).json(results)
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res.status(500).json({
+      message: 'Error al obtener la información.',
+      error: error.message,
+    })
+  }
+})
 
 // Obtener una novedad por su ID
-router.get('/:id', (req, res) => {
-  db.query('SELECT * FROM novedades WHERE Id = ?', [req.params.id], (error, results) => {
-    if (error) {
-            console.error("Error encontrado: ", error);
-            return res.status(500).json({ message: "Error al obtener la informacion. " });
-        }
-    res.status(200).json(results[0]);
-  });
-});
+router.get('/:id', async (req, res) => {
+  try {
+    const [results] = await pool.execute(
+      'SELECT * FROM novedades WHERE Id = ?',
+      [req.params.id]
+    )
+    res.status(200).json(results[0])
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res.status(500).json({
+      message: 'Error al obtener la información.',
+      error: error.message,
+    })
+  }
+})
 
 // Crear una nueva novedad
-router.post('/', (req, res) => {
-  const novedad = req.body;
-  db.query('INSERT INTO novedades SET ?', novedad, (error, results) => {
-    if (error) {
-            console.error("Error encontrado: ", error);
-            return res.status(500).json({ message: "Error al obtener la informacion. " });
-        }
-    res.status(201).json({message: "Novedad añadida correctamente", id: results.insertId});
-  });
-});
+router.post('/', async (req, res) => {
+  const novedad = req.body
+  try {
+    const [results] = await pool.execute('INSERT INTO novedades SET ?', novedad)
+    res
+      .status(201)
+      .json({ message: 'Novedad añadida correctamente', id: results.insertId })
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res
+      .status(500)
+      .json({ message: 'Error al crear la novedad.', error: error.message })
+  }
+})
 
 // Actualizar una novedad
-router.put('/:id', (req, res) => {
-  const { Titulo, Descripcion, Imagen, UsuarioModerador } = req.body;
-  db.query(
-    'UPDATE novedades SET Titulo = ?, Descripcion = ?, Imagen = ?, UsuarioModerador = ? WHERE Id = ?',
-    [Titulo, Descripcion, Imagen, UsuarioModerador, req.params.id],
-    (error, results) => {
-      if (error) {
-            console.error("Error encontrado: ", error);
-            return res.status(500).json({ message: "Error al obtener la informacion. " });
-        }
-      res.status(200).send(`Novedad actualizada con ID: ${req.params.id}`);
-    }
-  );
-});
+router.put('/:id', async (req, res) => {
+  const { Titulo, Descripcion, Imagen, UsuarioModerador } = req.body
+  try {
+    await pool.execute(
+      'UPDATE novedades SET Titulo = ?, Descripcion = ?, Imagen = ?, UsuarioModerador = ? WHERE Id = ?',
+      [Titulo, Descripcion, Imagen, UsuarioModerador, req.params.id]
+    )
+    res.status(200).send(`Novedad actualizada con ID: ${req.params.id}`)
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res.status(500).json({
+      message: 'Error al actualizar la novedad.',
+      error: error.message,
+    })
+  }
+})
 
 // Eliminar una novedad
-router.delete('/:id', (req, res) => {
-  db.query('DELETE FROM novedades WHERE Id = ?', [req.params.id], (error, results) => {
-    if (error) {
-            console.error("Error encontrado: ", error);
-            return res.status(500).json({ message: "Error al obtener la informacion. " });
-        }
-    res.status(200).send(`Novedad eliminada con ID: ${req.params.id}`);
-  });
-});
+router.delete('/:id', async (req, res) => {
+  try {
+    await pool.execute('DELETE FROM novedades WHERE Id = ?', [req.params.id])
+    res.status(200).send(`Novedad eliminada con ID: ${req.params.id}`)
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res
+      .status(500)
+      .json({ message: 'Error al eliminar la novedad.', error: error.message })
+  }
+})
 
 module.exports = router

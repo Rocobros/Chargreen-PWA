@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { Toaster, toast } from 'sonner'
 
 import RegisterValidation from '../func/UpdateVal'
+import axiosInstance from '../func/axiosInstance'
 
 function EditarPerfilUsuario() {
   const [userInfo, setUserInfo] = useState({
@@ -16,20 +16,25 @@ function EditarPerfilUsuario() {
   const [profileData, setProfileData] = useState({})
   const navigate = useNavigate()
 
+  const getUserIdFromJWT = () => {
+    const token = localStorage.getItem('jwt')
+    if (!token) return null
+    const decoded = jwtDecode(token)
+    return decoded.id
+  }
+
   useEffect(() => {
     setUserInfo(profileData)
   }, [profileData])
 
   useEffect(() => {
+    const userId = getUserIdFromJWT()
+    if (!userId) return
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(
-          `https://chargreen.com.mx/api/usuarios/${localStorage.getItem(
-            'userId'
-          )}`
-        )
-        const nivel = await axios.get(
-          `https://chargreen.com.mx/api/nivelusuario/${response.data.Nivel}`
+        const response = await axiosInstance.get(`/api/usuarios/${userId}`)
+        const nivel = await axiosInstance.get(
+          `/api/nivelusuario/${response.data.Nivel}`
         )
         setProfileData({ ...response.data, Nivel: nivel.data.Nombre })
       } catch (error) {
@@ -50,19 +55,15 @@ function EditarPerfilUsuario() {
   const handleSubmit = (event) => {
     event.preventDefault()
 
+    const userId = getUserIdFromJWT()
+    if (!userId) return
+
     const validationError = RegisterValidation(userInfo)
 
     if (!validationError) {
-      axios
-        .put(
-          `https://chargreen.com.mx/api/usuarios/${localStorage.getItem(
-            'userId'
-          )}`,
-          userInfo
-        )
-        .catch((err) => {
-          return toast.error(err.response.data.message)
-        })
+      axiosInstance.put(`/api/usuarios/${userId}`, userInfo).catch((err) => {
+        return toast.error(err.response.data.message)
+      })
     }
   }
 

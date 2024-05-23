@@ -1,88 +1,90 @@
-const router = require('express').Router()
-const db = require('../db.js')
+const express = require('express')
+const router = express.Router()
+const pool = require('../db.js')
 
 // Obtener todos los registros
-router.get('/', (req, res) => {
-    db.query('SELECT * FROM registro', (error, results) => {
-        if (error) {
-            console.error('Error encontrado: ', error)
-            return res
-                .status(500)
-                .json({ message: 'Error al obtener la informacion. ' })
-        }
-        res.status(200).json(results)
-    })
+router.get('/', async (req, res) => {
+  try {
+    const [results] = await pool.execute('SELECT * FROM registro')
+    res.status(200).json(results)
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res
+      .status(500)
+      .json({
+        message: 'Error al obtener la información.',
+        error: error.message,
+      })
+  }
 })
 
 // Obtener un registro por su ID
-router.get('/:id', (req, res) => {
-    db.query(
-        'SELECT * FROM registro WHERE Id = ?',
-        [req.params.id],
-        (error, results) => {
-            if (error) {
-                console.error('Error encontrado: ', error)
-                return res
-                    .status(500)
-                    .json({ message: 'Error al obtener la informacion. ' })
-            }
-            res.status(200).json(results[0])
-        }
+router.get('/:id', async (req, res) => {
+  try {
+    const [results] = await pool.execute(
+      'SELECT * FROM registro WHERE Id = ?',
+      [req.params.id]
     )
+    res.status(200).json(results[0])
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res
+      .status(500)
+      .json({
+        message: 'Error al obtener la información.',
+        error: error.message,
+      })
+  }
 })
 
 // Crear un nuevo registro
-router.post('/', (req, res) => {
-    const registro = req.body
-    db.query('INSERT INTO registro SET ?', registro, (error, results) => {
-        if (error) {
-            console.error('Error encontrado: ', error)
-            return res
-                .status(500)
-                .json({ message: 'Error al obtener la informacion. ' })
-        }
-        res.status(201).json({
-            message: 'Registro añadido correctamente',
-            id: results.insertId,
-        })
+router.post('/', async (req, res) => {
+  const registro = req.body
+  try {
+    const [results] = await pool.execute('INSERT INTO registro SET ?', registro)
+    res.status(201).json({
+      message: 'Registro añadido correctamente',
+      id: results.insertId,
     })
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res
+      .status(500)
+      .json({ message: 'Error al crear el registro.', error: error.message })
+  }
 })
 
 // Actualizar un registro
-router.put('/:id', (req, res) => {
-    const { UsuarioNormal, Botella, Salida } = req.body
-    db.query(
-        'UPDATE registro SET UsuarioNormal = ?, Botella = ?, Salida = ? WHERE Id = ?',
-        [UsuarioNormal, Botella, Salida, req.params.id],
-        (error, results) => {
-            if (error) {
-                console.error('Error encontrado: ', error)
-                return res
-                    .status(500)
-                    .json({ message: 'Error al obtener la informacion. ' })
-            }
-            res.status(200).send(
-                `Registro actualizado con ID: ${req.params.id}`
-            )
-        }
+router.put('/:id', async (req, res) => {
+  const { UsuarioNormal, Botella, Salida } = req.body
+  try {
+    await pool.execute(
+      'UPDATE registro SET UsuarioNormal = ?, Botella = ?, Salida = ? WHERE Id = ?',
+      [UsuarioNormal, Botella, Salida, req.params.id]
     )
+    res.status(200).send(`Registro actualizado con ID: ${req.params.id}`)
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res
+      .status(500)
+      .json({
+        message: 'Error al actualizar el registro.',
+        error: error.message,
+      })
+  }
 })
 
 // Eliminar un registro
-router.delete('/:id', (req, res) => {
-    db.query(
-        'DELETE FROM registro WHERE Id = ?',
-        [req.params.id],
-        (error, results) => {
-            if (error) {
-                console.error('Error encontrado: ', error)
-                return res
-                    .status(500)
-                    .json({ message: 'Error al obtener la informacion. ' })
-            }
-            res.status(200).send(`Registro eliminado con ID: ${req.params.id}`)
-        }
-    )
+router.delete('/:id', async (req, res) => {
+  try {
+    await pool.execute('DELETE FROM registro WHERE Id = ?', [req.params.id])
+    res.status(200).send(`Registro eliminado con ID: ${req.params.id}`)
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res
+      .status(500)
+      .json({ message: 'Error al eliminar el registro.', error: error.message })
+  }
 })
 
 module.exports = router

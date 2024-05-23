@@ -1,70 +1,60 @@
-import React from 'react'
-import toggleMenu from '../../func/NavbarMenu.js'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-const Navbar = ({ title }) => {
+const Navbar = () => {
+  const navigate = useNavigate()
+  const [selected, setSelected] = useState(null)
+
+  const handleClick = (icon, route) => {
+    setSelected(icon)
+    if (route) {
+      navigate(route)
+    } else {
+      alert(`Clicked ${icon}`)
+    }
+  }
+
   return (
-    <header className="bg-primary ">
-      <nav className="text-text flex justify-between items-center mx-auto px-8 py-2">
-        <div>
-          <h1 className="text-4xl font-primary">{title}</h1>
-        </div>
-
-        <div className="nav-links md:static absolute bg-primary md:min-h-fit min-h-[60vh] left-0 top-[-100%] md:w-auto w-full flex items-center px-5">
-          <ul className="text-xl font-secondary flex md:flex-row flex-col md:items-center md:gap-20 gap-8">
-            <li>
-              <a
-                className="hover:text-accent"
-                href="#"
-              >
-                Inicio
-              </a>
-            </li>
-            <li>
-              <Link to="/novedades">
-                <span>Novedades</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/tiempo">
-                <span>Cargar</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/map">
-                <span>Mapa</span>
-              </Link>
-            </li>
-            <li>
-              <Link to="/metricas">
-                <span>Metricas</span>
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        <div className="flex items-center gap-6">
-          <Link to="/editUser">
-            <span className="">
-              <i className="bx bxs-user text-3xl"></i>
-            </span>
-          </Link>
-
-          <Link to="/login">
-            <span className="">
-              <i className="bx bxs-log-in-circle text-3xl"></i>
-            </span>
-          </Link>
-
-          <span>
-            <i
-              onClick={toggleMenu}
-              className="bx bx-menu text-3xl md:hidden"
-            ></i>
-          </span>
-        </div>
+    <footer className="bg-background shadow-2xl h-21 fixed inset-x-0 -bottom-0.5 flex justify-around items-center p-2">
+      <nav className="h-auto fixed inset-x-0 bottom-0 flex justify-around items-center p-2 pb-8">
+        <i
+          className={`bx bx-home text-3xl active:text-primary active:scale-125 rounded ${
+            selected === 'home' ? 'text-primary' : ''
+          }`}
+          onClick={() => handleClick('home', '/')}
+        />
+        <i
+          className={`bx bx-news text-3xl active:text-primary active:scale-125 rounded ${
+            selected === 'novedades' ? 'text-primary' : ''
+          }`}
+          onClick={() => handleClick('novedades', '/novedades')}
+        />
+        <i
+          className={`bx bx-time text-3xl active:text-primary active:scale-125 rounded ${
+            selected === 'time' ? 'text-primary' : ''
+          }`}
+          onClick={() => handleClick('time', '/tiempo')}
+        />
+        <i
+          className={`bx bx-map-alt text-3xl active:text-primary active:scale-125 rounded ${
+            selected === 'map' ? 'text-primary' : ''
+          }`}
+          onClick={() => handleClick('map', '/mapa')}
+        />
+        <i
+          className={`bx bx-bot text-3xl active:text-primary active:scale-125 rounded ${
+            selected === 'bot' ? 'text-primary' : ''
+          }`}
+          onClick={() => handleClick('bot', '/chatbot')}
+        />
+        <i
+          className={`bx bx-user text-3xl active:text-primary active:scale-125 rounded ${
+            selected === 'user' ? 'text-primary' : ''
+          }`}
+          onClick={() => handleClick('user', '/perfil')}
+        />
       </nav>
-    </header>
+    </footer>
   )
 }
 
