@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import LoginValidation from '../func/LoginValidation.js'
@@ -29,13 +29,17 @@ const fields = [
   },
 ]
 
-const Login = ({ setUserRole, setUserId }) => {
+const Login = () => {
   const [values, setValues] = useState({
     username: '',
     password: '',
   })
 
   const navigate = useNavigate()
+
+  useEffect(() => {
+    localStorage.clear()
+  }, [])
 
   const handleSubmit = async (event) => {
     event.preventDefault()

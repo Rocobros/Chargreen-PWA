@@ -55,6 +55,20 @@ app.post('/api/sendToEsp', authenticateToken, (req, res) => {
 
 //TODO: Check validations in api routers
 
+app.get('/api/holamundo', async (req, res) => {
+  let con
+  try {
+    con = await pool.getConnection()
+  } catch (error) {
+    return res.sendStatus(500)
+  } finally {
+    if (con) {
+      con.release()
+    }
+  }
+  return res.send('Hola mundo')
+})
+
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body
 

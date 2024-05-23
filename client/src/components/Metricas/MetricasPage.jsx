@@ -171,7 +171,7 @@ const MetricasPage = () => {
         className="bg-background p-2"
         style={{ paddingBottom: 'var(--navbar-height)' }}
       >
-        <div className="overflow-y-auto">
+        <div className="">
           <div className="text-center mb-5">
             <button
               className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"

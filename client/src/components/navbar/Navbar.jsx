@@ -15,7 +15,7 @@ const Navbar = () => {
   }
 
   return (
-    <footer className="bg-background shadow-2xl h-21 fixed inset-x-0 -bottom-0.5 flex justify-around items-center p-2">
+    <footer className="bg-background shadow-2xl h-20 fixed inset-x-0 -bottom-0.5 flex justify-around items-center p-2">
       <nav className="h-auto fixed inset-x-0 bottom-0 flex justify-around items-center p-2 pb-8">
         <i
           className={`bx bx-home text-3xl active:text-primary active:scale-125 rounded ${
