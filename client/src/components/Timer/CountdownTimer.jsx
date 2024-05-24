@@ -96,13 +96,13 @@ const CountdownTimer = () => {
         <div className="flex flex-row gap-4">
           <button
             className="w-full h-auto mb-2 bg-primary outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
-            onClick={stopTimer}
+            onClick={() => navigate('/mapa')}
           >
             Enlzarme
           </button>
           <button
             className="w-full h-auto mb-2 bg-primary outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
-            onClick={() => navigate('/mapa')}
+            onClick={stopTimer}
           >
             Guardar mi tiempo
           </button>

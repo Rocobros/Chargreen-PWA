@@ -20,6 +20,7 @@ const MetricasPage = () => {
   const [actualTime, setActualTime] = useState(null)
   const [timeUsed, setTimeUsed] = useState(null)
   const [energyUsed, setEnergyUsed] = useState(null)
+  const [noRender, setNoRender] = useState(false)
 
   const getUserIdFromJWT = () => {
     const token = localStorage.getItem('jwt')
@@ -73,6 +74,7 @@ const MetricasPage = () => {
       setPieChartData(null)
       setBarsChartData(null)
       setTimeUsed(null)
+      setNoRender(true)
       return
     }
 
@@ -157,80 +159,82 @@ const MetricasPage = () => {
         now.getMonth(),
         now.getDate() - 7
       )
-      filteredData = data.filter((item) => {
-        const itemDate = new Date(item.Fecha)
-        return itemDate >= oneWeekAgo
-      })
+      filteredData = data.filter((item) => new Date(item.Fecha) >= oneWeekAgo)
     }
     updateCharts(filteredData)
   }
 
   return (
     <>
-      <div
-        className="bg-background p-2"
-        style={{ paddingBottom: 'var(--navbar-height)' }}
-      >
-        <div className="">
-          <div className="text-center mb-5">
-            <button
-              className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
-              onClick={() => filterData('6m')}
-            >
-              Últimos 6 meses
-            </button>
-            <button
-              className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
-              onClick={() => filterData('1m')}
-            >
-              Último mes
-            </button>
-            <button
-              className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
-              onClick={() => filterData('1w')}
-            >
-              Última semana
-            </button>
-          </div>
-          <div className="mb-2">
-            <h1 className="text-center">Cantidad de Botellas por Torre</h1>
-            {pieChartData ? (
-              <Pie data={pieChartData} />
-            ) : (
-              <p>Loading data...</p>
-            )}
-          </div>
-          <div className="mb-2">
-            <h1 className="text-center">
-              Cantidad de Botellas por Clasificación
-            </h1>
-            {barsChartData ? (
-              <Bar
-                data={barsChartData}
-                options={{
-                  scales: {
-                    y: {
-                      beginAtZero: true,
+      {!noRender && (
+        <div
+          className="bg-background p-2"
+          style={{ paddingBottom: 'var(--navbar-height)' }}
+        >
+          <div className="">
+            <div className="text-center mb-5">
+              <button
+                className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+                onClick={() => filterData('6m')}
+              >
+                Últimos 6 meses
+              </button>
+              <button
+                className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+                onClick={() => filterData('1m')}
+              >
+                Último mes
+              </button>
+              <button
+                className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+                onClick={() => filterData('1w')}
+              >
+                Última semana
+              </button>
+            </div>
+            <div className="mb-2">
+              <h1 className="text-center">Cantidad de Botellas por Torre</h1>
+              {pieChartData ? (
+                <Pie data={pieChartData} />
+              ) : (
+                <p>Loading data...</p>
+              )}
+            </div>
+            <div className="mb-2">
+              <h1 className="text-center">
+                Cantidad de Botellas por Clasificación
+              </h1>
+              {barsChartData ? (
+                <Bar
+                  data={barsChartData}
+                  options={{
+                    scales: {
+                      y: {
+                        beginAtZero: true,
+                      },
                     },
-                  },
-                }}
-              />
-            ) : (
-              <p>Loading data...</p>
-            )}
-          </div>
-          <div className="mb-2">
-            <h1 className="text-center text-2xl">
-              Cantidad de tiempo usado: {timeUsed} segundos
-            </h1>
-          </div>
-          <div className="mb-2">
-            <h1 className="text-center text-2xl">
-              Cantidad de energia usada: {Math.floor(energyUsed)} Watts
-            </h1>
+                  }}
+                />
+              ) : (
+                <p>Loading data...</p>
+              )}
+            </div>
+            <div className="mb-2">
+              <h1 className="text-center text-2xl">
+                Cantidad de tiempo usado: {timeUsed} segundos
+              </h1>
+            </div>
+            <div className="mb-2">
+              <h1 className="text-center text-2xl">
+                Cantidad de energia usada: {Math.floor(energyUsed)} Watts
+              </h1>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+      {noRender && (
+        <h1 className="text-4xl font-primary">No se tiene registro</h1>
+      )}
     </>
   )
 }
