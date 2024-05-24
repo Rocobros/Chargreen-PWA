@@ -2,7 +2,8 @@ const express = require('express')
 const router = express.Router()
 const pool = require('../db')
 const nodemailer = require('nodemailer')
-const CheckEmailAndPhoneAvailable = require('../utils/CheckEmailAndPhoneAvailable')
+const CheckEmailAvaiable = require('../utils/CheckEmailAndPhoneAvailable')
+const CheckPhoneAvailable = require('../utils/CheckPhoneAvailable')
 const authenticateToken = require('../utils/authenticateToken')
 const baseUrl = process.env.BASE_URL
 
@@ -120,7 +121,8 @@ router.put('/:registro', authenticateToken, async (req, res) => {
   } = req.body
 
   try {
-    const isAvailable = await CheckEmailAndPhoneAvailable(Correo, Celular)
+    const isAvailable = await CheckPhoneAvailable(Celular, req.params.registro)
+    console.log(isAvailable)
     if (isAvailable === 0) {
       await pool.execute(
         'UPDATE usuariosnormales SET Nombre = ?, ApellidoPaterno = ?, ApellidoMaterno = ?, Celular = ?, Correo = ?, Tiempo = ?, Nivel = ? WHERE Registro = ?',

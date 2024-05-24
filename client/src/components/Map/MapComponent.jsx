@@ -13,31 +13,58 @@ const center = {
   lng: -103.3479102,
 }
 
-const mapOptions = {
-  styles: [
-    {
-      featureType: 'poi.business',
-      stylers: [{ visibility: 'off' }], // Hides business points of interest
-    },
-    {
-      featureType: 'transit',
-      elementType: 'labels.icon',
-      stylers: [{ visibility: 'off' }], // Hides transit icons
-    },
-    {
-      featureType: 'road',
-      elementType: 'labels.icon',
-      stylers: [{ visibility: 'off' }], // Hides road labels and icons
-    },
-  ],
-  disableDefaultUI: true, // disables all the default UI buttons
-  streetViewControl: false, // disables the Street View control
-  mapTypeControl: false, // disables map type controls
-  scaleControl: false, // disables the scale control
-  rotateControl: false, // disables the rotate control
-  fullscreenControl: false, // disables the fullscreen control
-  disableDoubleClickZoom: true, // disables zooming with double click
-}
+const mapStyles = [
+  {
+    featureType: 'administrative',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#444444' }],
+  },
+  {
+    featureType: 'administrative.locality',
+    elementType: 'labels',
+    stylers: [{ visibility: 'on' }],
+  },
+  {
+    featureType: 'administrative.neighborhood',
+    elementType: 'labels',
+    stylers: [{ visibility: 'on' }],
+  },
+  {
+    featureType: 'poi',
+    elementType: 'labels',
+    stylers: [{ visibility: 'off' }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'labels.icon',
+    stylers: [{ visibility: 'off' }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#606060' }],
+  },
+  {
+    featureType: 'road.arterial',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#606060' }],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#606060' }],
+  },
+  {
+    featureType: 'transit',
+    elementType: 'labels',
+    stylers: [{ visibility: 'off' }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#9e9e9e' }],
+  },
+]
 
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
   const toRad = (value) => (value * Math.PI) / 180
@@ -194,12 +221,15 @@ function MapComponent() {
         mapContainerStyle={containerStyle}
         center={center}
         zoom={10}
-        options={mapOptions}
+        options={{
+          styles: mapStyles, // Apply the map styles here
+          disableDefaultUI: true, // Disable default UI for a cleaner look
+        }}
       >
         {locations.map((location) => {
           const hasAvailableExits = location.Exits.length > 0
           const markerIcon = hasAvailableExits
-            ? 'http://maps.google.com/mapfiles/ms/icons/green-dot.png' // Default icon
+            ? 'https://maps.google.com/mapfiles/ms/icons/green-dot.png' // Default icon
             : disabledIcon // Gray icon if no exits available
 
           return (
