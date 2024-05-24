@@ -1,5 +1,5 @@
 export default function validation(values) {
-  let error = ''
+  let error
 
   const TEXT_PATTERN = /^[a-zA-Z\u00f1\u00d1]{3,50}$/
   const TEL_PATTERN = /^[0-9]{10}$/

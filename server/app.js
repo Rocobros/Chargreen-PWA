@@ -165,42 +165,55 @@ app.post('/api/login', async (req, res) => {
   }
 })
 
-app.post('/api/recuperar/:token/:id', (req, res) => {
-  const password = req.body[0].password[0]
-
+app.post('/api/recuperar/:token/:id', async (req, res) => {
+  const password = req.body.password
   const token = req.params.token
   const registro = req.params.id
 
-  const activeToken = `select * from tokens where codigo = "${token}" and usuarionormal = ${registro} and estado = 'A'`
-  db.query(activeToken, (err, data) => {
-    if (data.length > 0) {
-      const getUser = `select credencial as id from usuariosnormales where registro = ${registro}`
-      db.query(getUser, async (err, data) => {
-        console.log(data)
-        const id = data[0].id
-        const hashedPassword = await bcrypt.hash(password, 10)
-        const query = `update credenciales set Contrasena = "${hashedPassword}" where id = ${id}`
-        db.query(query)
+  const activeToken = `select * from tokens where codigo = ? and usuarionormal = ? and estado = 'A'`
 
-        const deactivateToken = `update tokens set estado = 'D' where usuarionormal = ${registro}`
-        db.query(deactivateToken)
-      })
+  try {
+    const [data] = await pool.execute(activeToken, [token, registro])
+    if (data.length > 0) {
+      const getUser = `select credencial as id from usuariosnormales where registro = ?`
+      const [userData] = await pool.execute(getUser, [registro])
+
+      if (userData.length > 0) {
+        const id = userData[0].id
+        const hashedPassword = await bcrypt.hash(password, 10)
+        const updatePassword = `update credenciales set Contrasena = ? where id = ?`
+
+        await pool.execute(updatePassword, [hashedPassword, id])
+
+        const deactivateToken = `update tokens set estado = 'D' where usuarionormal = ?`
+        await pool.execute(deactivateToken, [registro])
+
+        return res
+          .status(200)
+          .json({ message: 'Password updated successfully' })
+      } else {
+        return res.status(404).json({ error: 'User not found' })
+      }
     } else {
-      res.status(400).end()
+      return res.status(400).json({ error: 'Invalid or inactive token' })
     }
-  })
+  } catch (err) {
+    console.log(err.message)
+    return res.status(500).json({ error: 'Internal server error' })
+  }
 })
 
-app.post('/api/mail', (req, res) => {
-  const correo = req.body[0].correo
+app.post('/api/mail', async (req, res) => {
+  const { correo } = req.body
   mailOptions.to = correo
 
   const token = makeToken(10)
 
   const query = `select registro as id from usuariosnormales where correo = "${correo}"`
-  db.query(query, (err, data) => {
-    if (err) {
-      console.log(err.message)
+
+  try {
+    const [data] = await pool.execute(query)
+    if (data.length === 0) {
       return res.status(404).end()
     }
 
@@ -209,24 +222,27 @@ app.post('/api/mail', (req, res) => {
         Ingresa al siguiente link para actualizarla: ${baseUrl}/recuperar?token=${token}&id=${id} 
         Si no has solicitado este cambio has caso omiso al correo`
 
-    transporter.sendMail(mailOptions, function (error, info) {
+    transporter.sendMail(mailOptions, async function (error, info) {
       if (error) {
         return res.json({
           error: error.message,
         })
       }
       const addToken =
-        'insert into tokens(codigo, estado, usuarionormal) values (?)'
+        'insert into tokens(codigo, estado, usuarionormal) values (?,?,?)'
       const vals = [token, 'A', id]
-      db.query(addToken, [vals], (err, data) => {
-        if (err) {
-          console.log(err)
-          return res.json('Error inserting to Token')
-        }
-        return res.json(data)
-      })
+      try {
+        const [result] = await pool.execute(addToken, vals)
+        return res.json(result)
+      } catch (err) {
+        console.log(err)
+        return res.json('Error inserting to Token')
+      }
     })
-  })
+  } catch (err) {
+    console.log(err.message)
+    return res.status(404).end()
+  }
 })
 
 module.exports = app

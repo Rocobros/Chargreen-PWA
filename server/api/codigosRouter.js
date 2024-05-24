@@ -1,11 +1,11 @@
 const express = require('express')
 const router = express.Router()
-const db = require('../db.js')
+const pool = require('../db.js')
 
 // Obtener todos los códigos
 router.get('/', async (req, res) => {
   try {
-    const [results] = await db.query('SELECT * FROM codigos')
+    const [results] = await db.execute('SELECT * FROM codigos')
     res.status(200).json(results)
   } catch (error) {
     console.error('Error encontrado: ', error)
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 // Obtener un código por ID
 router.get('/:id', async (req, res) => {
   try {
-    const [results] = await db.query('SELECT * FROM codigos WHERE Id = ?', [
+    const [results] = await db.execute('SELECT * FROM codigos WHERE Id = ?', [
       req.params.id,
     ])
     res.status(200).json(results[0])
@@ -36,7 +36,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   const codigo = req.body
   try {
-    const [results] = await db.query('INSERT INTO codigos SET ?', codigo)
+    const [results] = await db.execute('INSERT INTO codigos SET ?', [codigo])
     res
       .status(201)
       .json({ message: 'Código añadido correctamente', id: results.insertId })
@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   const { Codigo, TorreCarga, Salida } = req.body
   try {
-    await db.query(
+    await db.execute(
       'UPDATE codigos SET Codigo = ?, TorreCarga = ?, Salida = ? WHERE Id = ?',
       [Codigo, TorreCarga, Salida, req.params.id]
     )
@@ -68,7 +68,7 @@ router.put('/:id', async (req, res) => {
 // Eliminar un código
 router.delete('/:id', async (req, res) => {
   try {
-    await db.query('DELETE FROM codigos WHERE Id = ?', [req.params.id])
+    await db.execute('DELETE FROM codigos WHERE Id = ?', [req.params.id])
     res.status(200).send(`Código eliminado con ID: ${req.params.id}`)
   } catch (error) {
     console.error('Error encontrado: ', error)

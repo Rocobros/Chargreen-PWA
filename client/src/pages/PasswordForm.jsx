@@ -7,6 +7,8 @@ import FormWrapper from '../components/FormComponents/FormWrapper.jsx'
 import FormButton from '../components/FormComponents/FormButton.jsx'
 import FormInput from '../components/FormComponents/FormInput.jsx'
 
+const apiUrl = import.meta.env.VITE_API_URL
+
 const fields = [
   {
     id: 1,
@@ -37,14 +39,19 @@ const PasswordForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     if (!UpdateValidation(values)) {
+      try {
+        
+      } catch (error) {
+        
+      }
       axios
-        .post(`https://chargreen.com.mx/api/recuperar/${token}/${id}`, [values])
+        .post(apiUrl + `/api/recuperar/${token}/${id}`, values)
         .then(navigate('/login'))
     }
   }
 
   const handleInput = (event) => {
-    setValues({ ...values, [event.target.name]: [event.target.value] })
+    setValues({ ...values, [event.target.name]: event.target.value })
   }
 
   const inputs = fields.map((item) => (

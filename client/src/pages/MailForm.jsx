@@ -16,6 +16,8 @@ const fields = [
   },
 ]
 
+const apiUrl = import.meta.env.VITE_API_URL
+
 const UpdatePassword = () => {
   const [correo, setCorreo] = useState('')
   const [message, setMessage] = useState('')
@@ -23,7 +25,7 @@ const UpdatePassword = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     axios
-      .post('https://chargreen.com.mx/api/mail', [{ correo: correo }])
+      .post(apiUrl + '/api/mail', { correo: correo })
       .then(() => {
         setMessage(`Se envio un codigo al correo ${correo}`)
       })

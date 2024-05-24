@@ -12,13 +12,14 @@ import TowerForm from './pages/TowerForm'
 import CountdownTimer from './components/Timer/CountdownTimer'
 import MetricasPage from './components/Metricas/MetricasPage'
 import Verificar from './pages/Verificar'
+import Perfil from './pages/Perfil'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 
 import MapPage from './components/Map/MapPage'
-import EditarPerfilUsuario from './pages/EditarPerfilUsuario'
 import Novedades from './pages/Novedades'
 import PrivateRoute from './components/PrivateRoute'
 import NotFound from './pages/NotFound'
+import EditarPerfilUsuario from './components/EditarPerfilUsuario'
 
 const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
@@ -49,7 +50,11 @@ function App() {
             element={<Home />}
           />
           <Route
-            path="editar"
+            path="perfil"
+            element={<Perfil />}
+          />
+          <Route
+            path="editarPerfil"
             element={<EditarPerfilUsuario />}
           />
           <Route

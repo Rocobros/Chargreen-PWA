@@ -4,7 +4,7 @@
   "description": "App to control the Chargreen Charging Towers",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f4fdf2",
+  "background_color": "#59a73c",
   "theme_color": "#59a73c",
   "icons": [
     {
