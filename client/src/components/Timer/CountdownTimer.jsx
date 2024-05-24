@@ -7,7 +7,7 @@ import { jwtDecode } from 'jwt-decode'
 
 const CountdownTimer = () => {
   const [timeInSeconds, setTimeInSeconds] = useState(0)
-  const [isActive, setIsActive] = useState(true)
+  const [isActive, setIsActive] = useState(false)
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -27,13 +27,16 @@ const CountdownTimer = () => {
       try {
         const response = await axiosInstance.get(`/api/usuarios/${userId}`)
         setTimeInSeconds(response.data.Tiempo)
+        if (location.state) {
+          setIsActive(true)
+        }
       } catch (error) {
         console.error('Error fetching initial time:', error)
       }
     }
 
     fetchInitialTime()
-  }, [])
+  }, [location.state])
 
   useEffect(() => {
     let timer = null
@@ -41,8 +44,11 @@ const CountdownTimer = () => {
       timer = setInterval(() => {
         setTimeInSeconds((prevTime) => prevTime - 1)
       }, 1000)
-    } else if (!isActive) {
+    } else if (timeInSeconds <= 0) {
       clearInterval(timer)
+      if (isActive) {
+        stopTimer()
+      }
     }
     return () => clearInterval(timer)
   }, [isActive, timeInSeconds])
@@ -57,12 +63,16 @@ const CountdownTimer = () => {
       .then(() => {
         setIsActive(false)
         setTimeInSeconds(0)
-        axiosInstance.post('/api/sendToEsp', {
-          Torre: location.state.torre,
-          Salida: location.state.salidaId,
-          Tiempo: 0,
-        })
-        axiosInstance.put(`/api/salidas/desactivar/${location.state.salidaId}`)
+        if (location.state) {
+          axiosInstance.post('/api/sendToEsp', {
+            Torre: location.state.torre,
+            Salida: location.state.salidaId,
+            Tiempo: 0,
+          })
+          axiosInstance.put(
+            `/api/salidas/desactivar/${location.state.salidaId}`
+          )
+        }
       })
       .catch((err) => {
         console.error(err)
@@ -85,16 +95,16 @@ const CountdownTimer = () => {
         </h1>
         <div className="flex flex-row gap-4">
           <button
-            className="w-full h-10 mb-2 bg-primary outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
-            onClick={() => navigate('/map')}
-          >
-            Ir al mapa
-          </button>
-          <button
-            className="w-full h-10 mb-2 bg-primary outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
+            className="w-full h-auto mb-2 bg-primary outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
             onClick={stopTimer}
           >
-            Stop
+            Enlzarme
+          </button>
+          <button
+            className="w-full h-auto mb-2 bg-primary outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
+            onClick={() => navigate('/mapa')}
+          >
+            Guardar mi tiempo
           </button>
         </div>
       </div>

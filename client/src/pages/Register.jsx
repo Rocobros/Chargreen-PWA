@@ -97,7 +97,7 @@ const Register = () => {
         .post('/api/credenciales', credentials)
         .then(async (res) => {
           try {
-            return await axiosInstance
+            await axiosInstance
               .post('/api/usuarios', {
                 ...userInfo,
                 Credencial: res.data.id,
