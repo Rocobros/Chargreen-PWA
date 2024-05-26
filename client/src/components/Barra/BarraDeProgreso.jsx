@@ -13,7 +13,6 @@ const BarraDeProgreso = () => {
       try {
         const response = await axiosInstance.get(`/api/registro/month/${id}`)
         const botellasActuales = response.data.botellas
-        console.log(botellasActuales)
 
         const user = await axiosInstance.get(`/api/usuarios/${id}`)
         const userLevel = user.data.Nivel
@@ -32,7 +31,6 @@ const BarraDeProgreso = () => {
           levelAmount = 101
           nextAmount = 201
         }
-        console.log(nextAmount)
 
         setProgreso(
           Math.round(
