@@ -138,7 +138,7 @@ router.put('/:registro', authenticateToken, async (req, res) => {
         ]
       )
       res.status(200).json({ message: 'Usuario actualizado correctamente' })
-    } else if (isAvailable === 2) {
+    } else if (isAvailable === 1) {
       res.status(409).json({ message: 'El celular ya está registrado' })
     }
   } catch (error) {
