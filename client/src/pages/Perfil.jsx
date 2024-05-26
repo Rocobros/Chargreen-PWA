@@ -8,7 +8,7 @@ const Perfil = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState({})
   const [nivel, setNivel] = useState({})
-  
+
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem('jwt')
@@ -33,8 +33,10 @@ const Perfil = () => {
         <h1 className="text-4xl font-primary font-bold">Perfil de usuario</h1>
       </header>
       <div className="p-4 text-3xl">
-        Hola {user.Nombre}, eres un{' '}
-        <span className="text-primary">{nivel.Nombre}</span>
+        Hola {user.Nombre}
+        <br />
+        <br />
+        Tu nivel actual es: <span className="text-primary">{nivel.Nombre}</span>
         <p className="text-base mt-8">Progreso al siguiente nivel: </p>
       </div>
       <BarraDeProgreso />

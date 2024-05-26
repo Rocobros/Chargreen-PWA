@@ -29,7 +29,7 @@ const Home = () => {
     >
       <div className="overflow-y-scroll p-4">
         <h1 className="font-primary font-bold text-4xl text-center">
-          Bienvendio, {userData.Nombre}
+          Bienvenido, {userData.Nombre}
         </h1>
 
         <div className="h-full w-full ">
