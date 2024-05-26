@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-05-2024 a las 13:12:13
+-- Tiempo de generación: 26-05-2024 a las 22:29:09
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -123,6 +123,7 @@ CREATE TABLE `novedades` (
   `Titulo` varchar(255) DEFAULT NULL,
   `Descripcion` varchar(255) DEFAULT NULL,
   `Imagen` varchar(255) DEFAULT NULL,
+  `Fecha` date NOT NULL DEFAULT current_timestamp(),
   `UsuarioModerador` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -130,8 +131,8 @@ CREATE TABLE `novedades` (
 -- Volcado de datos para la tabla `novedades`
 --
 
-INSERT INTO `novedades` (`Id`, `Titulo`, `Descripcion`, `Imagen`, `UsuarioModerador`) VALUES
-(3, 'Novedad Uno', 'Descripcion', 'URL', 2);
+INSERT INTO `novedades` (`Id`, `Titulo`, `Descripcion`, `Imagen`, `Fecha`, `UsuarioModerador`) VALUES
+(3, 'Novedad Uno', 'Otra Descripcion', 'https://via.placeholder.com/400x300', '2024-05-01', 2);
 
 -- --------------------------------------------------------
 
@@ -168,7 +169,167 @@ INSERT INTO `registro` (`Id`, `UsuarioNormal`, `Botella`, `Salida`, `Fecha`) VAL
 (15, 2, 1, 1, '2024-05-16'),
 (16, 2, 2, 1, '2024-05-16'),
 (17, 2, 3, 1, '2024-05-16'),
-(18, 2, 3, 8, '2024-05-16');
+(18, 2, 3, 8, '2024-05-16'),
+(19, 2, 2, 2, '2024-05-15'),
+(20, 3, 1, 4, '2024-03-12'),
+(21, 16, 4, 7, '2024-01-25'),
+(22, 2, 3, 1, '2024-04-08'),
+(23, 3, 2, 5, '2024-02-10'),
+(24, 16, 1, 3, '2024-05-02'),
+(25, 2, 4, 6, '2024-03-05'),
+(26, 3, 3, 8, '2024-04-15'),
+(27, 16, 2, 2, '2024-02-27'),
+(28, 2, 1, 7, '2024-03-29'),
+(29, 3, 4, 1, '2024-01-13'),
+(30, 16, 3, 5, '2024-02-20'),
+(31, 2, 2, 4, '2024-05-05'),
+(32, 3, 1, 6, '2024-04-21'),
+(33, 16, 4, 3, '2024-03-15'),
+(34, 2, 3, 2, '2024-01-31'),
+(35, 3, 2, 8, '2024-02-25'),
+(36, 16, 1, 5, '2024-04-11'),
+(37, 2, 4, 7, '2024-01-05'),
+(38, 3, 3, 6, '2024-03-19'),
+(39, 16, 2, 4, '2024-02-14'),
+(40, 2, 1, 3, '2024-05-10'),
+(41, 3, 4, 8, '2024-03-27'),
+(42, 16, 3, 7, '2024-04-03'),
+(43, 2, 2, 5, '2024-01-22'),
+(44, 3, 1, 2, '2024-02-18'),
+(45, 16, 4, 6, '2024-04-25'),
+(46, 2, 3, 4, '2024-03-11'),
+(47, 3, 2, 7, '2024-01-17'),
+(48, 16, 1, 1, '2024-02-22'),
+(49, 2, 4, 8, '2024-03-06'),
+(50, 3, 3, 5, '2024-04-14'),
+(51, 16, 2, 3, '2024-01-28'),
+(52, 2, 1, 6, '2024-02-15'),
+(53, 3, 4, 2, '2024-05-06'),
+(54, 16, 3, 8, '2024-04-24'),
+(55, 2, 2, 7, '2024-01-10'),
+(56, 3, 1, 5, '2024-02-13'),
+(57, 16, 4, 4, '2024-03-08'),
+(58, 2, 3, 2, '2024-04-13'),
+(59, 3, 2, 6, '2024-01-14'),
+(60, 16, 1, 8, '2024-02-24'),
+(61, 2, 4, 1, '2024-05-01'),
+(62, 3, 3, 7, '2024-03-14'),
+(63, 16, 2, 5, '2024-01-12'),
+(64, 2, 1, 4, '2024-04-19'),
+(65, 3, 4, 3, '2024-02-16'),
+(66, 16, 3, 6, '2024-03-20'),
+(67, 2, 2, 8, '2024-01-30'),
+(68, 3, 1, 7, '2024-04-22'),
+(69, 16, 4, 2, '2024-02-26'),
+(70, 2, 3, 5, '2024-03-07'),
+(71, 3, 2, 4, '2024-01-15'),
+(72, 16, 1, 6, '2024-04-16'),
+(73, 2, 4, 7, '2024-02-11'),
+(74, 3, 3, 2, '2024-01-29'),
+(75, 16, 2, 1, '2024-03-04'),
+(76, 2, 1, 3, '2024-04-05'),
+(77, 3, 4, 8, '2024-02-17'),
+(78, 16, 3, 7, '2024-01-18'),
+(79, 2, 2, 6, '2024-04-09'),
+(80, 3, 1, 5, '2024-03-22'),
+(81, 16, 4, 4, '2024-02-21'),
+(82, 2, 3, 8, '2024-01-19'),
+(83, 3, 2, 7, '2024-04-12'),
+(84, 16, 1, 2, '2024-03-25'),
+(85, 2, 4, 1, '2024-02-27'),
+(86, 3, 3, 4, '2024-01-07'),
+(87, 16, 2, 5, '2024-04-26'),
+(88, 2, 1, 3, '2024-02-01'),
+(89, 3, 4, 6, '2024-01-08'),
+(90, 16, 3, 2, '2024-03-18'),
+(91, 2, 2, 8, '2024-02-02'),
+(92, 3, 1, 7, '2024-04-28'),
+(93, 16, 4, 5, '2024-01-09'),
+(94, 2, 3, 4, '2024-02-03'),
+(95, 3, 2, 6, '2024-04-30'),
+(96, 16, 1, 1, '2024-01-11'),
+(97, 2, 4, 3, '2024-02-04'),
+(98, 3, 3, 5, '2024-04-27'),
+(99, 16, 2, 8, '2024-01-13'),
+(100, 2, 1, 2, '2024-02-05'),
+(101, 3, 4, 7, '2024-04-23'),
+(102, 16, 3, 6, '2024-01-06'),
+(103, 2, 2, 1, '2024-02-06'),
+(104, 3, 1, 4, '2024-04-04'),
+(105, 16, 4, 3, '2024-01-26'),
+(106, 2, 3, 8, '2024-02-07'),
+(107, 3, 2, 5, '2024-04-10'),
+(108, 16, 1, 7, '2024-01-23'),
+(109, 2, 4, 2, '2024-02-08'),
+(110, 3, 3, 6, '2024-04-07'),
+(111, 16, 2, 4, '2024-01-20'),
+(112, 2, 1, 5, '2024-02-09'),
+(113, 3, 4, 1, '2024-04-11'),
+(114, 16, 3, 8, '2024-01-27'),
+(115, 2, 2, 3, '2024-02-12'),
+(116, 3, 1, 7, '2024-04-02'),
+(117, 16, 4, 6, '2024-01-24'),
+(118, 2, 3, 5, '2024-03-21'),
+(119, 3, 2, 2, '2024-01-21'),
+(120, 16, 1, 4, '2024-02-19'),
+(121, 2, 4, 8, '2024-03-17'),
+(122, 3, 3, 6, '2024-01-16'),
+(123, 16, 2, 1, '2024-02-23'),
+(124, 2, 1, 7, '2024-03-09'),
+(125, 3, 4, 3, '2024-01-03'),
+(126, 16, 3, 5, '2024-02-13'),
+(127, 2, 2, 6, '2024-03-13'),
+(128, 3, 1, 8, '2024-01-01'),
+(129, 16, 4, 4, '2024-02-15'),
+(130, 2, 3, 2, '2024-03-01'),
+(131, 3, 2, 7, '2024-01-04'),
+(132, 16, 1, 3, '2024-02-16'),
+(133, 2, 4, 5, '2024-03-23'),
+(134, 3, 3, 1, '2024-01-02'),
+(135, 16, 2, 8, '2024-02-18'),
+(136, 2, 1, 4, '2024-03-02'),
+(137, 3, 4, 7, '2024-01-31'),
+(138, 16, 3, 6, '2024-02-20'),
+(139, 2, 2, 3, '2024-03-03'),
+(140, 3, 1, 5, '2024-01-12'),
+(141, 16, 4, 2, '2024-02-22'),
+(142, 2, 3, 4, '2024-03-05'),
+(143, 3, 2, 6, '2024-01-10'),
+(144, 16, 1, 7, '2024-02-26'),
+(145, 2, 4, 1, '2024-03-28'),
+(146, 3, 3, 8, '2024-01-14'),
+(147, 16, 2, 5, '2024-02-24'),
+(148, 2, 1, 2, '2024-03-04'),
+(149, 3, 4, 6, '2024-01-17'),
+(150, 16, 3, 3, '2024-02-28'),
+(151, 2, 2, 1, '2024-03-10'),
+(152, 3, 1, 4, '2024-01-19'),
+(153, 16, 4, 5, '2024-02-25'),
+(154, 2, 3, 7, '2024-03-12'),
+(155, 3, 2, 8, '2024-01-20'),
+(156, 16, 1, 6, '2024-02-23'),
+(157, 2, 4, 3, '2024-03-18'),
+(158, 3, 3, 2, '2024-01-29'),
+(159, 16, 2, 4, '2024-02-27'),
+(160, 2, 1, 8, '2024-03-20'),
+(161, 3, 4, 5, '2024-01-07'),
+(162, 16, 3, 1, '2024-02-11'),
+(163, 2, 2, 6, '2024-03-19'),
+(164, 3, 1, 7, '2024-01-30'),
+(165, 16, 4, 2, '2024-02-14'),
+(166, 2, 3, 4, '2024-03-22'),
+(167, 3, 2, 5, '2024-01-11'),
+(168, 16, 1, 3, '2024-02-16'),
+(169, 2, 4, 1, '2024-03-25'),
+(170, 3, 3, 8, '2024-01-13'),
+(171, 16, 2, 7, '2024-02-10'),
+(172, 2, 1, 2, '2024-03-24'),
+(173, 3, 4, 4, '2024-01-21'),
+(174, 16, 3, 6, '2024-02-12'),
+(175, 2, 2, 5, '2024-03-26'),
+(176, 3, 1, 1, '2024-01-08'),
+(177, 16, 4, 3, '2024-02-08'),
+(194, 2, 2, 2, '2024-05-26');
 
 --
 -- Disparadores `registro`
@@ -204,10 +365,8 @@ CREATE TRIGGER `after_insert_registro` AFTER INSERT ON `registro` FOR EACH ROW B
     DECLARE min_quantity_next_level INT;
 
     
-    SELECT COUNT(*) INTO count_registros
-    FROM registro
-    WHERE UsuarioNormal = NEW.UsuarioNormal;
-
+    SELECT COUNT(*) INTO count_registros 
+    FROM registro WHERE DATE_FORMAT(Fecha, '%Y-%m') 	= DATE_FORMAT(NOW(), '%Y-%m') AND UsuarioNormal = 		NEW.UsuarioNormal;
     
     SELECT Nivel INTO current_level
     FROM usuariosnormales
@@ -254,10 +413,10 @@ INSERT INTO `salidas` (`Id`, `Numero`, `Estado`, `TorreCarga`) VALUES
 (2, 2, 'D', 22),
 (3, 3, 'D', 22),
 (4, 4, 'D', 22),
-(5, 1, 'D', 24),
-(6, 2, 'D', 24),
-(7, 3, 'D', 24),
-(8, 4, 'D', 24);
+(5, 1, 'A', 24),
+(6, 2, 'A', 24),
+(7, 3, 'A', 24),
+(8, 4, 'A', 24);
 
 -- --------------------------------------------------------
 
@@ -307,6 +466,18 @@ CREATE TRIGGER `AfterInsertTorreCarga` AFTER INSERT ON `torrecarga` FOR EACH ROW
     (new_id + 1, '2', 'D', NEW.Id),
     (new_id + 2, '3', 'D', NEW.Id),
     (new_id + 3, '4', 'D', NEW.Id);
+END
+$$
+DELIMITER ;
+DELIMITER $$
+CREATE TRIGGER `NovedadAlInsertarTorre` AFTER INSERT ON `torrecarga` FOR EACH ROW BEGIN
+    INSERT INTO novedades (Titulo, Descripcion, Imagen, UsuarioModerador)
+    VALUES (
+        CONCAT('Nueva Torre Creada: ', NEW.Nombre),
+        'Se ha instalado una nueva torre de carga para el uso de nuestro usuarios, revisala en el mapa',
+        NULL,
+        NULL
+    );
 END
 $$
 DELIMITER ;
@@ -376,6 +547,7 @@ CREATE TABLE `usuariosnormales` (
   `FechaCreacion` date DEFAULT current_timestamp(),
   `Tiempo` int(11) NOT NULL DEFAULT 0,
   `Estado` varchar(1) NOT NULL DEFAULT 'D',
+  `Notificaciones` varchar(1) NOT NULL DEFAULT 'D',
   `Nivel` tinyint(4) NOT NULL DEFAULT 2,
   `Credencial` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -384,11 +556,11 @@ CREATE TABLE `usuariosnormales` (
 -- Volcado de datos para la tabla `usuariosnormales`
 --
 
-INSERT INTO `usuariosnormales` (`Registro`, `Nombre`, `ApellidoPaterno`, `ApellidoMaterno`, `Celular`, `Correo`, `FechaCreacion`, `Tiempo`, `Estado`, `Nivel`, `Credencial`) VALUES
-(2, 'Rodrigo', 'Romero', 'Corvera', '3316346586', 'rocobros21@gmail.com', '2024-03-15', 985, 'A', 2, 1),
-(3, 'Diego', 'Romero', 'Corvera', '3338465252', 'diego2105@gmail.com', '2024-03-15', 6180, 'A', 2, 2),
-(16, 'Monica', 'Corvera', 'Romo', '3318107819', 'monicorverar@gmail.com', '2024-04-17', 0, 'D', 2, 29),
-(37, 'Susana', 'Ferrer', 'Hernandez', '1234567890', 'a20300699@ceti.mx', '2024-05-17', 0, 'A', 2, 65);
+INSERT INTO `usuariosnormales` (`Registro`, `Nombre`, `ApellidoPaterno`, `ApellidoMaterno`, `Celular`, `Correo`, `FechaCreacion`, `Tiempo`, `Estado`, `Notificaciones`, `Nivel`, `Credencial`) VALUES
+(2, 'Rodrigo', 'Romero', 'Romero', '3312345678', 'rocobros21@gmail.com', '2024-03-15', 25460, 'A', 'D', 2, 1),
+(3, 'Diego', 'Romero', 'Corvera', '3338465252', 'diego2105@gmail.com', '2024-03-15', 5000, 'A', 'D', 2, 2),
+(16, 'Monica', 'Corvera', 'Romo', '3318107819', 'monicorverar@gmail.com', '2024-04-17', 5000, 'D', 'D', 2, 29),
+(37, 'Susana', 'Ferrer', 'Hernandez', '1234567890', 'a20300699@ceti.mx', '2024-05-17', 300, 'A', 'D', 2, 65);
 
 --
 -- Índices para tablas volcadas
@@ -517,7 +689,7 @@ ALTER TABLE `novedades`
 -- AUTO_INCREMENT de la tabla `registro`
 --
 ALTER TABLE `registro`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=195;
 
 --
 -- AUTO_INCREMENT de la tabla `salidas`
@@ -623,13 +795,11 @@ DELIMITER $$
 --
 CREATE DEFINER=`root`@`localhost` EVENT `BorrarTokens` ON SCHEDULE EVERY 5 MINUTE STARTS '2024-05-04 21:56:28' ON COMPLETION NOT PRESERVE ENABLE DO DELETE FROM tokens$$
 
-CREATE DEFINER=`root`@`localhost` EVENT `update_tiempo` ON SCHEDULE EVERY 1 MONTH STARTS '2024-05-01 00:00:00' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
-    UPDATE usuariosnormales u
+CREATE DEFINER=`root`@`localhost` EVENT `reset_nivel` ON SCHEDULE EVERY 1 MONTH STARTS '2024-05-01 00:00:00' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
+	UPDATE usuariosnormales u
     JOIN nivelusuario n ON u.Nivel = n.Id
     SET u.Tiempo = u.Tiempo + n.SegundosAlMes;
-END$$
 
-CREATE DEFINER=`root`@`localhost` EVENT `reset_nivel` ON SCHEDULE EVERY 1 MONTH STARTS '2024-05-01 00:00:00' ON COMPLETION NOT PRESERVE ENABLE DO BEGIN
     UPDATE usuariosnormales
     SET Nivel = DEFAULT(Nivel);
 END$$
