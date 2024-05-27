@@ -34,6 +34,7 @@ function App() {
     '/404',
   ].includes(location.pathname)
   const [userId, setUserId] = useState(null)
+
   return (
     <LoadScript
       googleMapsApiKey={key}
@@ -112,7 +113,6 @@ function App() {
           element={<Navigate to="/404" />}
         />
       </Routes>
-      {/* {!isCommonRoute && <Navbar />} */}
     </LoadScript>
   )
 }
