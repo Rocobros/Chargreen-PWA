@@ -1,6 +1,7 @@
 import { React, useEffect, useState } from 'react'
 import axiosInstance from '../func/axiosInstance'
 import { jwtDecode } from 'jwt-decode'
+import Navbar from '../components/navbar/Navbar'
 
 const Home = () => {
   const [userData, setUserData] = useState({})
@@ -66,6 +67,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <Navbar />
     </>
   )
 }

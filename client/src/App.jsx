@@ -112,7 +112,7 @@ function App() {
           element={<Navigate to="/404" />}
         />
       </Routes>
-      {!isCommonRoute && <Navbar />}
+      {/* {!isCommonRoute && <Navbar />} */}
     </LoadScript>
   )
 }

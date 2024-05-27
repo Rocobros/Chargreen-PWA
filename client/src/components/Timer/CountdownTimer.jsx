@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axiosInstance from '../../func/axiosInstance'
 import { jwtDecode } from 'jwt-decode'
+import Navbar from '../navbar/Navbar'
 
 //TODO: Modificar el tiempo del usuario y desactivar la salida cuando se termine el tiempo
 
@@ -114,6 +115,7 @@ const CountdownTimer = () => {
           </div>
         </div>
       </div>
+      <Navbar />
     </>
   )
 }

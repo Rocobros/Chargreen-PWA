@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axiosInstance from '../func/axiosInstance'
 import Tarjeta from '../components/Novedades/Tarjeta'
+import Navbar from '../components/navbar/Navbar'
 
 const Novedades = () => {
   const [novedades, setNovedades] = useState([])
@@ -70,6 +71,7 @@ const Novedades = () => {
           ))}
         </div>
       </div>
+      <Navbar />
     </>
   )
 }

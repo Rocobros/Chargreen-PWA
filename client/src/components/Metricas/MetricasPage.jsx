@@ -4,6 +4,7 @@ import 'chart.js/auto'
 import axiosInstance from '../../func/axiosInstance'
 import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
+import Navbar from '../navbar/Navbar'
 
 const colors = {
   text: '#081603',
@@ -247,6 +248,7 @@ const MetricasPage = () => {
       {noRender && (
         <h1 className="text-4xl font-primary">No se tiene registro</h1>
       )}
+      <Navbar />
     </>
   )
 }

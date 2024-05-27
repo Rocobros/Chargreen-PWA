@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import Switch from './FormComponents/Switch'
 import EditValidation from '../func/EditValidation'
 import { toast, Toaster } from 'sonner'
+import Navbar from './navbar/Navbar'
 
 const EditarPerfilUsuario = () => {
   const [userInfo, setUserInfo] = useState({})
@@ -218,6 +219,7 @@ const EditarPerfilUsuario = () => {
           </div>
         </form>
       </div>
+      <Navbar />
     </>
   )
 }
