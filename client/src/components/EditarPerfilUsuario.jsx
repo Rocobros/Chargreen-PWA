@@ -80,98 +80,120 @@ const EditarPerfilUsuario = () => {
   return (
     <>
       <Toaster />
-
+      <header className="flex items-center justify-between border-b p-2 bg-primary">
+        <button
+          onClick={() => navigate('/perfil')}
+          className="text-3xl"
+        >
+          ←
+        </button>
+        <h1 className="text-3xl font-bold">Editar Perfil</h1>
+      </header>
       <div
-        className="max-w-md mx-auto p-6 border bg-background rounded-sm font-secondary text-3xl text-text"
+        className="max-w-md mx-auto p-6 border bg-background rounded-sm font-secondary text-text"
         style={{ paddingBottom: 'var(--navbar-height)' }}
       >
-        <h2 className="mb-6 text-4xl font-primary">Personal info</h2>
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col space-y-4"
+          className="flex flex-col space-y-4 text-2xl"
         >
-          <label className="flex flex-col">
-            Usuario
-            <input
-              disabled
-              type="text"
-              name="Usuario"
-              value={credentials.Usuario}
-              className="mt-1 p-2 border rounded-md"
-            />
-          </label>
-          <label className="flex flex-col">
-            Fecha de Creacion
-            <input
-              disabled
-              type="text"
-              name="FechaCreacion"
-              value={new Date(userInfo.FechaCreacion)}
-              className="mt-1 p-2 border rounded-md"
-            />
-          </label>
-          <label className="flex flex-col">
-            Nombre
-            <input
-              onChange={handleUserInput}
-              type="text"
-              name="Nombre"
-              value={userInfo.Nombre}
-              className="mt-1 p-2 border rounded-md"
-            />
-          </label>
-          <label className="flex flex-col">
-            Apellido Paterno
-            <input
-              onChange={handleUserInput}
-              type="text"
-              name="ApellidoPaterno"
-              value={userInfo.ApellidoPaterno}
-              className="mt-1 p-2 border rounded-md"
-            />
-          </label>
-          <label className="flex flex-col">
-            Apellido Materno
-            <input
-              onChange={handleUserInput}
-              type="text"
-              name="ApellidoMaterno"
-              value={userInfo.ApellidoMaterno}
-              className="mt-1 p-2 border rounded-md"
-            />
-          </label>
-          <label className="flex flex-col">
-            Correo
-            <input
-              disabled
-              onChange={handleUserInput}
-              type="mail"
-              name="Correo"
-              value={userInfo.Correo}
-              className="mt-1 p-2 border rounded-md"
-            />
-          </label>
-          <label className="flex flex-col">
-            Celular
-            <input
-              onChange={handleUserInput}
-              type="number"
-              name="Celular"
-              value={userInfo.Celular}
-              className="mt-1 p-2 border rounded-md"
-            />
-          </label>
+          <section className="mb-4">
+            <h2 className="text-lg font-semibold mb-2">CUENTA</h2>
+            <div className="flex justify-between items-center border-b py-2">
+              <label className=" flex flex-col font-semibold">
+                Usuario
+                <input
+                  disabled
+                  type="text"
+                  name="Usuario"
+                  value={credentials.Usuario}
+                />
+              </label>
+            </div>
+            <div className="flex justify-between items-center border-b py-2">
+              <label className="flex flex-col font-semibold">
+                Fecha de Creacion
+                <input
+                  disabled
+                  type="text"
+                  name="FechaCreacion"
+                  value={userInfo.FechaCreacion}
+                />
+              </label>
+            </div>
+            <div className="flex justify-between items-center border-b py-2">
+              <label className="flex flex-col font-semibold">
+                Nivel de Cuenta
+                <input
+                  disabled
+                  type="text"
+                  name="Nivel"
+                  value={nivel.Nombre}
+                />
+              </label>
+            </div>
+          </section>
 
-          <label className="flex flex-col">
-            Nivel de Cuenta
-            <input
-              disabled
-              type="text"
-              name="Nivel"
-              value={nivel.Nombre}
-              className="mt-1 p-2 border rounded-md"
-            />
-          </label>
+          <section className="mb-4">
+            <h2 className="text-lg font-semibold mb-2">DATOS PERSONALES</h2>
+            <div className="flex justify-between items-center border-b py-2">
+              <label className="flex flex-col font-semibold">
+                Nombre
+                <input
+                  onChange={handleUserInput}
+                  type="text"
+                  name="Nombre"
+                  value={userInfo.Nombre}
+                />
+              </label>
+            </div>
+            <div className="flex justify-between items-center border-b py-2">
+              <label className="flex flex-col font-semibold">
+                Apellido Paterno
+                <input
+                  onChange={handleUserInput}
+                  type="text"
+                  name="ApellidoPaterno"
+                  value={userInfo.ApellidoPaterno}
+                />
+              </label>
+            </div>
+            <div className="flex justify-between items-center border-b py-2">
+              <label className="flex flex-col font-semibold">
+                Apellido Materno
+                <input
+                  onChange={handleUserInput}
+                  type="text"
+                  name="ApellidoMaterno"
+                  value={userInfo.ApellidoMaterno}
+                />
+              </label>
+            </div>
+            <div className="flex justify-between items-center border-b py-2">
+              <label className="flex flex-col font-semibold">
+                Correo
+                <input
+                  disabled
+                  onChange={handleUserInput}
+                  type="mail"
+                  name="Correo"
+                  value={userInfo.Correo}
+                />
+              </label>
+            </div>
+            <div className="flex justify-between items-center border-b py-2">
+              <label className="flex flex-col font-semibold">
+                Celular
+                <input
+                  onChange={handleUserInput}
+                  type="number"
+                  name="Celular"
+                  value={userInfo.Celular}
+                />
+              </label>
+            </div>
+          </section>
+
           <label className="flex flex-col">
             Notificaciones
             <Switch
@@ -182,14 +204,14 @@ const EditarPerfilUsuario = () => {
           <div className="flex flex-row gap-4">
             <button
               type="submit"
-              className="flex-1 py-2 px-4 bg-primary text-text rounded-md hover:bg-green-700"
+              className="flex-1 py-2 px-4 bg-primary text-text rounded-md hover:bg-green-700 font-semibold"
               onClick={() => navigate('/perfil')}
             >
               Back
             </button>
             <button
               type="submit"
-              className=" flex-1 py-2 px-4 bg-primary text-text rounded-md hover:bg-green-700"
+              className=" flex-1 py-2 px-4 bg-primary text-text rounded-md hover:bg-green-700 font-semibold "
             >
               Save
             </button>

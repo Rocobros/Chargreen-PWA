@@ -52,7 +52,7 @@ router.post('/', async (req, res) => {
   } = req.body
 
   try {
-    const isAvailable = await CheckEmailAndPhoneAvailable(Correo, Celular)
+    const isAvailable = await CheckEmailAvaiable(Correo, Celular)
     if (isAvailable === 0) {
       const [results] = await pool.execute(
         'INSERT INTO usuariosnormales (Nombre, ApellidoPaterno, ApellidoMaterno, Celular, Correo, Credencial) VALUES (?, ?, ?, ?, ?, ?)',

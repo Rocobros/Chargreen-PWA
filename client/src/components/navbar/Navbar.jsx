@@ -1,15 +1,26 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 const Navbar = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const [selected, setSelected] = useState(location.pathname)
+  const [selected, setSelected] = useState('')
 
   const handleClick = (route) => {
     setSelected(route)
     navigate(route)
   }
+
+  useEffect(() => {
+    const loc = location.pathname
+    if (loc === '/editarPerfil') {
+      setSelected('/perfil')
+    } else if (loc === '/metricas') {
+      setSelected('/perfil')
+    } else {
+      setSelected(loc)
+    }
+  }, [])
 
   return (
     <footer className="bg-background shadow-2xl h-20 fixed inset-x-0 -bottom-0.5 flex justify-around items-center p-2 border-t-2">
