@@ -88,27 +88,33 @@ const CountdownTimer = () => {
   const formattedSeconds = String(seconds).padStart(2, '0')
 
   return (
-    <div className="flex justify-center items-center h-screen overflow-hidden">
-      <div className="w-5/6 md:w-fit h-fit text-text font-secondary font-semibold px-10 py-8">
-        <h1 className="font-primary font-bold text-8xl text-center pb-4">
-          {formattedMinutes}:{formattedSeconds}
-        </h1>
-        <div className="flex flex-row gap-4">
-          <button
-            className="w-full h-auto mb-2 bg-primary outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
-            onClick={() => navigate('/mapa')}
-          >
-            Enlzarme
-          </button>
-          <button
-            className="w-full h-auto mb-2 bg-primary outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
-            onClick={stopTimer}
-          >
-            Guardar mi tiempo
-          </button>
+    <>
+      <header className="flex items-center p-4 border-b border-gray-300 bg-primary">
+        <h1 className="text-4xl font-primary font-bold">Mi tiempo</h1>
+      </header>
+      <div className="flex justify-center items-center mt-60">
+        <div className="w-5/6 md:w-fit h-auto text-text font-secondary font-semibold px-10 py-8">
+          <h1 className="font-primary font-bold text-8xl text-center pb-4">
+            {formattedMinutes}:{formattedSeconds}
+          </h1>
+          <div className="flex flex-row gap-4">
+            <button
+              className="w-full h-auto mb-2 bg-primary outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
+              onClick={() => navigate('/mapa')}
+            >
+              Enlzarme
+            </button>
+            <button
+              className="w-full h-auto mb-2 bg-primary outline-none rounded-3xl shadow-lg text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
+              onClick={stopTimer}
+              disabled={!isActive}
+            >
+              Guardar mi tiempo
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 

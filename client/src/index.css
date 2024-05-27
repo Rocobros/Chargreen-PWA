@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  color: #081603;
+}
+
 :root {
   --navbar-height: 5rem;
 }

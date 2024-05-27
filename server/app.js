@@ -33,7 +33,7 @@ app.use(requestLogger)
 
 app.use('/api/botellaslatas', authenticateToken, botellasLatasRouter)
 app.use('/api/codigos', authenticateToken, codigosRouter)
-app.use('/api/credenciales', authenticateToken, credencialesRouter)
+app.use('/api/credenciales', credencialesRouter)
 app.use('/api/nivelusuario', authenticateToken, nivelUsuarioRouter)
 app.use('/api/novedades', authenticateToken, novedadesRouter)
 app.use('/api/registro', authenticateToken, registroRouter)
