@@ -186,19 +186,19 @@ const MetricasPage = () => {
           <div className="">
             <div className="text-center mb-5">
               <button
-                className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+                className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
                 onClick={() => filterData('6m')}
               >
                 Últimos 6 meses
               </button>
               <button
-                className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+                className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
                 onClick={() => filterData('1m')}
               >
                 Último mes
               </button>
               <button
-                className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+                className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
                 onClick={() => filterData('1w')}
               >
                 Última semana
