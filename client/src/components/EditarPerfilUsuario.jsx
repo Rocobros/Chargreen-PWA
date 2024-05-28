@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import axiosInstance from '../func/axiosInstance'
-import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import Switch from './FormComponents/Switch'
 import EditValidation from '../func/EditValidation'
 import { toast, Toaster } from 'sonner'
+import Navbar from './navbar/Navbar'
 
 const EditarPerfilUsuario = () => {
   const [userInfo, setUserInfo] = useState({})
@@ -19,21 +19,14 @@ const EditarPerfilUsuario = () => {
   }
 
   const navigate = useNavigate()
-
-  const getUserIdFromJWT = () => {
-    const token = localStorage.getItem('jwt')
-    if (!token) return null
-    const decoded = jwtDecode(token)
-    return decoded.id
-  }
-
+  
   useEffect(() => {
     const values = { ...userInfo }
     setValues(values)
   }, [userInfo])
 
   useEffect(() => {
-    const id = getUserIdFromJWT()
+    const id = localStorage.getItem('id')
     const fetchUser = async () => {
       try {
         const user = await axiosInstance.get(`/api/usuarios/${id}`)
@@ -218,6 +211,7 @@ const EditarPerfilUsuario = () => {
           </div>
         </form>
       </div>
+      <Navbar />
     </>
   )
 }

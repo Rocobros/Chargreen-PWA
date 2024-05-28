@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Pie, Bar } from 'react-chartjs-2'
 import 'chart.js/auto'
 import axiosInstance from '../../func/axiosInstance'
-import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
+import Navbar from '../navbar/Navbar'
 
 const colors = {
   text: '#081603',
@@ -25,15 +25,8 @@ const MetricasPage = () => {
 
   const navigate = useNavigate()
 
-  const getUserIdFromJWT = () => {
-    const token = localStorage.getItem('jwt')
-    if (!token) return null
-    const decoded = jwtDecode(token)
-    return decoded.id
-  }
-
   useEffect(() => {
-    const userId = getUserIdFromJWT()
+    const userId = localStorage.getItem('id')
     if (!userId) return
 
     axiosInstance
@@ -50,7 +43,7 @@ const MetricasPage = () => {
   }, [])
 
   useEffect(() => {
-    const userId = getUserIdFromJWT()
+    const userId = localStorage.getItem('id')
     if (!userId) return
 
     axiosInstance
@@ -186,19 +179,19 @@ const MetricasPage = () => {
           <div className="">
             <div className="text-center mb-5">
               <button
-                className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+                className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
                 onClick={() => filterData('6m')}
               >
                 Últimos 6 meses
               </button>
               <button
-                className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+                className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
                 onClick={() => filterData('1m')}
               >
                 Último mes
               </button>
               <button
-                className="bg-primary text-background border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+                className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
                 onClick={() => filterData('1w')}
               >
                 Última semana
@@ -247,6 +240,7 @@ const MetricasPage = () => {
       {noRender && (
         <h1 className="text-4xl font-primary">No se tiene registro</h1>
       )}
+      <Navbar />
     </>
   )
 }

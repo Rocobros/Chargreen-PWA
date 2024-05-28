@@ -1,10 +1,13 @@
 import React from 'react'
-import MyMapComponent from './MapComponent'
 import MapComponent from './MapComponent'
+import Navbar from '../navbar/Navbar'
 
 const MapPage = () => {
   return (
-    <MapComponent />
+    <>
+      <MapComponent />
+      <Navbar />
+    </>
   )
 }
 

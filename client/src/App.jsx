@@ -20,6 +20,7 @@ import Novedades from './pages/Novedades'
 import PrivateRoute from './components/PrivateRoute'
 import NotFound from './pages/NotFound'
 import EditarPerfilUsuario from './components/EditarPerfilUsuario'
+import ChatbotPage from './pages/ChatbotPage'
 
 const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
@@ -34,6 +35,7 @@ function App() {
     '/404',
   ].includes(location.pathname)
   const [userId, setUserId] = useState(null)
+
   return (
     <LoadScript
       googleMapsApiKey={key}
@@ -81,6 +83,10 @@ function App() {
             path="metricas"
             element={<MetricasPage />}
           />
+          <Route
+            path="chatbot"
+            element={<ChatbotPage />}
+          />
         </Route>
 
         <Route
@@ -112,7 +118,6 @@ function App() {
           element={<Navigate to="/404" />}
         />
       </Routes>
-      {!isCommonRoute && <Navbar />}
     </LoadScript>
   )
 }

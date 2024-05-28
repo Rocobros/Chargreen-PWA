@@ -1,25 +1,59 @@
 import { React, useEffect, useState } from 'react'
 import axiosInstance from '../func/axiosInstance'
 import { jwtDecode } from 'jwt-decode'
+import Navbar from '../components/navbar/Navbar'
 
 const Home = () => {
   const [userData, setUserData] = useState({})
   const token = localStorage.getItem('jwt')
-  const { id } = jwtDecode(token)
+  const { id, role } = jwtDecode(token)
+  localStorage.setItem('id', id)
+  localStorage.setItem('role', role)
 
   useEffect(() => {
-    const fetchUser = async () => {
-      let response
-      try {
-        response = await axiosInstance.get(`/api/usuarios/${id}`)
-      } catch (error) {
-        console.error('Failed to fetch data:', error.message)
-      } finally {
-        setUserData(response.data)
-      }
-    }
+    const id = localStorage.getItem('id')
+    const role = localStorage.getItem('role')
 
-    fetchUser()
+    console.log(id)
+    console.log(role)
+
+    if (role === 'user') {
+      const fetchUser = async () => {
+        let response
+        try {
+          response = await axiosInstance.get(`/api/usuarios/${id}`)
+        } catch (error) {
+          console.error('Failed to fetch data:', error.message)
+        } finally {
+          setUserData(response.data)
+        }
+      }
+      fetchUser()
+    } else if (role === 'admin') {
+      const fetchAdmin = async () => {
+        let response
+        try {
+          response = await axiosInstance.get(`/api/admins/${id}`)
+        } catch (error) {
+          console.error('Failed to fetch data:', error.message)
+        } finally {
+          setUserData(response.data)
+        }
+      }
+      fetchAdmin()
+    } else {
+      const fetchMod = async () => {
+        let response
+        try {
+          response = await axiosInstance.get(`/api/moderadores/${id}`)
+        } catch (error) {
+          console.error('Failed to fetch data:', error.message)
+        } finally {
+          setUserData(response.data)
+        }
+      }
+      fetchMod()
+    }
   }, [])
 
   return (
@@ -66,6 +100,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <Navbar />
     </>
   )
 }

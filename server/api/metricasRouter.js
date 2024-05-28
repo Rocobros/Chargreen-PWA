@@ -6,7 +6,7 @@ const pool = require('../db.js')
 router.get('/', async (req, res) => {
   try {
     const [results] = await pool.execute(
-      'SELECT registro.id as Id, registro.Fecha as Fecha, usuariosnormales.Registro as IdUsuario, botellaslatas.Id as IdBotella, botellaslatas.Nombre as Botella, botellaslatas.Segundos as Segundos, torrecarga.Id as IdTorre, torrecarga.Nombre as Torre FROM registro INNER JOIN usuariosnormales ON registro.UsuarioNormal = usuariosnormales.Registro INNER JOIN botellaslatas ON registro.Botella = botellaslatas.Id INNER JOIN salidas ON registro.Salida = salidas.Id INNER JOIN torrecarga ON salidas.TorreCarga = torrecarga.Id'
+      'SELECT registro.id as Id, registro.Fecha as Fecha, usuariosnormales.Registro as IdUsuario, credenciales.Usuario as Usuario, botellaslatas.Id as IdBotella, botellaslatas.Nombre as Botella, botellaslatas.Segundos as Segundos, torrecarga.Id as IdTorre, torrecarga.Nombre as Torre FROM registro INNER JOIN usuariosnormales ON registro.UsuarioNormal = usuariosnormales.Registro INNER JOIN botellaslatas ON registro.Botella = botellaslatas.Id INNER JOIN salidas ON registro.Salida = salidas.Id INNER JOIN torrecarga ON salidas.TorreCarga = torrecarga.Id INNER JOIN credenciales ON usuariosnormales.Credencial = credenciales.Id'
     )
     res.status(200).json(results)
   } catch (error) {
@@ -22,7 +22,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const [results] = await pool.execute(
-      'SELECT registro.id as Id, registro.Fecha as Fecha, usuariosnormales.Registro as IdUsuario, botellaslatas.Id as IdBotella, botellaslatas.Nombre as Botella, botellaslatas.Segundos as Segundos, torrecarga.Id as IdTorre, torrecarga.Nombre as Torre FROM registro INNER JOIN usuariosnormales ON registro.UsuarioNormal = usuariosnormales.Registro INNER JOIN botellaslatas ON registro.Botella = botellaslatas.Id INNER JOIN salidas ON registro.Salida = salidas.Id INNER JOIN torrecarga ON salidas.TorreCarga = torrecarga.Id WHERE usuariosnormales.Registro = ?',
+      'SELECT registro.id as Id, registro.Fecha as Fecha, usuariosnormales.Registro as IdUsuario, credenciales.Usuario as Usuario, botellaslatas.Id as IdBotella, botellaslatas.Nombre as Botella, botellaslatas.Segundos as Segundos, torrecarga.Id as IdTorre, torrecarga.Nombre as Torre FROM registro INNER JOIN usuariosnormales ON registro.UsuarioNormal = usuariosnormales.Registro INNER JOIN botellaslatas ON registro.Botella = botellaslatas.Id INNER JOIN salidas ON registro.Salida = salidas.Id INNER JOIN torrecarga ON salidas.TorreCarga = torrecarga.Id INNER JOIN credenciales ON usuariosnormales.Credencial = credenciales.Id WHERE usuariosnormales.Registro = ?',
       [req.params.id]
     )
     res.status(200).json(results)

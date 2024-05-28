@@ -4,7 +4,6 @@ import React from 'react'
 import FormButton from '../FormComponents/FormButton'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../../func/axiosInstance'
-import { jwtDecode } from 'jwt-decode'
 import { Toaster, toast } from 'sonner'
 
 const calculateDistance = (lat1, lon1, lat2, lon2) => {
@@ -37,17 +36,10 @@ const MapInfoBox = ({
 
   const hasAvailableExits = exits.length > 0
 
-  const getUserIdFromJWT = () => {
-    const token = localStorage.getItem('jwt')
-    if (!token) return null
-    const decoded = jwtDecode(token)
-    return decoded.id
-  }
-
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      const userId = getUserIdFromJWT()
+      const userId = localStorage.getItem('id')
       const response = await axiosInstance.get(`/api/usuarios/${userId}`)
       const user = response.data
       const userTime = user.Tiempo
