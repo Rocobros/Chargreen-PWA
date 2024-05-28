@@ -14,9 +14,6 @@ const Home = () => {
     const id = localStorage.getItem('id')
     const role = localStorage.getItem('role')
 
-    console.log(id)
-    console.log(role)
-
     if (role === 'user') {
       const fetchUser = async () => {
         let response

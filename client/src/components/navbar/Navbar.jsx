@@ -27,7 +27,6 @@ const Navbar = () => {
 
   if (role === 'user') {
     return (
-      //TODO: Conditional rendering depending on the jwt role
       <footer className="bg-slate-100 shadow-2xl h-20 fixed inset-x-0 -bottom-0.5 flex justify-around items-center p-2 border-t-2">
         <nav className="h-auto fixed inset-x-0 bottom-0 flex justify-around items-center p-2 pb-8">
           <i
@@ -81,19 +80,19 @@ const Navbar = () => {
           />
           <i
             className={`bx bx-add-to-queue text-3xl active:text-primary active:scale-125 rounded ${
-              selected === '/novedades' ? 'text-primary scale-125' : ''
+              selected === '/agregar' ? 'text-primary scale-125' : ''
             }`}
             onClick={() => handleClick('/agregar')}
           />
           <i
             className={`bx bx-line-chart text-3xl active:text-primary active:scale-125 rounded ${
-              selected === '/metricas' ? 'text-primary scale-125' : ''
+              selected === '/metricasAdmin' ? 'text-primary scale-125' : ''
             }`}
-            onClick={() => handleClick('/metricas')}
+            onClick={() => handleClick('/metricasAdmin')}
           />
           <i
-            className={`bx bx-log-out text-3xl active:text-primary active:scale-125 rounded ${
-              selected === '/login' ? 'text-primary scale-125' : ''
+            className={`bx bx-log-out text-3xl active:text-primary text-red-500 active:scale-125 rounded ${
+              selected === '/login' ? 'text-red-500 scale-125' : ''
             }`}
             onClick={() => handleClick('/login')}
           />
@@ -118,9 +117,9 @@ const Navbar = () => {
           />
           <i
             className={`bx bx-line-chart text-3xl active:text-primary active:scale-125 rounded ${
-              selected === '/metricas' ? 'text-primary scale-125' : ''
+              selected === '/metricasAdmin' ? 'text-primary scale-125' : ''
             }`}
-            onClick={() => handleClick('/metricas')}
+            onClick={() => handleClick('/metricasAdmin')}
           />
           <i
             className={`bx bx-log-out text-3xl active:text-primary active:scale-125 rounded ${

@@ -22,7 +22,7 @@ const MetricasPage = () => {
   const [timeUsed, setTimeUsed] = useState(null)
   const [energyUsed, setEnergyUsed] = useState(null)
   const [noRender, setNoRender] = useState(false)
-
+  const [filter, setFilter] = useState('')
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -135,6 +135,8 @@ const MetricasPage = () => {
     const now = new Date()
     let filteredData = []
 
+    setFilter(period)
+
     if (period === '6m') {
       const sixMonthsAgo = new Date(
         now.getFullYear(),
@@ -156,6 +158,8 @@ const MetricasPage = () => {
         now.getDate() - 7
       )
       filteredData = data.filter((item) => new Date(item.Fecha) >= oneWeekAgo)
+    } else if (period === 't') {
+      filteredData = data
     }
     updateCharts(filteredData)
   }
@@ -179,19 +183,33 @@ const MetricasPage = () => {
           <div className="">
             <div className="text-center mb-5">
               <button
-                className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+                className={`bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base ${
+                  filter === 't' ? 'bg-secondary' : ''
+                }`}
+                onClick={() => filterData('t')}
+              >
+                Todos
+              </button>
+              <button
+                className={`bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base ${
+                  filter === '6m' ? 'bg-secondary' : ''
+                }`}
                 onClick={() => filterData('6m')}
               >
                 Últimos 6 meses
               </button>
               <button
-                className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+                className={`bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base ${
+                  filter === '1m' ? 'bg-secondary' : ''
+                }`}
                 onClick={() => filterData('1m')}
               >
                 Último mes
               </button>
               <button
-                className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+                className={`bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base ${
+                  filter === '1w' ? 'bg-secondary' : ''
+                }`}
                 onClick={() => filterData('1w')}
               >
                 Última semana
