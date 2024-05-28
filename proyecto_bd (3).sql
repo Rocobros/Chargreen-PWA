@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-05-2024 a las 22:29:09
+-- Tiempo de generación: 28-05-2024 a las 05:15:45
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -120,9 +120,11 @@ INSERT INTO `nivelusuario` (`Id`, `Nombre`, `CantidadMinima`, `SegundosAlMes`) V
 
 CREATE TABLE `novedades` (
   `Id` int(11) NOT NULL,
-  `Titulo` varchar(255) DEFAULT NULL,
-  `Descripcion` varchar(255) DEFAULT NULL,
-  `Imagen` varchar(255) DEFAULT NULL,
+  `Tipo` varchar(1) NOT NULL,
+  `Titulo` varchar(50) DEFAULT NULL,
+  `Descripcion` varchar(300) DEFAULT NULL,
+  `Imagen` varchar(350) DEFAULT NULL,
+  `Link` varchar(350) DEFAULT NULL,
   `Fecha` date NOT NULL DEFAULT current_timestamp(),
   `UsuarioModerador` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -131,8 +133,9 @@ CREATE TABLE `novedades` (
 -- Volcado de datos para la tabla `novedades`
 --
 
-INSERT INTO `novedades` (`Id`, `Titulo`, `Descripcion`, `Imagen`, `Fecha`, `UsuarioModerador`) VALUES
-(3, 'Novedad Uno', 'Otra Descripcion', 'https://via.placeholder.com/400x300', '2024-05-01', 2);
+INSERT INTO `novedades` (`Id`, `Tipo`, `Titulo`, `Descripcion`, `Imagen`, `Link`, `Fecha`, `UsuarioModerador`) VALUES
+(3, 'N', 'ACCIONA Energía y Aruba firman un acuerdo', 'ACCIONA Energía trabajará con las energéticas estatales para desarrollar, construir y operar una planta de hidrógeno verde alimentada por un proyecto de autoconsumo renovable', 'https://shorturl.at/B3DUf', 'https://www.acciona.com/es/actualidad/noticias/acciona-energia-y-aruba-firman-acuerdo-impulsar-valle-hidrogeno-verde/?_adin=02021864894', '2024-05-01', 2),
+(4, 'A', 'Nueva Torre Creada: Torre Andares', 'Se ha instalado una nueva torre de carga para el uso de nuestro usuarios, revisala en el mapa', NULL, NULL, '2024-05-27', NULL);
 
 -- --------------------------------------------------------
 
@@ -413,10 +416,14 @@ INSERT INTO `salidas` (`Id`, `Numero`, `Estado`, `TorreCarga`) VALUES
 (2, 2, 'D', 22),
 (3, 3, 'D', 22),
 (4, 4, 'D', 22),
-(5, 1, 'A', 24),
-(6, 2, 'A', 24),
-(7, 3, 'A', 24),
-(8, 4, 'A', 24);
+(5, 1, 'D', 24),
+(6, 2, 'D', 24),
+(7, 3, 'D', 24),
+(8, 4, 'D', 24),
+(9, 1, 'D', 25),
+(10, 2, 'D', 25),
+(11, 3, 'D', 25),
+(12, 4, 'D', 25);
 
 -- --------------------------------------------------------
 
@@ -450,7 +457,8 @@ CREATE TABLE `torrecarga` (
 
 INSERT INTO `torrecarga` (`Id`, `Nombre`, `Coordenadas`, `UsuarioAdministrador`) VALUES
 (22, 'Torre Centro GDL', 0x0000000001010000005cab2a42cfaf34404bd4d9cd6ad659c0, 1),
-(24, 'Torre Ceti Colomos', 0x00000000010100000086babb90c9b334405c8fb793dad859c0, 1);
+(24, 'Torre Ceti Colomos', 0x00000000010100000086babb90c9b334405c8fb793dad859c0, 1),
+(25, 'Torre Andares', 0x000000000101000000e6459af4edb53440838324b65cda59c0, 1);
 
 --
 -- Disparadores `torrecarga`
@@ -471,10 +479,12 @@ $$
 DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `NovedadAlInsertarTorre` AFTER INSERT ON `torrecarga` FOR EACH ROW BEGIN
-    INSERT INTO novedades (Titulo, Descripcion, Imagen, UsuarioModerador)
+    INSERT INTO novedades (Tipo, Titulo, Descripcion, Imagen, Link, UsuarioModerador)
     VALUES (
+        'A',
         CONCAT('Nueva Torre Creada: ', NEW.Nombre),
         'Se ha instalado una nueva torre de carga para el uso de nuestro usuarios, revisala en el mapa',
+        NULL,
         NULL,
         NULL
     );
@@ -557,7 +567,7 @@ CREATE TABLE `usuariosnormales` (
 --
 
 INSERT INTO `usuariosnormales` (`Registro`, `Nombre`, `ApellidoPaterno`, `ApellidoMaterno`, `Celular`, `Correo`, `FechaCreacion`, `Tiempo`, `Estado`, `Notificaciones`, `Nivel`, `Credencial`) VALUES
-(2, 'Rodrigo', 'Romero', 'Romero', '3312345678', 'rocobros21@gmail.com', '2024-03-15', 25460, 'A', 'D', 2, 1),
+(2, 'Rodrigo', 'Romero', 'Romero', '3312345678', 'rocobros21@gmail.com', '2024-03-15', 300, 'A', 'D', 2, 1),
 (3, 'Diego', 'Romero', 'Corvera', '3338465252', 'diego2105@gmail.com', '2024-03-15', 5000, 'A', 'D', 2, 2),
 (16, 'Monica', 'Corvera', 'Romo', '3318107819', 'monicorverar@gmail.com', '2024-04-17', 5000, 'D', 'D', 2, 29),
 (37, 'Susana', 'Ferrer', 'Hernandez', '1234567890', 'a20300699@ceti.mx', '2024-05-17', 300, 'A', 'D', 2, 65);
@@ -683,7 +693,7 @@ ALTER TABLE `nivelusuario`
 -- AUTO_INCREMENT de la tabla `novedades`
 --
 ALTER TABLE `novedades`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `registro`
@@ -695,7 +705,7 @@ ALTER TABLE `registro`
 -- AUTO_INCREMENT de la tabla `salidas`
 --
 ALTER TABLE `salidas`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `tokens`
@@ -707,7 +717,7 @@ ALTER TABLE `tokens`
 -- AUTO_INCREMENT de la tabla `torrecarga`
 --
 ALTER TABLE `torrecarga`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `usuariosadministradores`
