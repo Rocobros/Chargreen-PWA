@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axiosInstance from '../func/axiosInstance'
-import { jwtDecode } from 'jwt-decode'
 import BarraDeProgreso from '../components/Barra/BarraDeProgreso'
 import Navbar from '../components/navbar/Navbar'
 
@@ -12,8 +11,8 @@ const Perfil = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem('jwt')
-      const { id } = jwtDecode(token)
+      const id = localStorage.getItem('id')
+
       try {
         const response = await axiosInstance.get(`/api/usuarios/${id}`)
         setUser(response.data)

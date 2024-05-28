@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { Pie, Bar } from 'react-chartjs-2'
 import 'chart.js/auto'
 import axiosInstance from '../../func/axiosInstance'
-import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../navbar/Navbar'
 
@@ -26,15 +25,8 @@ const MetricasPage = () => {
 
   const navigate = useNavigate()
 
-  const getUserIdFromJWT = () => {
-    const token = localStorage.getItem('jwt')
-    if (!token) return null
-    const decoded = jwtDecode(token)
-    return decoded.id
-  }
-
   useEffect(() => {
-    const userId = getUserIdFromJWT()
+    const userId = localStorage.getItem('id')
     if (!userId) return
 
     axiosInstance
@@ -51,7 +43,7 @@ const MetricasPage = () => {
   }, [])
 
   useEffect(() => {
-    const userId = getUserIdFromJWT()
+    const userId = localStorage.getItem('id')
     if (!userId) return
 
     axiosInstance

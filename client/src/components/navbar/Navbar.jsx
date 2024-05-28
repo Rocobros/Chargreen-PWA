@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { jwtDecode } from 'jwt-decode'
 
 const Navbar = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const [selected, setSelected] = useState('')
   const [role, setRole] = useState()
-
-  const getUserRoleFromJWT = () => {
-    const token = localStorage.getItem('jwt')
-    if (!token) return null
-    const decoded = jwtDecode(token)
-    return decoded.role
-  }
 
   const handleClick = (route) => {
     setSelected(route)
@@ -30,7 +22,7 @@ const Navbar = () => {
       setSelected(loc)
     }
 
-    setRole(getUserRoleFromJWT())
+    setRole(localStorage.getItem('role'))
   }, [])
 
   if (role === 'user') {
@@ -99,6 +91,12 @@ const Navbar = () => {
             }`}
             onClick={() => handleClick('/metricas')}
           />
+          <i
+            className={`bx bx-log-out text-3xl active:text-primary active:scale-125 rounded ${
+              selected === '/login' ? 'text-primary scale-125' : ''
+            }`}
+            onClick={() => handleClick('/login')}
+          />
         </nav>
       </footer>
     )
@@ -123,6 +121,12 @@ const Navbar = () => {
               selected === '/metricas' ? 'text-primary scale-125' : ''
             }`}
             onClick={() => handleClick('/metricas')}
+          />
+          <i
+            className={`bx bx-log-out text-3xl active:text-primary active:scale-125 rounded ${
+              selected === '/login' ? 'text-primary scale-125' : ''
+            }`}
+            onClick={() => handleClick('/login')}
           />
         </nav>
       </footer>

@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import './BarraDeProgreso.css'
 import axiosInstance from '../../func/axiosInstance'
-import { jwtDecode } from 'jwt-decode'
 
 const BarraDeProgreso = () => {
   const [progreso, setProgreso] = useState()
 
   useEffect(() => {
     const fetchLevel = async () => {
-      const token = localStorage.getItem('jwt')
-      const { id } = jwtDecode(token)
+      const id = localStorage.getItem('id')
+
       try {
         const response = await axiosInstance.get(`/api/registro/month/${id}`)
         const botellasActuales = response.data.botellas

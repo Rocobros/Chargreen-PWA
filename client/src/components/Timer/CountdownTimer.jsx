@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axiosInstance from '../../func/axiosInstance'
-import { jwtDecode } from 'jwt-decode'
 import Navbar from '../navbar/Navbar'
 
 //TODO: Modificar el tiempo del usuario y desactivar la salida cuando se termine el tiempo
@@ -13,15 +12,8 @@ const CountdownTimer = () => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  const getUserIdFromJWT = () => {
-    const token = localStorage.getItem('jwt')
-    if (!token) return null
-    const decoded = jwtDecode(token)
-    return decoded.id
-  }
-
   useEffect(() => {
-    const userId = getUserIdFromJWT()
+    const userId = localStorage.getItem('id')
     if (!userId) return
     // Function to fetch initial time
     const fetchInitialTime = async () => {
@@ -55,7 +47,7 @@ const CountdownTimer = () => {
   }, [isActive, timeInSeconds])
 
   const stopTimer = () => {
-    const userId = getUserIdFromJWT()
+    const userId = localStorage.getItem('id')
     if (!userId) return
     axiosInstance
       .put(`/api/usuarios/tiempo/${userId}`, {
