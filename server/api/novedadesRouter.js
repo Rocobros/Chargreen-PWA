@@ -33,11 +33,34 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+//TODO: Diferenciar POST para novedad y actualizacion
 // Crear una nueva novedad
 router.post('/', async (req, res) => {
-  const novedad = req.body
+  const { Tipo, Titulo, Descripcion, Imagen, Link, Admin } = req.body
   try {
-    const [results] = await pool.execute('INSERT INTO novedades SET ?', novedad)
+    const [results] = await pool.execute(
+      'INSERT INTO `novedades`(Tipo, Titulo, Descripcion, Imagen, Link, UsuarioModerador) VALUES (?)',
+      [Tipo, Titulo, Descripcion, Imagen, Link, Admin]
+    )
+    res
+      .status(201)
+      .json({ message: 'Novedad añadida correctamente', id: results.insertId })
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res
+      .status(500)
+      .json({ message: 'Error al crear la novedad.', error: error.message })
+  }
+})
+
+// Crear una nueva actualizacion
+router.post('/actualizacion', async (req, res) => {
+  const { Tipo, Titulo, Descripcion, Admin } = req.body
+  try {
+    const [results] = await pool.execute(
+      'INSERT INTO `novedades`(Tipo, Titulo, Descripcion, UsuarioModerador) VALUES (?)',
+      [Tipo, Titulo, Descripcion, Admin]
+    )
     res
       .status(201)
       .json({ message: 'Novedad añadida correctamente', id: results.insertId })
