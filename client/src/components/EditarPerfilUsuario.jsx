@@ -56,7 +56,8 @@ const EditarPerfilUsuario = () => {
       axiosInstance
         .put(`/api/usuarios/${values.Registro}`, values)
         .then(() => {
-          return toast.success('Usuario actualizado')
+          toast.success('Datos actualizados')
+          navigate('/perfil')
         })
         .catch((error) => {
           return toast.error(error.response.data.message)
@@ -96,7 +97,7 @@ const EditarPerfilUsuario = () => {
               <label className=" flex flex-col font-semibold">
                 Usuario
                 <input
-                  className="font-normal border bg-transparent"
+                  className="font-normal border-2 border-slate-300 bg-transparent "
                   disabled
                   type="text"
                   name="Usuario"
@@ -109,7 +110,7 @@ const EditarPerfilUsuario = () => {
                 Fecha de Creacion
                 <input
                   disabled
-                  className="font-normal border bg-transparent"
+                  className="font-normal border-2 border-slate-300 bg-transparent "
                   type="text"
                   name="FechaCreacion"
                   value={userInfo.FechaCreacion}
@@ -121,7 +122,7 @@ const EditarPerfilUsuario = () => {
                 Nivel de Cuenta
                 <input
                   disabled
-                  className="font-normal border bg-transparent"
+                  className="font-normal border-2 border-slate-300 bg-transparent "
                   type="text"
                   name="Nivel"
                   value={nivel.Nombre}
@@ -136,7 +137,7 @@ const EditarPerfilUsuario = () => {
               <label className="flex flex-col font-semibold">
                 Nombre
                 <input
-                  className="font-normal border bg-transparent"
+                  className="font-normal border-2 border-slate-300 bg-transparent "
                   onChange={handleUserInput}
                   type="text"
                   name="Nombre"
@@ -148,7 +149,7 @@ const EditarPerfilUsuario = () => {
               <label className="flex flex-col font-semibold">
                 Apellido Paterno
                 <input
-                  className="font-normal border bg-transparent"
+                  className="font-normal border-2 border-slate-300 bg-transparent "
                   onChange={handleUserInput}
                   type="text"
                   name="ApellidoPaterno"
@@ -160,7 +161,7 @@ const EditarPerfilUsuario = () => {
               <label className="flex flex-col font-semibold">
                 Apellido Materno
                 <input
-                  className="font-normal border bg-transparent"
+                  className="font-normal border-2 border-slate-300 bg-transparent "
                   onChange={handleUserInput}
                   type="text"
                   name="ApellidoMaterno"
@@ -172,7 +173,7 @@ const EditarPerfilUsuario = () => {
               <label className="flex flex-col font-semibold">
                 Correo
                 <input
-                  className="font-normal border bg-transparent"
+                  className="font-normal border-2 border-slate-300 bg-transparent "
                   disabled
                   onChange={handleUserInput}
                   type="mail"
@@ -185,7 +186,7 @@ const EditarPerfilUsuario = () => {
               <label className="flex flex-col font-semibold">
                 Celular
                 <input
-                  className="font-normal border bg-transparent"
+                  className="font-normal border-2 border-slate-300 bg-transparent "
                   onChange={handleUserInput}
                   type="number"
                   name="Celular"
@@ -204,17 +205,17 @@ const EditarPerfilUsuario = () => {
           </label>
           <div className="flex flex-row gap-4">
             <button
-              type="submit"
-              className="flex-1 py-2 px-4 bg-primary text-text rounded-md hover:bg-green-700 font-semibold"
+              type="reset"
+              className="flex-1 py-2 px-4 bg-red-500 text-text rounded-md hover:bg-green-700 font-semibold"
               onClick={() => navigate('/perfil')}
             >
-              Back
+              Regresar
             </button>
             <button
               type="submit"
               className=" flex-1 py-2 px-4 bg-primary text-text rounded-md hover:bg-green-700 font-semibold "
             >
-              Save
+              Guardar
             </button>
           </div>
         </form>

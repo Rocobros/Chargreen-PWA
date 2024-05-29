@@ -18,6 +18,14 @@ const Navbar = () => {
       setSelected('/perfil')
     } else if (loc === '/metricas') {
       setSelected('/perfil')
+    } else if (loc === '/agregar/torre') {
+      setSelected('/agregar')
+    } else if (loc === '/agregar/moderador') {
+      setSelected('/agregar')
+    } else if (loc === '/agregar/novedad') {
+      setSelected('/agregar')
+    } else if (loc === '/agregar/actualizacion') {
+      setSelected('/agregar')
     } else {
       setSelected(loc)
     }
