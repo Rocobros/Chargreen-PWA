@@ -19,7 +19,7 @@ const EditarPerfilUsuario = () => {
   }
 
   const navigate = useNavigate()
-  
+
   useEffect(() => {
     const values = { ...userInfo }
     setValues(values)
@@ -96,6 +96,7 @@ const EditarPerfilUsuario = () => {
               <label className=" flex flex-col font-semibold">
                 Usuario
                 <input
+                  className="font-normal border bg-transparent"
                   disabled
                   type="text"
                   name="Usuario"
@@ -108,6 +109,7 @@ const EditarPerfilUsuario = () => {
                 Fecha de Creacion
                 <input
                   disabled
+                  className="font-normal border bg-transparent"
                   type="text"
                   name="FechaCreacion"
                   value={userInfo.FechaCreacion}
@@ -119,6 +121,7 @@ const EditarPerfilUsuario = () => {
                 Nivel de Cuenta
                 <input
                   disabled
+                  className="font-normal border bg-transparent"
                   type="text"
                   name="Nivel"
                   value={nivel.Nombre}
@@ -133,6 +136,7 @@ const EditarPerfilUsuario = () => {
               <label className="flex flex-col font-semibold">
                 Nombre
                 <input
+                  className="font-normal border bg-transparent"
                   onChange={handleUserInput}
                   type="text"
                   name="Nombre"
@@ -144,6 +148,7 @@ const EditarPerfilUsuario = () => {
               <label className="flex flex-col font-semibold">
                 Apellido Paterno
                 <input
+                  className="font-normal border bg-transparent"
                   onChange={handleUserInput}
                   type="text"
                   name="ApellidoPaterno"
@@ -155,6 +160,7 @@ const EditarPerfilUsuario = () => {
               <label className="flex flex-col font-semibold">
                 Apellido Materno
                 <input
+                  className="font-normal border bg-transparent"
                   onChange={handleUserInput}
                   type="text"
                   name="ApellidoMaterno"
@@ -166,6 +172,7 @@ const EditarPerfilUsuario = () => {
               <label className="flex flex-col font-semibold">
                 Correo
                 <input
+                  className="font-normal border bg-transparent"
                   disabled
                   onChange={handleUserInput}
                   type="mail"
@@ -178,6 +185,7 @@ const EditarPerfilUsuario = () => {
               <label className="flex flex-col font-semibold">
                 Celular
                 <input
+                  className="font-normal border bg-transparent"
                   onChange={handleUserInput}
                   type="number"
                   name="Celular"
