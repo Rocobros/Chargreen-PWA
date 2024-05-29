@@ -1,9 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const pool = require('../db.js')
+const authenticateToken = require('../utils/authenticateToken.js')
+const CheckModEmailAndPhoneAvailable = require('../utils/CheckModEmailAndPhoneAvailable.js')
 
 // Obtener todos los usuarios
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   try {
     const [results] = await pool.execute('SELECT * FROM usuariosmoderadores')
     res.status(200).json(results)
@@ -17,7 +19,7 @@ router.get('/', async (req, res) => {
 })
 
 // Obtener un usuario por su Registro
-router.get('/:registro', async (req, res) => {
+router.get('/:registro', authenticateToken, async (req, res) => {
   try {
     const [results] = await pool.execute(
       'SELECT * FROM usuariosmoderadores WHERE Registro = ?',
@@ -48,24 +50,33 @@ router.post('/', async (req, res) => {
     Credencial,
   } = req.body
   try {
-    const [results] = await pool.execute(
-      'INSERT INTO usuariosmoderadores (Nombre, ApellidoPaterno, ApellidoMaterno, Celular, Correo, Credencial) VALUES (?, ?, ?, ?, ?, ?)',
-      [Nombre, ApellidoPaterno, ApellidoMaterno, Celular, Correo, Credencial]
-    )
-    res.status(201).json({
-      message: 'Moderador creado correctamente',
-      Registro: results.insertId,
-    })
+    const isAvailable = await CheckModEmailAndPhoneAvailable(Correo, Celular)
+    if (isAvailable === 0) {
+      const [results] = await pool.execute(
+        'INSERT INTO usuariosmoderadores (Nombre, ApellidoPaterno, ApellidoMaterno, Celular, Correo, Credencial) VALUES (?, ?, ?, ?, ?, ?)',
+        [Nombre, ApellidoPaterno, ApellidoMaterno, Celular, Correo, Credencial]
+      )
+      res.status(201).json({
+        message: 'Moderador creado correctamente',
+        Registro: results.insertId,
+      })
+    } else if (isAvailable === 1) {
+      res.status(409).json({ message: 'El correo ya esta en uso' })
+    } else if (isAvailable === 2) {
+      res.status(409).json({ message: 'El celular ya esta en uso' })
+    }
   } catch (error) {
     console.error('Error encontrado: ', error)
     res
+    console.error('Error al verificar el correo:', error)
+    res
       .status(500)
-      .json({ message: 'Error al crear el usuario.', error: error.message })
+      .json({ message: 'Error al crear el moderador.', error: error.message })
   }
 })
 
 // Actualizar un usuario
-router.put('/:registro', async (req, res) => {
+router.put('/:registro', authenticateToken, async (req, res) => {
   const { Nombre, ApellidoPaterno, ApellidoMaterno, Celular, Correo } = req.body
   try {
     await pool.execute(
@@ -90,7 +101,7 @@ router.put('/:registro', async (req, res) => {
 })
 
 // Eliminar un usuario
-router.delete('/:registro', async (req, res) => {
+router.delete('/:registro', authenticateToken, async (req, res) => {
   try {
     await pool.execute('DELETE FROM usuariosmoderadores WHERE Registro = ?', [
       req.params.registro,

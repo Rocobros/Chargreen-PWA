@@ -96,9 +96,9 @@ router.post('/', async (req, res) => {
         Registro: results.insertId,
       })
     } else if (isAvailable === 1) {
-      res.status(409).json({ message: 'El correo ya está registrado' })
+      res.status(409).json({ message: 'El correo ya esta en uso' })
     } else if (isAvailable === 2) {
-      res.status(409).json({ message: 'El celular ya está registrado' })
+      res.status(409).json({ message: 'El celular ya esta en uso' })
     }
   } catch (error) {
     console.error('Error al verificar el correo:', error)
