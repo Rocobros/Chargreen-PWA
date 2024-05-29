@@ -23,6 +23,7 @@ import EditarPerfilUsuario from './components/EditarPerfilUsuario'
 import ChatbotPage from './pages/ChatbotPage'
 import MetricasAdminPage from './components/Metricas/MetricasAdminPage'
 import Agregar from './pages/Agregar'
+import AgregarTorrePage from './pages/AgregarTorrePage'
 
 const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
@@ -39,96 +40,96 @@ function App() {
   const [userId, setUserId] = useState(null)
 
   return (
-    // <LoadScript
-    //   googleMapsApiKey={key}
-    //   loadingElement={<div>Cargando...</div>}
-    //   language="es"
-    // >
-    <Routes>
-      <Route
-        path="/"
-        element={<PrivateRoute />}
-      >
+    <LoadScript
+      googleMapsApiKey={key}
+      loadingElement={<div>Cargando...</div>}
+      language="es"
+    >
+      <Routes>
         <Route
-          index
-          element={<Home />}
-        />
-        <Route
-          path="perfil"
-          element={<Perfil />}
-        />
-        <Route
-          path="editarPerfil"
-          element={<EditarPerfilUsuario />}
-        />
-        <Route
-          path="novedades"
-          element={<Novedades />}
-        />
-        <Route
-          path="agregar/moderador"
-          element={<ModeratorFrom />}
-        />
-        <Route
-          path="agregar"
-          element={<Agregar />}
-        />
-        <Route
-          path="agregar/torre"
-          element={<TowerForm userId={userId} />}
-        />
-        <Route
-          path="tiempo"
-          element={<CountdownTimer userId={userId} />}
-        />
-        <Route
-          path="mapa"
-          element={<MapPage />}
-        />
-        <Route
-          path="metricas"
-          element={<MetricasPage />}
-        />
-        <Route
-          path="metricasAdmin"
-          element={<MetricasAdminPage />}
-        />
-        <Route
-          path="chatbot"
-          element={<ChatbotPage />}
-        />
-      </Route>
+          path="/"
+          element={<PrivateRoute />}
+        >
+          <Route
+            index
+            element={<Home />}
+          />
+          <Route
+            path="perfil"
+            element={<Perfil />}
+          />
+          <Route
+            path="editarPerfil"
+            element={<EditarPerfilUsuario />}
+          />
+          <Route
+            path="novedades"
+            element={<Novedades />}
+          />
+          <Route
+            path="agregar/moderador"
+            element={<ModeratorFrom />}
+          />
+          <Route
+            path="agregar"
+            element={<Agregar />}
+          />
+          <Route
+            path="agregar/torre"
+            element={<AgregarTorrePage />}
+          />
+          <Route
+            path="tiempo"
+            element={<CountdownTimer userId={userId} />}
+          />
+          <Route
+            path="mapa"
+            element={<MapPage />}
+          />
+          <Route
+            path="metricas"
+            element={<MetricasPage />}
+          />
+          <Route
+            path="metricasAdmin"
+            element={<MetricasAdminPage />}
+          />
+          <Route
+            path="chatbot"
+            element={<ChatbotPage />}
+          />
+        </Route>
 
-      <Route
-        path="/registro"
-        element={<Register />}
-      ></Route>
-      <Route
-        path="/login"
-        element={<Login />}
-      ></Route>
-      <Route
-        path="/olvidar"
-        element={<MailForm />}
-      ></Route>
-      <Route
-        path="/recuperar"
-        element={<PasswordForm />}
-      ></Route>
-      <Route
-        path="/verificar"
-        element={<Verificar />}
-      ></Route>
-      <Route
-        path="/404"
-        element={<NotFound />}
-      />
-      <Route
-        path="*"
-        element={<Navigate to="/404" />}
-      />
-    </Routes>
-    // </LoadScript>
+        <Route
+          path="/registro"
+          element={<Register />}
+        ></Route>
+        <Route
+          path="/login"
+          element={<Login />}
+        ></Route>
+        <Route
+          path="/olvidar"
+          element={<MailForm />}
+        ></Route>
+        <Route
+          path="/recuperar"
+          element={<PasswordForm />}
+        ></Route>
+        <Route
+          path="/verificar"
+          element={<Verificar />}
+        ></Route>
+        <Route
+          path="/404"
+          element={<NotFound />}
+        />
+        <Route
+          path="*"
+          element={<Navigate to="/404" />}
+        />
+      </Routes>
+    </LoadScript>
   )
 }
 

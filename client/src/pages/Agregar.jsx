@@ -14,25 +14,25 @@ const Agregar = () => {
         <MenuItem
           label={'Agregar Torre'}
           handleClick={() => {
-            navigate('/login')
+            navigate('/agregar/torre')
           }}
         />
         <MenuItem
           label={'Agregar Moderador'}
           handleClick={() => {
-            navigate('/login')
+            navigate('/agregar/moderador')
           }}
         />
         <MenuItem
           label={'Agregar Novedad'}
           handleClick={() => {
-            navigate('/login')
+            navigate('/agregar/novedad')
           }}
         />
         <MenuItem
           label={'Agregar Actualizacion'}
           handleClick={() => {
-            navigate('/login')
+            navigate('/agregar/actualizacion')
           }}
         />
       </div>

@@ -220,7 +220,7 @@ function MapComponent() {
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
-        zoom={10}
+        zoom={11}
         options={{
           styles: mapStyles, // Apply the map styles here
           disableDefaultUI: true, // Disable default UI for a cleaner look
