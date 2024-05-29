@@ -1,5 +1,9 @@
 import React, { useState } from 'react'
 import { GoogleMap, Marker } from '@react-google-maps/api'
+import Navbar from '../components/navbar/Navbar'
+import axiosInstance from '../func/axiosInstance'
+import { Toaster, toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
 
 const AgregarTorrePage = () => {
   const [selectedCoord, setSelectedCoord] = useState(null)
@@ -7,9 +11,11 @@ const AgregarTorrePage = () => {
   const [showPopup, setShowPopup] = useState(false)
   const [name, setName] = useState('')
 
+  const navigate = useNavigate()
+
   const containerStyle = {
-    width: '100%', // 100% of the viewport width
-    height: '100%', // 100% of the viewport height
+    width: '100%',
+    height: '100%',
   }
 
   const center = {
@@ -90,18 +96,37 @@ const AgregarTorrePage = () => {
     setIsMapActive(true)
   }
 
-  const handleSaveTower = () => {
-    // Logic to save the tower data
-    console.log('Saving tower:', { name, coordinates: selectedCoord })
-    // Reset form
-    setSelectedCoord(null)
-    setName('')
-    setShowPopup(false)
-    setIsMapActive(true)
+  const handleSaveTower = async () => {
+    try {
+      await axiosInstance.post('/api/torres', {
+        Nombre: name,
+        Latitud: selectedCoord.lat,
+        Longitud: selectedCoord.lng,
+        UsuarioAdministrador: localStorage.getItem('id'),
+      })
+      toast.success('Torre agregada correctamente')
+      setSelectedCoord(null)
+      setName('')
+      setShowPopup(false)
+      setIsMapActive(true)
+      navigate('/agregar/torre')
+    } catch (error) {
+      toast.error(error.response.data.message)
+    }
   }
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
+      <Toaster />
+      <header className="flex items-center justify-between border-b p-2 bg-primary">
+        <button
+          onClick={() => navigate('/agregar')}
+          className="text-3xl"
+        >
+          ←
+        </button>
+        <h1 className="text-3xl font-bold">Agregar Torre</h1>
+      </header>
       <GoogleMap
         mapContainerStyle={containerStyle}
         center={center}
@@ -117,31 +142,49 @@ const AgregarTorrePage = () => {
 
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-          <div className="bg-white p-6 rounded shadow-lg">
+          <div className="bg-background p-6 rounded shadow-lg w-96">
             <form>
               <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-2">
-                  Nombre
+                <label className="block text-text text-sm font-bold my-2">
+                  Nombre de la torre
                 </label>
                 <input
                   type="text"
                   value={name}
                   onChange={handleNameChange}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-text leading-tight focus:outline-none focus:shadow-outline"
+                />
+                <label className="block text-text text-sm font-bold my-2">
+                  Latitud
+                </label>
+                <input
+                  disabled
+                  type="text"
+                  value={selectedCoord.lat}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-text leading-tight focus:outline-none focus:shadow-outline"
+                />
+                <label className="block text-text text-sm font-bold my-2">
+                  Longitud
+                </label>
+                <input
+                  disabled
+                  type="text"
+                  value={selectedCoord.lng}
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-text leading-tight focus:outline-none focus:shadow-outline"
                 />
               </div>
-              <div className="flex justify-between">
+              <div className="flex gap-2">
                 <button
-                  type="button"
+                  type="reset"
                   onClick={handleChangeCoordinates}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="flex-1 ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
-                  Cambiar coordenadas
+                  Cancelar
                 </button>
                 <button
                   type="button"
                   onClick={handleSaveTower}
-                  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  className="flex-1 mr-2 bg-primary hover:bg-accent text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
                   Guardar torre
                 </button>
@@ -150,6 +193,7 @@ const AgregarTorrePage = () => {
           </div>
         </div>
       )}
+      <Navbar />
     </div>
   )
 }

@@ -254,6 +254,7 @@ function MapComponent() {
           />
         )}
       </GoogleMap>
+
       {recommendedTower && (
         <div className="bg-background fixed bottom-[75px] left-0 p-4 shadow-md">
           <h3>Recomendación</h3>

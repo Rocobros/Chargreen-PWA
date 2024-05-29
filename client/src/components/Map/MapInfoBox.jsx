@@ -74,37 +74,50 @@ const MapInfoBox = ({
   return (
     <>
       <Toaster />
-      <div className="text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-fit max-w-[400px] bg-secondary p-5 rounded-md shadow-md">
-        <h2 className="font-primary font-bold text-xl text-center">
-          {selectedTower.Nombre}
-        </h2>
-        <p>Distancia a la torre: {distanceToTower.toFixed(2)} km</p>
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="exitSelect">Elige una salida:</label>
-          <select
-            id="exitSelect"
-            name="exitSelect"
-          >
-            {hasAvailableExits ? (
-              exits.map((exit) => (
-                <option
-                  key={exit.Id}
-                  value={exit.Id}
-                >
-                  {exit.Numero}
-                </option>
-              ))
-            ) : (
-              <option>No hay salidas disponibles</option>
-            )}
-          </select>
-          <div className="mt-2">
-            <FormButton disabledCondition={!hasAvailableExits}>
-              Usar mi tiempo
-            </FormButton>
-          </div>
-        </form>
-        <FormButton onClick={handleInfoClose}>Cerrar</FormButton>
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 text-xl">
+        <div className="bg-background p-5 rounded-md shadow-md">
+          <h2 className="font-primary font-bold text-3xl text-center mb-4">
+            {selectedTower.Nombre}
+          </h2>
+          <p>Distancia a la torre: {distanceToTower.toFixed(2)} km</p>
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="exitSelect">Elige una salida: </label>
+            <select
+              id="exitSelect"
+              name="exitSelect"
+              className="border border-gray-600"
+            >
+              {hasAvailableExits ? (
+                exits.map((exit) => (
+                  <option
+                    key={exit.Id}
+                    value={exit.Id}
+                  >
+                    {exit.Numero}
+                  </option>
+                ))
+              ) : (
+                <option>No hay salidas disponibles</option>
+              )}
+            </select>
+            <div className="flex gap-2 mt-4 text-lg">
+              <button
+                type="reset"
+                onClick={handleInfoClose}
+                className="flex-1 ml-2 bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Cerrar
+              </button>
+              <button
+                disabled={!hasAvailableExits}
+                type="submit"
+                className="flex-1 mr-2 bg-primary hover:bg-accent text-whiteP py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Iniciar
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </>
   )
