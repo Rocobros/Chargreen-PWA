@@ -23,7 +23,7 @@ const AgregarActualizationPage = () => {
         .post('/api/novedades/actualizacion', values)
         .then((res) => {
           toast.success(res.data.message)
-          navigate('/novedades')
+          navigate('/agregarMod')
         })
         .catch((err) => {
           return toast.error(err.response.data.message)
