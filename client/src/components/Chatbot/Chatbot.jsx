@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 function Chatbot() {
   const [input, setInput] = useState('')
   const [chatHistory, setChatHistory] = useState([])
   const [context, setContext] = useState('start')
   const [isActive, setIsActive] = useState(true) // Nuevo estado para manejar la actividad del chat
+  const navigate = useNavigate()
 
   useEffect(() => {
     const welcomeMessage = {
@@ -66,7 +68,7 @@ function Chatbot() {
           break
         case '4':
           responseText = 'Ingresa tu duda.'
-          
+          navigate('/chatbot/ticket')
           setContext('end')
           break
         default:
@@ -92,6 +94,7 @@ function Chatbot() {
         case '4':
           responseText = 'Ingresa tu duda.'
           setContext('end')
+          navigate('/chatbot/ticket')
           break
         default:
           break
@@ -111,6 +114,7 @@ function Chatbot() {
         case '3':
           responseText = 'Ingresa tu duda.'
           setContext('end')
+          navigate('/chatbot/ticket')
           break
         default:
           break
@@ -145,6 +149,7 @@ function Chatbot() {
         case '6':
           responseText = 'Ingresa tu duda.'
           setContext('end')
+          navigate('/chatbot/ticket')
           break
         default:
           break
@@ -168,6 +173,7 @@ function Chatbot() {
         case '4':
           responseText = 'Ingresa tu duda.'
           setContext('end')
+          navigate('/chatbot/ticket')
           break
         default:
           break
@@ -176,26 +182,32 @@ function Chatbot() {
       switch (input) {
         case '1':
           responseText = 'Ingresa tu problema.'
+          navigate('/chatbot/ticket')
           setContext('end')
           break
         case '2':
           responseText = 'Ingresa tu problema.'
+          navigate('/chatbot/ticket')
           setContext('end')
           break
         case '3':
           responseText = 'Ingresa tu problema.'
+          navigate('/chatbot/ticket')
           setContext('end')
           break
         case '4':
           responseText = 'Ingresa tu problema.'
+          navigate('/chatbot/ticket')
           setContext('end')
           break
         case '5':
           responseText = 'Ingresa tu problema.'
+          navigate('/chatbot/ticket')
           setContext('end')
           break
         case '6':
           responseText = 'Ingresa tu problema.'
+          navigate('/chatbot/ticket')
           setContext('end')
           break
         default:
@@ -205,14 +217,17 @@ function Chatbot() {
       switch (input) {
         case '1':
           responseText = 'Ingresa tu problema.'
+          navigate('/chatbot/ticket')
           setContext('end')
           break
         case '2':
           responseText = 'Ingresa tu problema.'
+          navigate('/chatbot/ticket')
           setContext('end')
           break
         case '3':
           responseText = 'Ingresa tu problema.'
+          navigate('/chatbot/ticket')
           setContext('end')
           break
         default:
@@ -228,8 +243,8 @@ function Chatbot() {
   }
 
   return (
-    <div className="flex flex-col h-screen w-screen border-2 border-black rounded-lg shadow-lg">
-      <div className="flex-1 overflow-auto p-4">
+    <div className="flex-1 border-2 border-black rounded-lg shadow-lg">
+      <div className="overflow-auto p-4 text-text">
         {chatHistory.map((entry, index) => (
           <div
             key={index}
@@ -243,8 +258,8 @@ function Chatbot() {
               } bx-sm text-xl`}
             />
             <div
-              className={`p-2 rounded-lg text-white ${
-                entry.user ? 'bg-green-500' : 'bg-blue-500'
+              className={`p-2 rounded-lg ${
+                entry.user ? 'bg-green-500' : 'bg-accent'
               }`}
             >
               {entry.text}
@@ -267,7 +282,7 @@ function Chatbot() {
           />
           <button
             type="submit"
-            className="w-full mt-2 bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded"
+            className="w-full mt-2 bg-primary text-text font-bold py-2 px-4 rounded"
           >
             Send
           </button>
