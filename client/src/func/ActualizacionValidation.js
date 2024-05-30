@@ -18,14 +18,6 @@ export default function validation(values) {
     error = 'Descripcion vacío'
   } else if (!DESC_PATTERN.test(values.Descripcion)) {
     error = 'La descripcion no coincide'
-  } else if (isEmpty(values.Imagen)) {
-    error = 'Imagen vacia'
-  } else if (!IMG_PATTERN.test(values.Imagen)) {
-    error = 'La imagen no coincide'
-  } else if (isEmpty(values.Link)) {
-    error = 'Link vacío'
-  } else if (!LINK_PATTERN.test(values.Link)) {
-    error = 'El link no coincide'
   }
 
   return error

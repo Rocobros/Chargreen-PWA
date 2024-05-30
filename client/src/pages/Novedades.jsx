@@ -19,7 +19,7 @@ const Novedades = () => {
 
   useEffect(() => {
     const fetchNovedades = async () => {
-      const response = await axiosInstance.get('/api/novedades')
+      const response = await axiosInstance.get('/api/novedades/ordered')
       setNovedades(response.data)
     }
 

@@ -109,7 +109,7 @@ const AgregarTorrePage = () => {
       setName('')
       setShowPopup(false)
       setIsMapActive(true)
-      navigate('/agregar/torre')
+      navigate('/agregarAdmin/torre')
     } catch (error) {
       toast.error(error.response.data.message)
     }
@@ -120,7 +120,7 @@ const AgregarTorrePage = () => {
       <Toaster />
       <header className="flex items-center justify-between border-b p-2 bg-primary">
         <button
-          onClick={() => navigate('/agregar')}
+          onClick={() => navigate('/agregarAdmin')}
           className="text-3xl"
         >
           ←
@@ -186,7 +186,7 @@ const AgregarTorrePage = () => {
                   onClick={handleSaveTower}
                   className="flex-1 mr-2 bg-primary hover:bg-accent text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 >
-                  Guardar torre
+                  Agregar torre
                 </button>
               </div>
             </form>

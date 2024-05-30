@@ -11,7 +11,7 @@ const Tarjeta = ({
 }) => {
   return (
     <div
-      className="bg-secondary w-full sm:w-96 rounded-lg shadow-lg p-4 cursor-pointer transition-all duration-500"
+      className="bg-secondary w-full sm:w-96 rounded-lg shadow-lg p-4 cursor-pointer transition-all duration-500 mb-4"
       onClick={onClick}
     >
       <div className="flex flex-col items-center">
