@@ -16,6 +16,21 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.get('/ordered', async (req, res) => {
+  try {
+    const [results] = await pool.execute(
+      'SELECT * FROM novedades ORDER BY Fecha DESCf'
+    )
+    res.status(200).json(results)
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res.status(500).json({
+      message: 'Error al obtener la información.',
+      error: error.message,
+    })
+  }
+})
+
 // Obtener una novedad por su ID
 router.get('/:id', async (req, res) => {
   try {
@@ -35,9 +50,31 @@ router.get('/:id', async (req, res) => {
 
 // Crear una nueva novedad
 router.post('/', async (req, res) => {
-  const novedad = req.body
+  const { Titulo, Descripcion, Imagen, Link, UsuarioModerador } = req.body
   try {
-    const [results] = await pool.execute('INSERT INTO novedades SET ?', novedad)
+    const [results] = await pool.execute(
+      'INSERT INTO `novedades`(Tipo, Titulo, Descripcion, Imagen, Link, UsuarioModerador) VALUES (?, ?, ?, ?, ?, ?)',
+      ['N', Titulo, Descripcion, Imagen, Link, UsuarioModerador]
+    )
+    res
+      .status(201)
+      .json({ message: 'Novedad añadida correctamente', id: results.insertId })
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res
+      .status(500)
+      .json({ message: 'Error al crear la novedad.', error: error.message })
+  }
+})
+
+// Crear una nueva actualizacion
+router.post('/actualizacion', async (req, res) => {
+  const { Titulo, Descripcion, UsuarioModerador } = req.body
+  try {
+    const [results] = await pool.execute(
+      'INSERT INTO `novedades`(Tipo, Titulo, Descripcion, UsuarioModerador) VALUES (?, ?, ?, ?)',
+      ['A', Titulo, Descripcion, UsuarioModerador]
+    )
     res
       .status(201)
       .json({ message: 'Novedad añadida correctamente', id: results.insertId })

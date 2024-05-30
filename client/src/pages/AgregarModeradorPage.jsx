@@ -6,7 +6,7 @@ import axiosInstance from '../func/axiosInstance.js'
 import { toast, Toaster } from 'sonner'
 import Navbar from '../components/navbar/Navbar.jsx'
 
-const ModeratorFrom = () => {
+const AgregarModeradorPage = () => {
   const [userInfo, setUserInfo] = useState({
     Nombre: '',
     ApellidoPaterno: '',
@@ -46,7 +46,7 @@ const ModeratorFrom = () => {
               })
               .then(() => {
                 toast.success('Usuario moderador agregado')
-                navigate('/agregar')
+                navigate('/agregarAdmin')
               })
           } catch (err) {
             if (err.response.status === 409) {
@@ -79,7 +79,7 @@ const ModeratorFrom = () => {
       <Toaster />
       <header className="flex items-center justify-between border-b p-2 bg-primary">
         <button
-          onClick={() => navigate('/agregar')}
+          onClick={() => navigate('/agregarAdmin')}
           className="text-3xl"
         >
           ←
@@ -217,7 +217,7 @@ const ModeratorFrom = () => {
               type="submit"
               className=" flex-1 py-2 px-4 bg-primary text-text rounded-md hover:bg-green-700 font-semibold "
             >
-              Crear
+              Agregar
             </button>
           </div>
         </form>
@@ -227,4 +227,4 @@ const ModeratorFrom = () => {
   )
 }
 
-export default ModeratorFrom
+export default AgregarModeradorPage

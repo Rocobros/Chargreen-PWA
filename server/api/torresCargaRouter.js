@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const pool = require('../db.js')
+const CheckTowerName = require('../utils/CheckTowerNameAvailable.js')
 
 // Obtener todas las torres
 router.get('/', async (req, res) => {
@@ -39,14 +40,19 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   const { Nombre, Latitud, Longitud, UsuarioAdministrador } = req.body
   try {
-    const [results] = await pool.execute(
-      'INSERT INTO torrecarga (Nombre, Coordenadas, UsuarioAdministrador) VALUES (?, POINTFROMTEXT(?), ?)',
-      [Nombre, `POINT(${Latitud} ${Longitud})`, UsuarioAdministrador]
-    )
-    res.status(201).json({
-      message: 'Torre añadida correctamente',
-      id: results.insertId,
-    })
+    const checkAvailable = CheckTowerName(Nombre)
+    if (checkAvailable === 0) {
+      const [results] = await pool.execute(
+        'INSERT INTO torrecarga (Nombre, Coordenadas, UsuarioAdministrador) VALUES (?, POINTFROMTEXT(?), ?)',
+        [Nombre, `POINT(${Latitud} ${Longitud})`, UsuarioAdministrador]
+      )
+      res.status(201).json({
+        message: 'Torre añadida correctamente',
+        id: results.insertId,
+      })
+    } else {
+      res.status(409).json({ message: 'El nombre ya se encuentra en uso' })
+    }
   } catch (error) {
     console.error('Error encontrado: ', error)
     res

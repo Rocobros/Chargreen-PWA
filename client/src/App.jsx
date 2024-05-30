@@ -7,8 +7,6 @@ import Register from './pages/Register'
 import Home from './pages/Home'
 import MailForm from './pages/MailForm'
 import PasswordForm from './pages/PasswordForm'
-import ModeratorFrom from './pages/ModeratorForm'
-import TowerForm from './pages/TowerForm'
 import CountdownTimer from './components/Timer/CountdownTimer'
 import MetricasPage from './components/Metricas/MetricasPage'
 import Verificar from './pages/Verificar'
@@ -22,8 +20,12 @@ import NotFound from './pages/NotFound'
 import EditarPerfilUsuario from './components/EditarPerfilUsuario'
 import ChatbotPage from './pages/ChatbotPage'
 import MetricasAdminPage from './components/Metricas/MetricasAdminPage'
-import Agregar from './pages/Agregar'
 import AgregarTorrePage from './pages/AgregarTorrePage'
+import AgregarModeradorPage from './pages/AgregarModeradorPage'
+import AgregarNovedadPage from './pages/AgregarNovedadPage'
+import AgregarMod from './pages/AgregarMod'
+import AgregarAdmin from './pages/AgregarAdmin'
+import AgregarActualizationPage from './pages/AgregarActualizationPage'
 
 const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
@@ -67,16 +69,28 @@ function App() {
             element={<Novedades />}
           />
           <Route
-            path="agregar/moderador"
-            element={<ModeratorFrom />}
+            path="agregarAdmin/moderador"
+            element={<AgregarModeradorPage />}
           />
           <Route
-            path="agregar"
-            element={<Agregar />}
+            path="agregarAdmin"
+            element={<AgregarAdmin />}
           />
           <Route
-            path="agregar/torre"
+            path="agregarMod"
+            element={<AgregarMod />}
+          />
+          <Route
+            path="agregarAdmin/torre"
             element={<AgregarTorrePage />}
+          />
+          <Route
+            path="agregarMod/novedad"
+            element={<AgregarNovedadPage />}
+          />
+          <Route
+            path="agregarMod/actualizacion"
+            element={<AgregarActualizationPage />}
           />
           <Route
             path="tiempo"

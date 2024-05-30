@@ -22,7 +22,7 @@ const MetricasAdminPage = () => {
   const [timeUsed, setTimeUsed] = useState(0)
   const [energyUsed, setEnergyUsed] = useState(0)
   const [noRender, setNoRender] = useState(false)
-  const [filter, setFilter] = useState('')
+  const [filter, setFilter] = useState('t')
 
   useEffect(() => {
     axiosInstance

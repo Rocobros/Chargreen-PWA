@@ -41,7 +41,7 @@ app.use('/api/salidas', authenticateToken, salidasRouter)
 app.use('/api/tokens', authenticateToken, tokensRouter)
 app.use('/api/torres', authenticateToken, torreCargaRouter)
 app.use('/api/admins', authenticateToken, adminRouter)
-app.use('/api/moderadores', authenticateToken, moderRouter)
+app.use('/api/moderadores', moderRouter)
 app.use('/api/usuarios', usuariosRouter)
 app.use('/api/metricas', authenticateToken, metricasRouter)
 

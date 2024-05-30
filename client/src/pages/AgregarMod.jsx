@@ -2,7 +2,7 @@ import React from 'react'
 import Navbar from '../components/navbar/Navbar'
 import { useNavigate } from 'react-router-dom'
 
-const Agregar = () => {
+const AgregarMod = () => {
   const navigate = useNavigate()
 
   return (
@@ -12,27 +12,15 @@ const Agregar = () => {
       </header>
       <div className="flex flex-col divide-y divide-gray-300  text-xl">
         <MenuItem
-          label={'Agregar Torre'}
-          handleClick={() => {
-            navigate('/agregar/torre')
-          }}
-        />
-        <MenuItem
-          label={'Agregar Moderador'}
-          handleClick={() => {
-            navigate('/agregar/moderador')
-          }}
-        />
-        <MenuItem
           label={'Agregar Novedad'}
           handleClick={() => {
-            navigate('/agregar/novedad')
+            navigate('/agregarMod/novedad')
           }}
         />
         <MenuItem
           label={'Agregar Actualizacion'}
           handleClick={() => {
-            navigate('/agregar/actualizacion')
+            navigate('/agregarMod/actualizacion')
           }}
         />
       </div>
@@ -50,4 +38,4 @@ const MenuItem = ({ label, handleClick }) => (
   </div>
 )
 
-export default Agregar
+export default AgregarMod

@@ -18,6 +18,14 @@ const Navbar = () => {
       setSelected('/perfil')
     } else if (loc === '/metricas') {
       setSelected('/perfil')
+    } else if (loc === '/agregarAdmin/torre') {
+      setSelected('/agregarAdmin')
+    } else if (loc === '/agregarAdmin/moderador') {
+      setSelected('/agregarAdmin')
+    } else if (loc === '/agregarMod/novedad') {
+      setSelected('/agregar')
+    } else if (loc === '/agregarMod/actualizacion') {
+      setSelected('/agregarMod')
     } else {
       setSelected(loc)
     }
@@ -80,9 +88,9 @@ const Navbar = () => {
           />
           <i
             className={`bx bx-add-to-queue text-3xl active:text-primary active:scale-125 rounded ${
-              selected === '/agregar' ? 'text-primary scale-125' : ''
+              selected === '/agregarAdmin' ? 'text-primary scale-125' : ''
             }`}
-            onClick={() => handleClick('/agregar')}
+            onClick={() => handleClick('/agregarAdmin')}
           />
           <i
             className={`bx bx-line-chart text-3xl active:text-primary active:scale-125 rounded ${
@@ -110,6 +118,18 @@ const Navbar = () => {
             onClick={() => handleClick('/')}
           />
           <i
+            className={`bx bx-add-to-queue text-3xl active:text-primary active:scale-125 rounded ${
+              selected === '/agregarMod' ? 'text-primary scale-125' : ''
+            }`}
+            onClick={() => handleClick('/agregarMod')}
+          />
+          <i
+            className={`bx bx-news text-3xl active:text-primary active:scale-125 rounded ${
+              selected === '/novedades' ? 'text-primary scale-125' : ''
+            }`}
+            onClick={() => handleClick('/novedades')}
+          />
+          <i
             className={`bx bx-receipt text-3xl active:text-primary active:scale-125 rounded ${
               selected === '/tickets' ? 'text-primary scale-125' : ''
             }`}
@@ -122,8 +142,8 @@ const Navbar = () => {
             onClick={() => handleClick('/metricasAdmin')}
           />
           <i
-            className={`bx bx-log-out text-3xl active:text-primary active:scale-125 rounded ${
-              selected === '/login' ? 'text-primary scale-125' : ''
+            className={`bx bx-log-out text-3xl active:text-primary text-red-500 pactive:scale-125 rounded ${
+              selected === '/login' ? 'text-red-500 scale-125' : ''
             }`}
             onClick={() => handleClick('/login')}
           />
