@@ -166,7 +166,15 @@ const MetricasPage = () => {
 
   return (
     <>
-    
+      <header className="flex items-center justify-between border-b p-2 bg-primary">
+        <button
+          onClick={() => navigate('/perfil')}
+          className="text-3xl"
+        >
+          ←
+        </button>
+        <h1 className="text-3xl font-bold mr-4">Mis metricas</h1>
+      </header>
       {!noRender && (
         <div
           className="bg-background p-2"
