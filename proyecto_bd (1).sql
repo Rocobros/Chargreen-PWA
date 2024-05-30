@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-05-2024 a las 04:33:34
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Tiempo de generación: 30-05-2024 a las 13:59:43
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -510,11 +510,37 @@ INSERT INTO `registro` (`Id`, `UsuarioNormal`, `Botella`, `Salida`, `Fecha`) VAL
 (365, 16, 4, 2, '2023-07-14 00:00:00'),
 (366, 2, 3, 6, '2023-08-22 00:00:00'),
 (367, 3, 2, 4, '2023-09-20 00:00:00'),
-(368, 16, 1, 8, '2023-10-04 00:00:00');
+(368, 16, 1, 8, '2023-10-04 00:00:00'),
+(370, NULL, 2, 2, '2024-05-29 23:04:12'),
+(371, NULL, 2, 2, '2024-05-29 23:08:33'),
+(372, NULL, 2, 2, '2024-05-29 23:11:34'),
+(373, NULL, 2, 3, '2024-05-29 23:12:04'),
+(374, NULL, 2, 2, '2024-05-29 23:13:17'),
+(375, NULL, 2, 2, '2024-05-29 23:14:29'),
+(376, NULL, 2, 2, '2024-05-29 23:15:00'),
+(377, NULL, 2, 2, '2024-05-29 23:24:18'),
+(378, NULL, 2, 2, '2024-05-29 23:25:41');
 
 --
 -- Disparadores `registro`
 --
+DELIMITER $$
+CREATE TRIGGER `GenerarCodigo` AFTER INSERT ON `registro` FOR EACH ROW BEGIN
+    DECLARE nuevo_codigo VARCHAR(4);
+    DECLARE codigo_existente INT;
+    SET codigo_existente = 1;
+    
+    WHILE codigo_existente > 0 DO
+        SET nuevo_codigo = LPAD(FLOOR(RAND() * 10000), 4, '0');
+        SELECT COUNT(*) INTO codigo_existente FROM salidas WHERE Codigo = nuevo_codigo;
+    END WHILE;
+
+    IF (SELECT Estado FROM salidas WHERE Id = NEW.Salida) = 'D' THEN
+        UPDATE salidas SET Codigo = nuevo_codigo WHERE Id = NEW.Salida;
+    END IF;
+END
+$$
+DELIMITER ;
 DELIMITER $$
 CREATE TRIGGER `SumarMinutosAlUsuario` AFTER INSERT ON `registro` FOR EACH ROW BEGIN
   
@@ -582,6 +608,7 @@ CREATE TABLE `salidas` (
   `Id` int(11) NOT NULL,
   `Numero` tinyint(1) DEFAULT NULL,
   `Estado` varchar(1) DEFAULT NULL,
+  `Codigo` int(4) DEFAULT NULL,
   `TorreCarga` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -589,23 +616,23 @@ CREATE TABLE `salidas` (
 -- Volcado de datos para la tabla `salidas`
 --
 
-INSERT INTO `salidas` (`Id`, `Numero`, `Estado`, `TorreCarga`) VALUES
-(1, 1, 'D', 22),
-(2, 2, 'D', 22),
-(3, 3, 'D', 22),
-(4, 4, 'D', 22),
-(5, 1, 'D', 24),
-(6, 2, 'D', 24),
-(7, 3, 'D', 24),
-(8, 4, 'D', 24),
-(9, 1, 'D', 25),
-(10, 2, 'D', 25),
-(11, 3, 'D', 25),
-(12, 4, 'D', 25),
-(13, 1, 'D', 27),
-(14, 2, 'D', 27),
-(15, 3, 'D', 27),
-(16, 4, 'D', 27);
+INSERT INTO `salidas` (`Id`, `Numero`, `Estado`, `Codigo`, `TorreCarga`) VALUES
+(1, 1, 'D', 0, 22),
+(2, 2, 'A', 9921, 22),
+(3, 3, 'A', 9835, 22),
+(4, 4, 'D', 0, 22),
+(5, 1, 'D', 0, 24),
+(6, 2, 'D', 0, 24),
+(7, 3, 'D', 0, 24),
+(8, 4, 'D', 0, 24),
+(9, 1, 'D', 0, 25),
+(10, 2, 'D', 0, 25),
+(11, 3, 'D', 0, 25),
+(12, 4, 'D', 0, 25),
+(13, 1, 'D', 0, 27),
+(14, 2, 'D', 0, 27),
+(15, 3, 'D', 0, 27),
+(16, 4, 'D', 0, 27);
 
 -- --------------------------------------------------------
 
@@ -883,7 +910,7 @@ ALTER TABLE `novedades`
 -- AUTO_INCREMENT de la tabla `registro`
 --
 ALTER TABLE `registro`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=369;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=379;
 
 --
 -- AUTO_INCREMENT de la tabla `salidas`
