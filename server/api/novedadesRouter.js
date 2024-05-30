@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 router.get('/ordered', async (req, res) => {
   try {
     const [results] = await pool.execute(
-      'SELECT * FROM novedades ORDER BY Fecha DESCf'
+      'SELECT * FROM novedades ORDER BY Fecha DESC'
     )
     res.status(200).json(results)
   } catch (error) {
