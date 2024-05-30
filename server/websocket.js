@@ -1,4 +1,7 @@
 const WebSocket = require('ws')
+const crearRegistro = require('./utils/crearRegistro')
+const ReactivateExit = require('./utils/ReactivateExit')
+const getExitCode = require('./utils/getExitCode')
 
 function setupWebSocket() {
   const wss = new WebSocket.Server({ port: 8000 }, () => {
@@ -11,15 +14,26 @@ function setupWebSocket() {
     console.log('Cliente conectado')
     espClient = ws
 
-    ws.on('message', (message) => {
+    ws.on('message', async (message) => {
       try {
-        // Deserialize the JSON string to a JavaScript object
         const data = JSON.parse(message)
-
-        // Get the ID
-        const messageText = data.id
-
         console.log(data)
+        if (data.botella !== '0') {
+          await crearRegistro(data).then(async (res) => {
+            console.log('Registro creado')
+            const code = await getExitCode(data)
+            ws.send(
+              JSON.stringify({
+                Torre: data.id,
+                Salida: data.salida,
+                Tiempo: -1,
+                Codigo: code,
+              })
+            )
+          })
+        } else {
+          ReactivateExit(data)
+        }
       } catch (error) {
         console.error('Error parsing JSON: ', error)
       }
