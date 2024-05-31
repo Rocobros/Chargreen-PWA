@@ -50,32 +50,32 @@ const MetricasAdminPage = () => {
   }, [])
 
   useEffect(() => {
-    if (data.length > 0 && actualTime !== null) {
-      updateCharts(data)
+    if (data.length > 0) {
+      applyFilters(data)
     }
-  }, [data, actualTime])
+  }, [data, actualTime, selectedUser, selectedTorre])
 
-  const updateCharts = (data) => {
-    if (!data || data.length === 0) {
+  const updateCharts = (filteredData) => {
+    if (!filteredData || filteredData.length === 0) {
       setPieChartData(null)
       setBarsChartData(null)
-      setTimeUsed(null)
+      setTimeUsed(0)
+      setEnergyUsed(0)
       setNoRender(true)
       return
+    } else {
+      setNoRender(false)
     }
 
-    //Obtener suma de los segundos de las botellas registradas
     let sum = 0
-    data.map((item) => {
+    filteredData.forEach((item) => {
       sum += item.Segundos
     })
-    //Definir el tiempo real de uso
-    setTimeUsed(sum - actualTime)
 
+    setTimeUsed(sum - actualTime)
     setEnergyUsed(((sum - actualTime) / 3600) * 20)
 
-    // Procesar los datos para obtener los conteos de botellas por torre
-    const torreCounts = data.reduce((acc, item) => {
+    const torreCounts = filteredData.reduce((acc, item) => {
       acc[item.Torre] = (acc[item.Torre] || 0) + 1
       return acc
     }, {})
@@ -96,15 +96,13 @@ const MetricasAdminPage = () => {
       ],
     })
 
-    const userBottleCounts = data.reduce((acc, item) => {
+    const userBottleCounts = filteredData.reduce((acc, item) => {
       const key = `${item.Botella}`
       acc[key] = (acc[key] || 0) + 1
       return acc
     }, {})
 
-    const barsLabels = Object.keys(userBottleCounts).map((key) => {
-      return key
-    })
+    const barsLabels = Object.keys(userBottleCounts)
     const barsValues = Object.values(userBottleCounts)
 
     setBarsChartData({
@@ -156,13 +154,15 @@ const MetricasAdminPage = () => {
 
   const applyFilters = (filteredData) => {
     if (selectedUser) {
-      filteredData = filterData.filter(
-        (item) => filterData.IdUsuario === parseInt(selectedUser)
+      filteredData = filteredData.filter(
+        (item) => item.IdUsuario === parseInt(selectedUser)
       )
     }
 
     if (selectedTorre) {
-      filteredData = filterData.filter((item) => item.IdTorre === selectedTorre)
+      filteredData = filteredData.filter(
+        (item) => item.IdTorre === parseInt(selectedTorre)
+      )
     }
 
     updateCharts(filteredData)
@@ -170,12 +170,10 @@ const MetricasAdminPage = () => {
 
   const handleUserChange = (e) => {
     setSelectedUser(e.target.value)
-    applyFilters(data)
   }
 
   const handleTorreChange = (e) => {
     setSelectedTorre(e.target.value)
-    applyFilters(data)
   }
 
   return (
@@ -185,118 +183,118 @@ const MetricasAdminPage = () => {
           Metricas del sistema
         </h1>
       </header>
-      {!noRender && (
-        <div
-          className="bg-background p-2"
-          style={{ paddingBottom: 'var(--navbar-height)' }}
-        >
-          <div className="">
-            <div className="text-center mb-5">
-              <button
-                className={`bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base ${
-                  filter === 't' ? 'bg-secondary' : ''
-                }`}
-                onClick={() => filterData('t')}
-              >
-                Todos
-              </button>
-              <button
-                className={`bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base ${
-                  filter === '6m' ? 'bg-secondary' : ''
-                }`}
-                onClick={() => filterData('6m')}
-              >
-                Últimos 6 meses
-              </button>
-              <button
-                className={`bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base ${
-                  filter === '1m' ? 'bg-secondary' : ''
-                }`}
-                onClick={() => filterData('1m')}
-              >
-                Último mes
-              </button>
-              <button
-                className={`bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base ${
-                  filter === '1w' ? 'bg-secondary' : ''
-                }`}
-                onClick={() => filterData('1w')}
-              >
-                Última semana
-              </button>
-            </div>
-            <div className="flex justify-center mb-5">
-              <select
-                value={selectedUser}
-                onChange={handleUserChange}
-                className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
-              >
-                <option value="">Selecciona un usuario</option>
-                {users.map((usuario) => (
-                  <option
-                    key={usuario.Id}
-                    value={usuario.Id}
-                  >
-                    {usuario.Nombre}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={selectedTorre}
-                onChange={handleTorreChange}
-                className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
-              >
-                <option value="">Selecciona una torre</option>
-                {towers.map((torre) => (
-                  <option
-                    key={torre.Id}
-                    value={torre.Id}
-                  >
-                    {torre.Nombre}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="mb-2">
-              <h1 className="text-center">Cantidad de Botellas por Torre</h1>
-              {pieChartData ? (
-                <Pie data={pieChartData} />
-              ) : (
-                <p>Loading data...</p>
-              )}
-            </div>
-            <div className="mb-2">
-              <h1 className="text-center">
-                Cantidad de Botellas por Clasificación
-              </h1>
-              {barsChartData ? (
-                <Bar
-                  data={barsChartData}
-                  options={{
-                    scales: {
-                      y: {
-                        beginAtZero: true,
-                      },
-                    },
-                  }}
-                />
-              ) : (
-                <p>Loading data...</p>
-              )}
-            </div>
-            <div className="mb-2">
-              <h1 className="text-center text-2xl">
-                Cantidad de tiempo usado: {timeUsed} segundos
-              </h1>
-            </div>
-            <div className="mb-2">
-              <h1 className="text-center text-2xl">
-                Cantidad de energia usada: {Math.floor(energyUsed)} Watts
-              </h1>
-            </div>
+      <div
+        className="bg-background p-2"
+        style={{ paddingBottom: 'var(--navbar-height)' }}
+      >
+        <div className="">
+          <div className="text-center mb-5">
+            <button
+              className={`bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base ${
+                filter === 't' ? 'bg-secondary' : ''
+              }`}
+              onClick={() => filterData('t')}
+            >
+              Todos
+            </button>
+            <button
+              className={`bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base ${
+                filter === '6m' ? 'bg-secondary' : ''
+              }`}
+              onClick={() => filterData('6m')}
+            >
+              Últimos 6 meses
+            </button>
+            <button
+              className={`bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base ${
+                filter === '1m' ? 'bg-secondary' : ''
+              }`}
+              onClick={() => filterData('1m')}
+            >
+              Último mes
+            </button>
+            <button
+              className={`bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base ${
+                filter === '1w' ? 'bg-secondary' : ''
+              }`}
+              onClick={() => filterData('1w')}
+            >
+              Última semana
+            </button>
           </div>
+          <div className="flex justify-center mb-5">
+            <select
+              value={selectedUser}
+              onChange={handleUserChange}
+              className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+            >
+              <option>Selecciona un usuario</option>
+              {users.map((usuario) => (
+                <option
+                  key={usuario.Registro}
+                  value={usuario.Registro}
+                >
+                  {usuario.Nombre}
+                </option>
+              ))}
+            </select>
+            <select
+              value={selectedTorre}
+              onChange={handleTorreChange}
+              className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+            >
+              <option value="">Selecciona una torre</option>
+              {towers.map((torre) => (
+                <option
+                  key={torre.Id}
+                  value={torre.Id}
+                >
+                  {torre.Nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+          {noRender ? (
+            <div className="text-center mt-5">
+              <p>No hay datos disponibles para mostrar.</p>
+            </div>
+          ) : (
+            <>
+              <div className="mb-2">
+                <h1 className="text-center">Cantidad de Botellas por Torre</h1>
+                {pieChartData ? (
+                  <Pie data={pieChartData} />
+                ) : (
+                  <p>Loading data...</p>
+                )}
+              </div>
+              <div className="mb-2">
+                <h1 className="text-center">
+                  Cantidad de Botellas por Clasificación
+                </h1>
+                {barsChartData ? (
+                  <Bar
+                    data={barsChartData}
+                    options={{
+                      scales: {
+                        y: {
+                          beginAtZero: true,
+                        },
+                      },
+                    }}
+                  />
+                ) : (
+                  <p>Loading data...</p>
+                )}
+              </div>
+              <div className="text-center mt-5">
+                <p>Tiempo total utilizado: {Math.round(timeUsed)} segundos</p>
+                <p>Energia total utilizada: {Math.round(energyUsed)} Joules</p>
+              </div>
+            </>
+          )}
         </div>
-      )}
+      </div>
       <Navbar />
     </>
   )

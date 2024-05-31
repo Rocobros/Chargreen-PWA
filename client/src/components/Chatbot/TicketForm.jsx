@@ -68,6 +68,7 @@ const TicketForm = ({ id, pregunta, usuario }) => {
                   id="respuesta"
                   onChange={(event) => setRespuesta(event.target.value)}
                   className="w-full p-2 border border-gray-300 rounded mt-1"
+                  maxLength={300}
                 />
               </label>
               <div className="flex justify-around"></div>

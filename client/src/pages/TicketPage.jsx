@@ -69,6 +69,7 @@ const TicketPage = () => {
                   type="text"
                   name="Pregunta"
                   value={values.Pregunta}
+                  maxLength={50}
                 />
               </label>
             </div>

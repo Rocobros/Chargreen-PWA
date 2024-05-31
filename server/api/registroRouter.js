@@ -33,14 +33,31 @@ router.get('/:id', async (req, res) => {
   }
 })
 
+router.get('/:salida/:codigo', async (req, res) => {
+  try {
+    const [results] = await pool.execute(
+      'SELECT * FROM registro WHERE Salida = ? AND Codigo = ?',
+      [req.params.salida, req.params.codigo]
+    )
+    res.status(200).json(results)
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res.status(500).json({
+      message: 'Error al obtener la información.',
+      error: error.message,
+    })
+  }
+})
+
 // Obtener los registros del ultimo mes por su ID
 router.get('/month/:id', async (req, res) => {
   try {
     const [results] = await pool.execute(
-      "SELECT COUNT(*) as botellas FROM registro WHERE DATE_FORMAT(Fecha, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m') AND UsuarioNormal = ?",
+      "SELECT COUNT(*) as botellas FROM registro WHERE Fecha >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND UsuarioNormal = ?",
       [req.params.id]
     )
-    res.status(200).json(results[0])
+
+    res.status(200).send(results[0])
   } catch (error) {
     console.error('Error encontrado: ', error)
     res.status(500).json({

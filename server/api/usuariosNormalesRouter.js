@@ -151,7 +151,41 @@ router.put('/:registro', authenticateToken, async (req, res) => {
 })
 
 // Actualizar tiempo de un usuario
-router.put('/tiempo/:registro', authenticateToken, async (req, res) => {
+router.put('/tiempo/agregar/:registro', authenticateToken, async (req, res) => {
+  const { Tiempo } = req.body
+
+  try {
+    // Obtener el tiempo actual del usuario
+    const [rows] = await pool.execute(
+      'SELECT Tiempo FROM usuariosnormales WHERE Registro = ?',
+      [req.params.registro]
+    )
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: 'Usuario no encontrado' })
+    }
+
+    const tiempoActual = rows[0].Tiempo
+    const nuevoTiempo = tiempoActual + Tiempo
+
+    // Actualizar el tiempo del usuario
+    await pool.execute(
+      'UPDATE usuariosnormales SET Tiempo = ? WHERE Registro = ?',
+      [nuevoTiempo, req.params.registro]
+    )
+
+    res.status(200).json({ message: 'Usuario actualizado correctamente' })
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res.status(500).json({
+      message: 'Error al actualizar el usuario.',
+      error: error.message,
+    })
+  }
+})
+
+// Sumar al tiempo de un usuario
+router.put('/tiempo/agregar:registro', authenticateToken, async (req, res) => {
   const { Tiempo } = req.body
 
   try {

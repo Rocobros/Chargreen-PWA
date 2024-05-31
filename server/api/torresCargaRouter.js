@@ -40,7 +40,7 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   const { Nombre, Latitud, Longitud, UsuarioAdministrador } = req.body
   try {
-    const checkAvailable = CheckTowerName(Nombre)
+    const checkAvailable = await CheckTowerName(Nombre)
     if (checkAvailable === 0) {
       const [results] = await pool.execute(
         'INSERT INTO torrecarga (Nombre, Coordenadas, UsuarioAdministrador) VALUES (?, POINTFROMTEXT(?), ?)',
