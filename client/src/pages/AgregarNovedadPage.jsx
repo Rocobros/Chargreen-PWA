@@ -26,7 +26,7 @@ const AgregarNovedadPage = () => {
         .post('/api/novedades', values)
         .then((res) => {
           toast.success(res.data.message)
-          navigate('/novedades')
+          navigate('/agregarMod')
         })
         .catch((err) => {
           return toast.error(err.response.data.message)

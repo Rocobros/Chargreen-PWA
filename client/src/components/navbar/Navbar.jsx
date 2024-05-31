@@ -23,9 +23,13 @@ const Navbar = () => {
     } else if (loc === '/agregarAdmin/moderador') {
       setSelected('/agregarAdmin')
     } else if (loc === '/agregarMod/novedad') {
-      setSelected('/agregar')
+      setSelected('/agregarMod')
     } else if (loc === '/agregarMod/actualizacion') {
       setSelected('/agregarMod')
+    } else if (loc === '/chatbot/ticket') {
+      setSelected('/chatbot')
+    } else if (loc === '/chatbot/tickets') {
+      setSelected('/chatbot')
     } else {
       setSelected(loc)
     }
@@ -122,12 +126,6 @@ const Navbar = () => {
               selected === '/agregarMod' ? 'text-primary scale-125' : ''
             }`}
             onClick={() => handleClick('/agregarMod')}
-          />
-          <i
-            className={`bx bx-news text-3xl active:text-primary active:scale-125 rounded ${
-              selected === '/novedades' ? 'text-primary scale-125' : ''
-            }`}
-            onClick={() => handleClick('/novedades')}
           />
           <i
             className={`bx bx-receipt text-3xl active:text-primary active:scale-125 rounded ${

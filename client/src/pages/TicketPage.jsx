@@ -5,31 +5,31 @@ import axiosInstance from '../func/axiosInstance.js'
 import { toast, Toaster } from 'sonner'
 import Navbar from '../components/navbar/Navbar.jsx'
 import ActualizacionValidation from '../func/ActualizacionValidation.js'
-const AgregarActualizationPage = () => {
+
+const TicketPage = () => {
   const [values, setValues] = useState({
-    Titulo: '',
-    Descripcion: '',
-    UsuarioModerador: localStorage.getItem('id'),
+    Pregunta: '',
+    Estado: 'A',
+    UsuarioNormal: localStorage.getItem('id'),
   })
 
   const navigate = useNavigate()
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    const validationError = ActualizacionValidation(values)
 
-    if (!validationError) {
+    if (values.Pregunta != '') {
       axiosInstance
-        .post('/api/novedades/actualizacion', values)
+        .post('/api/chatbot', values)
         .then((res) => {
           toast.success(res.data.message)
-          navigate('/agregarMod')
+          navigate('/chatbot')
         })
         .catch((err) => {
           return toast.error(err.response.data.message)
         })
     } else {
-      toast.warning(validationError)
+      toast.warning('La pregunta esta vacia')
     }
   }
 
@@ -42,12 +42,12 @@ const AgregarActualizationPage = () => {
       <Toaster />
       <header className="flex items-center justify-between border-b p-2 bg-primary">
         <button
-          onClick={() => navigate('/agregarMod')}
+          onClick={() => navigate('/chatbot')}
           className="text-3xl"
         >
           ←
         </button>
-        <h1 className="text-3xl font-bold">Agregar Actualización</h1>
+        <h1 className="text-3xl font-bold">Generar Ticket</h1>
       </header>
       <div
         className="max-w-md mx-auto p-6 border bg-background rounded-sm font-secondary text-text overflow-y-auto"
@@ -58,29 +58,17 @@ const AgregarActualizationPage = () => {
           className="flex flex-col space-y-4 text-2xl"
         >
           <section className="mb-4">
-            <h2 className="text-lg font-semibold mb-2">INFORMACION</h2>
+            <h2 className="text-lg font-semibold mb-2">PREGUNTA</h2>
             <div className="flex justify-between items-center border-b py-2">
               <label className=" flex flex-col font-semibold">
-                Titulo
+                Ingresa tu duda
                 <input
                   onChange={handleInput}
                   className="font-normal bg-transparent border-2 border-slate-300"
                   required
                   type="text"
-                  name="Titulo"
-                  value={values.Titulo}
-                />
-              </label>
-            </div>
-            <div className="flex justify-between items-center border-b py-2">
-              <label className="flex flex-col font-semibold">
-                Descripcion
-                <textarea
-                  required
-                  onChange={handleInput}
-                  className="font-normal bg-transparent border-2 border-slate-300 h-48"
-                  name="Descripcion"
-                  value={values.Descripcion}
+                  name="Pregunta"
+                  value={values.Pregunta}
                 />
               </label>
             </div>
@@ -89,15 +77,15 @@ const AgregarActualizationPage = () => {
           <div className="flex flex-row gap-4">
             <button
               className="flex-1 py-2 px-4 bg-red-500 text-text rounded-md hover:bg-green-700 font-semibold"
-              onClick={() => navigate('/agregarMod')}
+              onClick={() => navigate('/chatbot')}
             >
-              Regresar
+              Cancelar
             </button>
             <button
               type="submit"
               className=" flex-1 py-2 px-4 bg-primary text-text rounded-md hover:bg-green-700 font-semibold "
             >
-              Agregar
+              Enviar
             </button>
           </div>
         </form>
@@ -107,4 +95,4 @@ const AgregarActualizationPage = () => {
   )
 }
 
-export default AgregarActualizationPage
+export default TicketPage

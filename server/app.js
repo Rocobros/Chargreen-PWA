@@ -20,9 +20,9 @@ const adminRouter = require('./api/usuariosAdministradoresRouter.js')
 const moderRouter = require('./api/usuariosModeradoresRouter.js')
 const usuariosRouter = require('./api/usuariosNormalesRouter.js')
 const metricasRouter = require('./api/metricasRouter.js')
+const chatbotRouter = require('./api/chatbotRouter.js')
 
 const requestLogger = require('./utils/requestLogger.js')
-
 const authenticateToken = require('./utils/authenticateToken.js')
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -32,6 +32,7 @@ app.use(express.json())
 app.use(requestLogger)
 
 app.use('/api/botellaslatas', authenticateToken, botellasLatasRouter)
+app.use('/api/chatbot', authenticateToken, chatbotRouter)
 app.use('/api/codigos', authenticateToken, codigosRouter)
 app.use('/api/credenciales', credencialesRouter)
 app.use('/api/nivelusuario', authenticateToken, nivelUsuarioRouter)
