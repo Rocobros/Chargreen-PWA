@@ -5,10 +5,11 @@ import axiosInstance from '../func/axiosInstance.js'
 import { toast, Toaster } from 'sonner'
 import Navbar from '../components/navbar/Navbar.jsx'
 import ActualizacionValidation from '../func/ActualizacionValidation.js'
+
 const TicketPage = () => {
   const [values, setValues] = useState({
     Pregunta: '',
-    Estado: 'P',
+    Estado: 'A',
     UsuarioNormal: localStorage.getItem('id'),
   })
 

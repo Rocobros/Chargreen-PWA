@@ -17,10 +17,9 @@ router.get('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
   try {
-    const [results] = await pool.execute(
-      'SELECT * FROM chatbot WHERE Id = ?',
-      req.params.id
-    )
+    const [results] = await pool.execute('SELECT * FROM chatbot WHERE Id = ?', [
+      req.params.id,
+    ])
     res.status(200).json(results[0])
   } catch (error) {
     console.error('Error encontrado: ', error)
@@ -46,6 +45,21 @@ router.get('/user/:id', async (req, res) => {
     })
   }
 })
+
+// router.get('/open', async (req, res) => {
+//   try {
+//     const [results] = await pool.execute(
+//       "SELECT * FROM chatbot WHERE Estado = 'A'"
+//     )
+//     res.status(200).json({ message: 'Mensaje' })
+//   } catch (error) {
+//     console.error('Error encontrado: ', error)
+//     res.status(500).json({
+//       message: 'Error al obtener la información.',
+//       error: error.message,
+//     })
+//   }
+// })
 
 router.post('/', async (req, res) => {
   const ticket = req.body

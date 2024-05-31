@@ -28,6 +28,7 @@ import AgregarAdmin from './pages/AgregarAdmin'
 import AgregarActualizationPage from './pages/AgregarActualizationPage'
 import TicketPage from './pages/TicketPage.jsx'
 import UserTicketsPage from './pages/UserTicketsPage.jsx'
+import TicketsPage from './pages/TicketsPage.jsx'
 
 const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
