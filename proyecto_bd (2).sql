@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 31-05-2024 a las 03:43:23
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Tiempo de generación: 31-05-2024 a las 11:03:37
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -66,8 +66,9 @@ CREATE TABLE `chatbot` (
 
 INSERT INTO `chatbot` (`Id`, `Pregunta`, `Respuesta`, `Estado`, `UsuarioModerador`, `UsuarioNormal`) VALUES
 (1, 'Duda', 'Duda Resuelta', 'R', 2, 2),
-(2, 'Otra duda', NULL, 'A', NULL, 2),
-(3, 'Nueva duda', NULL, 'A', NULL, 2);
+(2, 'Otra duda', 'Repuesta', 'R', 2, 2),
+(3, 'Nueva duda', 'Nueva respuesta', 'R', 2, 2),
+(4, 'Tengo una nueva duda', 'Nueva Duda Resuelta', 'R', 2, 2);
 
 -- --------------------------------------------------------
 
@@ -96,7 +97,8 @@ INSERT INTO `credenciales` (`Id`, `Usuario`, `Contrasena`) VALUES
 (29, 'Monika', '$2a$08$COv4rxfHzuCdde1gPkZRzOxSFpg1gY4PHPHV5kdV2tOL/CYcUfSdG'),
 (31, 'Wachos17', '$2a$10$vS3MdOQ6sGGcmqWkk.bEwOUTQ1/mu.rs5HjY6bmOWA/yi.3Z0Rile'),
 (65, 'Susana123', '$2a$10$95hi84Bg0uVVS/t385oo.uF7.hSDSY2AbQ6BvcgpBDBp3prsYXGhy'),
-(66, 'Moderador123', '$2a$10$tYaEx.2ZuM/QswngshwtLeACamXYPUGuAWqUoJLt/WpO1/EkQYH0G');
+(66, 'Moderador123', '$2a$10$tYaEx.2ZuM/QswngshwtLeACamXYPUGuAWqUoJLt/WpO1/EkQYH0G'),
+(73, 'Administrator123', 'Administrator123');
 
 -- --------------------------------------------------------
 
@@ -150,7 +152,11 @@ INSERT INTO `novedades` (`Id`, `Tipo`, `Titulo`, `Descripcion`, `Imagen`, `Link`
 (6, 'A', 'Nueva Torre Creada: Nueva Torre', 'Se ha instalado una nueva torre de carga para el uso de nuestro usuarios, revisala en el mapa', NULL, NULL, '2024-05-29 00:00:00', NULL),
 (9, 'A', 'Otra actualizacion', 'Otra actualizacion', NULL, NULL, '2024-05-29 18:44:19', 2),
 (10, 'A', 'Nueva Actualizacion', 'Nueva ACT', NULL, NULL, '2024-05-30 09:17:54', 2),
-(11, 'A', 'Nueva', 'Nueva', NULL, NULL, '2024-05-30 09:22:06', 2);
+(11, 'A', 'Nueva', 'Nueva', NULL, NULL, '2024-05-30 09:22:06', 2),
+(12, 'A', 'Nueva Act', 'Nueva Act', NULL, NULL, '2024-05-31 01:22:57', 2),
+(13, 'N', 'Ultima Novedad', 'Ultima Novedad', 'https://blog.toyota-forklifts.es/hs-fs/hubfs/push-back-racking-1.jpg?width=1440&name=push-back-racking-1.jpg', 'https://chargreen.com.mx', '2024-05-31 02:21:40', 2),
+(14, 'N', 'Ultima Novedad', 'Ultima Novedad', 'https://blog.toyota-forklifts.es/hs-fs/hubfs/push-back-racking-1.jpg?width=1440&name=push-back-racking-1.jpg', 'https://chargreen.com.mx', '2024-05-31 02:23:48', 2),
+(15, 'A', 'Ultima Act', 'Ultima Act', NULL, NULL, '2024-05-31 02:24:57', 2);
 
 -- --------------------------------------------------------
 
@@ -539,7 +545,7 @@ CREATE TRIGGER `GenerarCodigo` BEFORE INSERT ON `registro` FOR EACH ROW BEGIN
     END WHILE;
 
     IF (SELECT Estado FROM salidas WHERE Id = NEW.Salida) = 'D' THEN
-        UPDATE salidas SET Codigo = nuevo_codigo WHERE Id = NEW.Salida;
+        UPDATE salidas SET Codigo = nuevo_codigo, Estado = 'A' WHERE Id = NEW.Salida;
     END IF;
 END
 $$
@@ -597,8 +603,6 @@ CREATE TRIGGER `after_insert_registro` AFTER INSERT ON `registro` FOR EACH ROW B
         SET Nivel = next_level
         WHERE Registro = NEW.UsuarioNormal;
     END IF;
-    
-    UPDATE registro SET Codigo = (SELECT Codigo FROM salidas WHERE Id = registro.Salida);
 END
 $$
 DELIMITER ;
@@ -622,10 +626,10 @@ CREATE TABLE `salidas` (
 --
 
 INSERT INTO `salidas` (`Id`, `Numero`, `Estado`, `Codigo`, `TorreCarga`) VALUES
-(1, 1, 'D', 0, 22),
-(2, 2, 'A', 9921, 22),
-(3, 3, 'A', 9835, 22),
-(4, 4, 'D', 0, 22),
+(1, 1, 'A', 5472, 22),
+(2, 2, 'D', 877, 22),
+(3, 3, 'D', 5584, 22),
+(4, 4, 'D', 4833, 22),
 (5, 1, 'D', 0, 24),
 (6, 2, 'D', 0, 24),
 (7, 3, 'D', 0, 24),
@@ -729,7 +733,8 @@ CREATE TABLE `usuariosadministradores` (
 --
 
 INSERT INTO `usuariosadministradores` (`Registro`, `Nombre`, `ApellidoPaterno`, `ApellidoMaterno`, `Celular`, `Correo`, `FechaCreacion`, `Credencial`) VALUES
-(1, 'Rodrigo', 'Romero', 'Corvera', '3316346586', 'a20300699@ceti.mx', '2024-03-22', 3);
+(1, 'Rodrigo', 'Romero', 'Corvera', '3316346586', 'a20300699@ceti.mx', '2024-03-22', 3),
+(2, 'Diego', 'Romero', 'Corvera', '3355555555', 'rocobros21@gmail.com', '2024-05-31', 73);
 
 -- --------------------------------------------------------
 
@@ -783,10 +788,10 @@ CREATE TABLE `usuariosnormales` (
 --
 
 INSERT INTO `usuariosnormales` (`Registro`, `Nombre`, `ApellidoPaterno`, `ApellidoMaterno`, `Celular`, `Correo`, `FechaCreacion`, `Tiempo`, `Estado`, `Notificaciones`, `Nivel`, `Credencial`) VALUES
-(2, 'Rodrigo', 'Romero', 'Romero', '3312345678', 'rocobros21@gmail.com', '2024-03-15', 350, 'A', 'D', 2, 1),
+(2, 'Rodrigo', 'Romero', 'Romero', '3312345678', 'rocobros21@gmail.com', '2024-03-15', 328, 'A', 'A', 2, 1),
 (3, 'Diego', 'Romero', 'Corvera', '3338465252', 'diego2105@gmail.com', '2024-03-15', 350, 'A', 'D', 2, 2),
 (16, 'Monica', 'Corvera', 'Romo', '3318107819', 'monicorverar@gmail.com', '2024-04-17', 350, 'D', 'D', 2, 29),
-(37, 'Susana', 'Ferrer', 'Hernandez', '1234567890', 'a20300699@ceti.mx', '2024-05-17', 350, 'A', 'D', 2, 65);
+(37, 'Susana', 'Ferrer', 'Hernandez', '1234567890', 'a20300699@ceti.mx', '2024-05-17', 350, 'A', 'A', 2, 65);
 
 --
 -- Índices para tablas volcadas
@@ -891,13 +896,13 @@ ALTER TABLE `botellaslatas`
 -- AUTO_INCREMENT de la tabla `chatbot`
 --
 ALTER TABLE `chatbot`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `credenciales`
 --
 ALTER TABLE `credenciales`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT de la tabla `nivelusuario`
@@ -909,13 +914,13 @@ ALTER TABLE `nivelusuario`
 -- AUTO_INCREMENT de la tabla `novedades`
 --
 ALTER TABLE `novedades`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `registro`
 --
 ALTER TABLE `registro`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=380;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=413;
 
 --
 -- AUTO_INCREMENT de la tabla `salidas`
@@ -939,7 +944,7 @@ ALTER TABLE `torrecarga`
 -- AUTO_INCREMENT de la tabla `usuariosadministradores`
 --
 ALTER TABLE `usuariosadministradores`
-  MODIFY `Registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Registro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `usuariosmoderadores`
