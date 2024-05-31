@@ -3,11 +3,12 @@ import axiosInstance from '../func/axiosInstance'
 import { toast, Toaster } from 'sonner'
 import Navbar from '../components/navbar/Navbar'
 import { useNavigate } from 'react-router-dom'
-import Ticket from '../components/Chatbot/Ticket'
+import TicketForm from '../components/Chatbot/TicketForm'
 
 const TicketsPage = () => {
   const [tickets, setTickets] = useState([])
-  const [expandedCard, setExpandedCard] = useState(null)
+  const [filteredTickets, setFilteredTickets] = useState([])
+  const [popUp, setPopUp] = useState(null)
 
   const navigate = useNavigate()
 
@@ -22,33 +23,29 @@ const TicketsPage = () => {
     fetchTickets()
   }, [])
 
+  useEffect(() => {
+    const filter = tickets.filter((item) => item.Estado === 'A')
+    setFilteredTickets(filter)
+  }, [tickets])
+
   const handleCardClick = (index) => {
-    setExpandedCard(expandedCard === index ? null : index)
+    setPopUp(popUp === index ? null : index)
   }
 
   return (
     <>
       <Toaster />
       <header className="flex items-center justify-between border-b p-2 bg-primary">
-        <button
-          onClick={() => navigate('/tickets')}
-          className="text-3xl"
-        >
-          ←
-        </button>
-        <h1 className="text-3xl font-bold mr-4">Tickets Pendientes</h1>
+        <h1 className="text-4xl font-bold mr-4">Tickets Pendientes</h1>
       </header>
 
       <div className="flex flex-col items-center">
-        {tickets.map((ticket, index) => (
+        {filteredTickets.map((ticket, index) => (
           <TicketForm
             key={index}
+            id={ticket.Id}
             pregunta={ticket.Pregunta}
-            respuesta={ticket.Respuesta}
-            estado={ticket.Estado}
-            moderador={ticket.UsuarioModerador}
-            isExpanded={expandedCard === index}
-            onClick={() => handleCardClick(index)}
+            usuario={ticket.UsuarioNormal}
           />
         ))}
       </div>

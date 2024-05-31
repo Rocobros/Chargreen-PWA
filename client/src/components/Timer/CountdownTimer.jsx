@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import axiosInstance from '../../func/axiosInstance'
 import Navbar from '../navbar/Navbar'
-
-//TODO: Modificar el tiempo del usuario y desactivar la salida cuando se termine el tiempo
+import CodePopup from './CodePopup'
+import { toast, Toaster } from 'sonner'
 
 const CountdownTimer = () => {
   const [timeInSeconds, setTimeInSeconds] = useState(0)
   const [isActive, setIsActive] = useState(false)
+  const [isPopupOpen, setIsPopupOpen] = useState(false)
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -57,9 +58,11 @@ const CountdownTimer = () => {
         setIsActive(false)
         setTimeInSeconds(0)
         if (location.state) {
+          console.log(location.state.torre)
+          console.log(location.state.salida)
           axiosInstance.post('/api/sendToEsp', {
             Torre: location.state.torre,
-            Salida: location.state.salidaId,
+            Salida: location.state.salida,
             Tiempo: 0,
           })
           axiosInstance.put(
@@ -72,6 +75,14 @@ const CountdownTimer = () => {
       })
   }
 
+  const handleOpenPopup = () => {
+    setIsPopupOpen(true)
+  }
+
+  const handleClosePopup = () => {
+    setIsPopupOpen(false)
+  }
+
   // Convert seconds to minutes and seconds
   const minutes = Math.floor(timeInSeconds / 60)
   const seconds = timeInSeconds % 60
@@ -82,6 +93,7 @@ const CountdownTimer = () => {
 
   return (
     <>
+      <Toaster />
       <header className="flex items-center p-4 border-b border-gray-300 bg-primary">
         <h1 className="text-4xl font-primary font-bold">Mi tiempo</h1>
       </header>
@@ -95,7 +107,13 @@ const CountdownTimer = () => {
               className="w-full h-auto mb-2 bg-primary outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
               onClick={() => navigate('/mapa')}
             >
-              Enlzarme
+              Usar mi tiempo
+            </button>
+            <button
+              className="w-full h-auto mb-2 bg-primary outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
+              onClick={handleOpenPopup}
+            >
+              Enlazar con torre
             </button>
             <button
               className="w-full h-auto mb-2 bg-primary outline-none rounded-3xl shadow-lg text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
@@ -107,6 +125,7 @@ const CountdownTimer = () => {
           </div>
         </div>
       </div>
+      {isPopupOpen && <CodePopup handleClose={handleClosePopup} />}
       <Navbar />
     </>
   )

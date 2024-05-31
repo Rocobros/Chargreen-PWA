@@ -45,120 +45,120 @@ function App() {
   const [userId, setUserId] = useState(null)
 
   return (
-    // <LoadScript
-    //   googleMapsApiKey={key}
-    //   loadingElement={<div>Cargando...</div>}
-    //   language="es"
-    // >
-    <Routes>
-      <Route
-        path="/"
-        element={<PrivateRoute />}
-      >
+    <LoadScript
+      googleMapsApiKey={key}
+      loadingElement={<div>Cargando...</div>}
+      language="es"
+    >
+      <Routes>
         <Route
-          index
-          element={<Home />}
-        />
-        <Route
-          path="perfil"
-          element={<Perfil />}
-        />
-        <Route
-          path="editarPerfil"
-          element={<EditarPerfilUsuario />}
-        />
-        <Route
-          path="novedades"
-          element={<Novedades />}
-        />
-        <Route
-          path="agregarAdmin/moderador"
-          element={<AgregarModeradorPage />}
-        />
-        <Route
-          path="agregarAdmin"
-          element={<AgregarAdmin />}
-        />
-        <Route
-          path="agregarMod"
-          element={<AgregarMod />}
-        />
-        <Route
-          path="agregarAdmin/torre"
-          element={<AgregarTorrePage />}
-        />
-        <Route
-          path="agregarMod/novedad"
-          element={<AgregarNovedadPage />}
-        />
-        <Route
-          path="agregarMod/actualizacion"
-          element={<AgregarActualizationPage />}
-        />
-        <Route
-          path="chatbot/ticket"
-          element={<TicketPage />}
-        />
-        <Route
-          path="chatbot/tickets"
-          element={<UserTicketsPage />}
-        />
-        <Route
-          path="tiempo"
-          element={<CountdownTimer userId={userId} />}
-        />
-        <Route
-          path="mapa"
-          element={<MapPage />}
-        />
-        <Route
-          path="metricas"
-          element={<MetricasPage />}
-        />
-        <Route
-          path="metricasAdmin"
-          element={<MetricasAdminPage />}
-        />
-        <Route
-          path="chatbot"
-          element={<ChatbotPage />}
-        />
-        <Route
-          path="tickets"
-          element={<TicketsPage />}
-        />
-      </Route>
+          path="/"
+          element={<PrivateRoute />}
+        >
+          <Route
+            index
+            element={<Home />}
+          />
+          <Route
+            path="perfil"
+            element={<Perfil />}
+          />
+          <Route
+            path="editarPerfil"
+            element={<EditarPerfilUsuario />}
+          />
+          <Route
+            path="novedades"
+            element={<Novedades />}
+          />
+          <Route
+            path="agregarAdmin/moderador"
+            element={<AgregarModeradorPage />}
+          />
+          <Route
+            path="agregarAdmin"
+            element={<AgregarAdmin />}
+          />
+          <Route
+            path="agregarMod"
+            element={<AgregarMod />}
+          />
+          <Route
+            path="agregarAdmin/torre"
+            element={<AgregarTorrePage />}
+          />
+          <Route
+            path="agregarMod/novedad"
+            element={<AgregarNovedadPage />}
+          />
+          <Route
+            path="agregarMod/actualizacion"
+            element={<AgregarActualizationPage />}
+          />
+          <Route
+            path="chatbot/ticket"
+            element={<TicketPage />}
+          />
+          <Route
+            path="chatbot/tickets"
+            element={<UserTicketsPage />}
+          />
+          <Route
+            path="tiempo"
+            element={<CountdownTimer userId={userId} />}
+          />
+          <Route
+            path="mapa"
+            element={<MapPage />}
+          />
+          <Route
+            path="metricas"
+            element={<MetricasPage />}
+          />
+          <Route
+            path="metricasAdmin"
+            element={<MetricasAdminPage />}
+          />
+          <Route
+            path="chatbot"
+            element={<ChatbotPage />}
+          />
+          <Route
+            path="tickets"
+            element={<TicketsPage />}
+          />
+        </Route>
 
-      <Route
-        path="/registro"
-        element={<Register />}
-      ></Route>
-      <Route
-        path="/login"
-        element={<Login />}
-      ></Route>
-      <Route
-        path="/olvidar"
-        element={<MailForm />}
-      ></Route>
-      <Route
-        path="/recuperar"
-        element={<PasswordForm />}
-      ></Route>
-      <Route
-        path="/verificar"
-        element={<Verificar />}
-      ></Route>
-      <Route
-        path="/404"
-        element={<NotFound />}
-      />
-      <Route
-        path="*"
-        element={<Navigate to="/404" />}
-      />
-    </Routes>
-    // </LoadScript>
+        <Route
+          path="/registro"
+          element={<Register />}
+        ></Route>
+        <Route
+          path="/login"
+          element={<Login />}
+        ></Route>
+        <Route
+          path="/olvidar"
+          element={<MailForm />}
+        ></Route>
+        <Route
+          path="/recuperar"
+          element={<PasswordForm />}
+        ></Route>
+        <Route
+          path="/verificar"
+          element={<Verificar />}
+        ></Route>
+        <Route
+          path="/404"
+          element={<NotFound />}
+        />
+        <Route
+          path="*"
+          element={<Navigate to="/404" />}
+        />
+      </Routes>
+    </LoadScript>
   )
 }
 

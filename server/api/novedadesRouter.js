@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const pool = require('../db.js')
+const nodemailer = require('nodemailer')
 
 // Obtener todas las novedades
 router.get('/', async (req, res) => {
@@ -56,6 +57,35 @@ router.post('/', async (req, res) => {
       'INSERT INTO `novedades`(Tipo, Titulo, Descripcion, Imagen, Link, UsuarioModerador) VALUES (?, ?, ?, ?, ?, ?)',
       ['N', Titulo, Descripcion, Imagen, Link, UsuarioModerador]
     )
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD,
+      },
+    })
+
+    var mailOptions = {
+      from: 'rocobros21@gmail.com',
+      subject: 'Nueva novedad añadida en la app de Chargreen',
+    }
+
+    const [response] = await pool.execute(
+      "SELECT Correo FROM usuariosnormales WHERE Notificaciones = 'A'"
+    )
+    const correos = response.map((row) => row.Correo).join(', ')
+
+    mailOptions.to = correos
+
+    mailOptions.text = `Se ha creado un creado una nueva novedad. Revisala en el apartado de Novedades en la app de Chargreen`
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.log(err)
+      }
+    })
+
     res
       .status(201)
       .json({ message: 'Novedad añadida correctamente', id: results.insertId })
@@ -75,6 +105,35 @@ router.post('/actualizacion', async (req, res) => {
       'INSERT INTO `novedades`(Tipo, Titulo, Descripcion, UsuarioModerador) VALUES (?, ?, ?, ?)',
       ['A', Titulo, Descripcion, UsuarioModerador]
     )
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD,
+      },
+    })
+
+    var mailOptions = {
+      from: 'rocobros21@gmail.com',
+      subject: 'Nueva actualizacion añadida en la app de Chargreen',
+    }
+
+    const [response] = await pool.execute(
+      "SELECT Correo FROM usuariosnormales WHERE Notificaciones = 'A'"
+    )
+    const correos = response.map((row) => row.Correo).join(', ')
+
+    mailOptions.to = correos
+
+    mailOptions.text = `Se ha creado un creado una nueva actualizacion. Revisala en el apartado de Novedades en la app de Chargreen`
+
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.log(err)
+      }
+    })
+
     res
       .status(201)
       .json({ message: 'Novedad añadida correctamente', id: results.insertId })

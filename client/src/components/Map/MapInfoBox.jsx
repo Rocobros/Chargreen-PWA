@@ -1,5 +1,3 @@
-// src/components/MapInfoBox.js
-
 import React from 'react'
 import FormButton from '../FormComponents/FormButton'
 import { useNavigate } from 'react-router-dom'
@@ -45,8 +43,12 @@ const MapInfoBox = ({
       const userTime = user.Tiempo
 
       const exitId = event.target.exitSelect.value
+      console.log(exitId)
       const res = await axiosInstance.get(`/api/salidas/${exitId}`)
-      const exitNum = res.data.Numero
+      console.log(res.data)
+      const exitNum = res.data[0].Numero
+
+      console.log(exitNum)
 
       await axiosInstance.post('/api/sendToEsp', {
         Torre: selectedTower.Id,
@@ -56,7 +58,7 @@ const MapInfoBox = ({
 
       await axiosInstance.put(`/api/salidas/activar/${exitId}`)
       navigate('/tiempo', {
-        state: { torre: selectedTower.Id, salidaId: exitId },
+        state: { torre: selectedTower.Id, salidaId: exitId, salida: exitNum },
       })
     } catch (error) {
       console.error(error)

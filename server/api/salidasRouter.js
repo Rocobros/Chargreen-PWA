@@ -16,13 +16,29 @@ router.get('/', async (req, res) => {
   }
 })
 
-// Obtener una salida por ID
 router.get('/:id', async (req, res) => {
   try {
     const [results] = await pool.execute('SELECT * FROM salidas WHERE Id = ?', [
       req.params.id,
     ])
-    res.status(200).json(results[0])
+    res.status(200).json(results)
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res.status(500).json({
+      message: 'Error al obtener la información.',
+      error: error.message,
+    })
+  }
+})
+
+// Obtener una salida por ID
+router.get('/activeCodes', async (req, res) => {
+  try {
+    const [results] = await pool.execute(
+      "SELECT * FROM salidas WHERE Estado = 'A'"
+    )
+    console.log(results)
+    res.status(200).json(results)
   } catch (error) {
     console.error('Error encontrado: ', error)
     res.status(500).json({
