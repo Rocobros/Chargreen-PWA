@@ -14,7 +14,6 @@ const colors = {
 }
 
 const MetricasAdminPage = () => {
-  //TODO: Revisar toda la informacion que se debe graficar
   const [data, setData] = useState([])
   const [pieChartData, setPieChartData] = useState(null)
   const [barsChartData, setBarsChartData] = useState(null)
@@ -23,6 +22,10 @@ const MetricasAdminPage = () => {
   const [energyUsed, setEnergyUsed] = useState(0)
   const [noRender, setNoRender] = useState(false)
   const [filter, setFilter] = useState('t')
+  const [users, setUsers] = useState([])
+  const [towers, setTowers] = useState([])
+  const [selectedUser, setSelectedUser] = useState('')
+  const [selectedTorre, setSelectedTorre] = useState('')
 
   useEffect(() => {
     axiosInstance
@@ -36,6 +39,14 @@ const MetricasAdminPage = () => {
         }
       })
       .catch((error) => console.error('Error fetching data:', error))
+
+    axiosInstance.get('/api/usuarios').then((res) => {
+      setUsers(res.data)
+    })
+
+    axiosInstance.get('/api/torres').then((res) => {
+      setTowers(res.data)
+    })
   }, [])
 
   useEffect(() => {
@@ -140,7 +151,31 @@ const MetricasAdminPage = () => {
     } else if (period === 't') {
       filteredData = data
     }
+    applyFilters(filteredData)
+  }
+
+  const applyFilters = (filteredData) => {
+    if (selectedUser) {
+      filteredData = filterData.filter(
+        (item) => filterData.IdUsuario === parseInt(selectedUser)
+      )
+    }
+
+    if (selectedTorre) {
+      filteredData = filterData.filter((item) => item.IdTorre === selectedTorre)
+    }
+
     updateCharts(filteredData)
+  }
+
+  const handleUserChange = (e) => {
+    setSelectedUser(e.target.value)
+    applyFilters(data)
+  }
+
+  const handleTorreChange = (e) => {
+    setSelectedTorre(e.target.value)
+    applyFilters(data)
   }
 
   return (
@@ -190,6 +225,38 @@ const MetricasAdminPage = () => {
                 Última semana
               </button>
             </div>
+            <div className="flex justify-center mb-5">
+              <select
+                value={selectedUser}
+                onChange={handleUserChange}
+                className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+              >
+                <option value="">Selecciona un usuario</option>
+                {users.map((usuario) => (
+                  <option
+                    key={usuario.Id}
+                    value={usuario.Id}
+                  >
+                    {usuario.Nombre}
+                  </option>
+                ))}
+              </select>
+              <select
+                value={selectedTorre}
+                onChange={handleTorreChange}
+                className="bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base"
+              >
+                <option value="">Selecciona una torre</option>
+                {towers.map((torre) => (
+                  <option
+                    key={torre.Id}
+                    value={torre.Id}
+                  >
+                    {torre.Nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="mb-2">
               <h1 className="text-center">Cantidad de Botellas por Torre</h1>
               {pieChartData ? (
@@ -229,9 +296,6 @@ const MetricasAdminPage = () => {
             </div>
           </div>
         </div>
-      )}
-      {noRender && (
-        <h1 className="text-4xl font-primary">No se tiene registro</h1>
       )}
       <Navbar />
     </>

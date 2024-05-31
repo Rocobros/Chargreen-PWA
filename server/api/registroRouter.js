@@ -85,6 +85,23 @@ router.put('/:id', async (req, res) => {
   }
 })
 
+router.put('/usuario/:id', async (req, res) => {
+  const { Codigo, Salida } = req.body
+  try {
+    await pool.execute(
+      'UPDATE registro SET UsuarioNormal = ? WHERE Codigo = ? AND Salida = ?',
+      [req.params.id, Codigo, Salida]
+    )
+    res.status(200).send(`Registro actualizado con ID: ${req.params.id}`)
+  } catch (error) {
+    console.error('Error encontrado: ', error)
+    res.status(500).json({
+      message: 'Error al actualizar el registro.',
+      error: error.message,
+    })
+  }
+})
+
 // Eliminar un registro
 router.delete('/:id', async (req, res) => {
   try {
