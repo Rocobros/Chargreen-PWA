@@ -58,7 +58,7 @@ const MapInfoBox = ({
 
       await axiosInstance.put(`/api/salidas/activar/${exitId}`)
       navigate('/tiempo', {
-        state: { torre: selectedTower.Id, salidaId: exitId, salida: exitNum },
+        state: { estado: 'mapa', torre: selectedTower.Id, salidaId: exitId, salida: exitNum },
       })
     } catch (error) {
       console.error(error)

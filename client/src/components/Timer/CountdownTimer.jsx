@@ -8,7 +8,6 @@ import { toast, Toaster } from 'sonner'
 const CountdownTimer = () => {
   const [timeInSeconds, setTimeInSeconds] = useState(0)
   const [isActive, setIsActive] = useState(false)
-  const [isPopupOpen, setIsPopupOpen] = useState(false)
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -22,7 +21,12 @@ const CountdownTimer = () => {
         const response = await axiosInstance.get(`/api/usuarios/${userId}`)
         setTimeInSeconds(response.data.Tiempo)
         if (location.state) {
-          setIsActive(true)
+          if (location.state.estado === 'mapa') {
+            setIsActive(true)
+          } else if (location.state.estado === 'enlazar') {
+            setTimeInSeconds(location.state.tiempo)
+            setIsActive(true)
+          }
         }
       } catch (error) {
         console.error('Error fetching initial time:', error)
@@ -50,8 +54,14 @@ const CountdownTimer = () => {
   const stopTimer = () => {
     const userId = localStorage.getItem('id')
     if (!userId) return
+    let apiRoute = ''
+    if (location.state.estado === 'mapa') {
+      apiRoute = `/api/usuarios/tiempo/${userId}`
+    } else {
+      apiRoute = `/api/usuarios/tiempo/agregar/${userId}`
+    }
     axiosInstance
-      .put(`/api/usuarios/tiempo/${userId}`, {
+      .put(apiRoute, {
         Tiempo: timeInSeconds,
       })
       .then(() => {
@@ -74,15 +84,6 @@ const CountdownTimer = () => {
         console.error(err)
       })
   }
-
-  const handleOpenPopup = () => {
-    setIsPopupOpen(true)
-  }
-
-  const handleClosePopup = () => {
-    setIsPopupOpen(false)
-  }
-
   // Convert seconds to minutes and seconds
   const minutes = Math.floor(timeInSeconds / 60)
   const seconds = timeInSeconds % 60
@@ -104,14 +105,16 @@ const CountdownTimer = () => {
           </h1>
           <div className="flex flex-row gap-4">
             <button
+              disabled={isActive}
               className="w-full h-auto mb-2 bg-primary outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
               onClick={() => navigate('/mapa')}
             >
               Usar mi tiempo
             </button>
             <button
+              disabled={isActive}
               className="w-full h-auto mb-2 bg-primary outline-none rounded-3xl shadow-lg cursor-pointer text-lg font-bold hover:bg-secondary active:ring active:ring-accent active:translate-y-1"
-              onClick={handleOpenPopup}
+              onClick={() => navigate('/enlazar')}
             >
               Enlazar con torre
             </button>
@@ -125,8 +128,8 @@ const CountdownTimer = () => {
           </div>
         </div>
       </div>
-      {isPopupOpen && <CodePopup handleClose={handleClosePopup} />}
-      <Navbar />
+
+      <Navbar disable={isActive} />
     </>
   )
 }

@@ -29,6 +29,7 @@ import AgregarActualizationPage from './pages/AgregarActualizationPage'
 import TicketPage from './pages/TicketPage.jsx'
 import UserTicketsPage from './pages/UserTicketsPage.jsx'
 import TicketsPage from './pages/TicketsPage.jsx'
+import CodePage from './pages/CodePage.jsx'
 
 const key = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
 
@@ -126,6 +127,10 @@ function App() {
           <Route
             path="tickets"
             element={<TicketsPage />}
+          />
+          <Route
+            path="enlazar"
+            element={<CodePage />}
           />
         </Route>
 
