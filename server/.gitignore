@@ -132,3 +132,6 @@ dist
 .env
 .env.*
 *.env
+
+reporte/*.png
+reporte/*.pdf
