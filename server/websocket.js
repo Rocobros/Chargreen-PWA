@@ -2,6 +2,7 @@ const WebSocket = require('ws')
 const crearRegistro = require('./utils/crearRegistro')
 const ReactivateExit = require('./utils/ReactivateExit')
 const getExitCode = require('./utils/getExitCode')
+const sendMailToAdmins = require('./utils/sendMailToAdmins')
 
 function setupWebSocket() {
   const wss = new WebSocket.Server({ port: 8000 }, () => {
@@ -18,7 +19,10 @@ function setupWebSocket() {
       try {
         const data = JSON.parse(message)
         console.log(data)
-        if (data.botella !== '0') {
+        if (data.salida === '0') {
+          sendMailToAdmins(data)
+          console.log('Mail send to Admins')
+        } else if (data.botella !== '0') {
           await crearRegistro(data).then(async (res) => {
             console.log('Registro creado')
             const code = await getExitCode(data)
