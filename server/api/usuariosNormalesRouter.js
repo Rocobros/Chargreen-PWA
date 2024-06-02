@@ -185,7 +185,7 @@ router.put('/tiempo/agregar/:registro', authenticateToken, async (req, res) => {
 })
 
 // Sumar al tiempo de un usuario
-router.put('/tiempo/agregar:registro', authenticateToken, async (req, res) => {
+router.put('/tiempo/:registro', authenticateToken, async (req, res) => {
   const { Tiempo } = req.body
 
   try {

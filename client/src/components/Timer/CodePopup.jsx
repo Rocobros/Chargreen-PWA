@@ -24,7 +24,8 @@ const CodePopup = () => {
         const response = await axiosInstance.get(
           `/api/salidas/${filteredSalida[0].Id}`
         )
-        const infoSalida = response.data
+
+        const infoSalida = response.data[0]
         const registrosFetch = await axiosInstance.get(
           `/api/registro/${filteredSalida[0].Id}/${code}`
         )
