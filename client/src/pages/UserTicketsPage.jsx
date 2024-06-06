@@ -40,7 +40,7 @@ const UserTicketsPage = () => {
         <h1 className="text-3xl font-bold mr-4">Mis Tickets</h1>
       </header>
 
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center mb-20">
         {tickets.map((ticket, index) => (
           <Ticket
             key={index}
