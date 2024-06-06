@@ -50,14 +50,17 @@ router.get('/:salida/:codigo', async (req, res) => {
 })
 
 // Obtener los registros del ultimo mes por su ID
-router.get('/month/:id', async (req, res) => {
+router.get('/progreso/:id', async (req, res) => {
   try {
     const [results] = await pool.execute(
-      "SELECT COUNT(*) as botellas FROM registro WHERE Fecha >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND UsuarioNormal = ?",
+      "SELECT COUNT(*) as botellas FROM registro WHERE Fecha >= DATE_FORMAT(CURDATE(), '%Y-%m-01') AND Fecha < DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01') AND UsuarioNormal = ?",
       [req.params.id]
     )
-
-    res.status(200).send(results[0])
+    if (results) {
+      res.status(200).json({ message: 'Hola' })
+    } else {
+      res.status(404).json({ message: 'Not found' })
+    }
   } catch (error) {
     console.error('Error encontrado: ', error)
     res.status(500).json({

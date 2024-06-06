@@ -9,7 +9,7 @@ const BarraDeProgreso = () => {
     const fetchLevel = async () => {
       const id = localStorage.getItem('id')
       try {
-        const response = await axiosInstance.get(`/api/registro/month/${id}`)
+        const response = await axiosInstance.get(`/api/metricas/progreso/${id}`)
         const botellasActuales = response.data.botellas
         console.log(botellasActuales)
 
