@@ -37,7 +37,7 @@ const Novedades = () => {
           Novedades y actualizaciones
         </h1>
       </header>
-      <div className="text-center flex my-2 gap-2">
+      <div className="text-center flex my-2 gap-2 ">
         <button
           className={`flex-1 bg-primary text-text border-none py-2.5 px-5 m-1 cursor-pointer text-base ml-4 ${
             filter === 'N' ? 'bg-secondary' : ''
@@ -55,7 +55,7 @@ const Novedades = () => {
           Actualizaciones
         </button>
       </div>
-      <div className="flex flex-col items-center w-screen h-screen overflow-hidden p-4 space-y-4">
+      <div className="flex flex-col items-center w-screen h-screen overflow-hidden p-4 space-y-4 mb-20">
         <div className="w-full max-w-md h-full overflow-y-auto">
           {filteredNovedades.map((novedad, index) => (
             <Tarjeta
